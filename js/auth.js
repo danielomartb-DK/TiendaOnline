@@ -38,13 +38,13 @@ class AuthManager {
     }
 
     /**
-     * Cierra la sesiÃ³n
+     * Cierra la sesión
      */
     logout() {
         localStorage.removeItem(this.sessionKey);
         this.user = null;
-        this.updateUI();
-        window.location.reload();
+        // Redirigir al inicio inmediatamente en lugar de recargar en el mismo sitio
+        window.location.href = 'index.html';
     }
 
     /**
