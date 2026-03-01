@@ -127,12 +127,12 @@ class AuthManager {
      * Inicializa eventos y elementos UI que dependen del Auth
      */
     initUI() {
-        // Enlazar botones de Logout si existen mediante delegación de eventos robusta
+        // Mejor soporte para móviles y clicks dentro de elementos
         document.addEventListener('click', (e) => {
-            // Manejar si el clic es directamente en el botón o dentro de él
             const logoutBtn = e.target.closest('#btnLogout');
             if (logoutBtn) {
                 e.preventDefault();
+                e.stopPropagation();
                 this.logout();
             }
         });
@@ -166,14 +166,14 @@ class AuthManager {
                         </div>
                         
                         <!-- Dropdown menu -->
-                        <div class="absolute top-10 right-0 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden text-slate-900 dark:text-white">
+                        <div class="absolute top-10 right-0 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden text-slate-900 dark:text-white pointer-events-none group-hover:pointer-events-auto">
                             <div class="p-3 border-b border-slate-100 dark:border-slate-800">
                                 <p class="font-bold text-sm truncate">${this.user.user.email}</p>
                             </div>
-                            <ul class="py-2 text-sm">
-                                <li><a href="#" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800">Your Orders</a></li>
-                                ${this.isAdmin() ? '<li><a href="admin.html" class="block px-4 py-2 text-primary font-bold hover:bg-slate-100 dark:hover:bg-slate-800">Panel Administrador</a></li>' : ''}
-                                <li><button id="btnLogout" class="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400">Sign Out</button></li>
+                            <ul class="py-2 text-sm z-50 relative">
+                                <li><a href="#" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800">Tus Pedidos</a></li>
+                                ${this.isAdmin() ? '<li><a href="admin.html" class="block px-4 py-2 text-primary font-bold hover:bg-slate-100 dark:hover:bg-slate-800">Panel Admin</a></li>' : ''}
+                                <li><button id="btnLogout" type="button" class="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 cursor-pointer">Cerrar Sesión</button></li>
                             </ul>
                         </div>
                     </div>
