@@ -127,9 +127,11 @@ class AuthManager {
      * Inicializa eventos y elementos UI que dependen del Auth
      */
     initUI() {
-        // Enlazar botones de Logout si existen
+        // Enlazar botones de Logout si existen mediante delegación de eventos robusta
         document.addEventListener('click', (e) => {
-            if (e.target && e.target.id === 'btnLogout') {
+            // Manejar si el clic es directamente en el botón o dentro de él
+            const logoutBtn = e.target.closest('#btnLogout');
+            if (logoutBtn) {
                 e.preventDefault();
                 this.logout();
             }

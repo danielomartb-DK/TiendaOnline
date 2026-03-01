@@ -15,6 +15,29 @@ const headers = {
 };
 
 /**
+ * Obtiene las cabeceras HTTP incluyendo el Token JWT de sesión si existe.
+ * Es crucial para que Supabase reconozca al Administrador y le permita saltar el RLS.
+ */
+function getDynamicHeaders() {
+    const defaultHeaders = { ...headers };
+    try {
+        const sessionStore = localStorage.getItem('PixelWear_session');
+        if (sessionStore) {
+            const session = JSON.parse(sessionStore);
+            if (session.session && session.session.access_token) {
+                // Sobrescribir el Authorization Header de la API KEY anónima con el JWT del Usuario Autenticado
+                defaultHeaders['Authorization'] = `Bearer ${session.session.access_token}`;
+            } else if (session.access_token) {
+                defaultHeaders['Authorization'] = `Bearer ${session.access_token}`;
+            }
+        }
+    } catch (e) {
+        console.warn('No session found for dynamic headers');
+    }
+    return defaultHeaders;
+}
+
+/**
  * Obtiene todos los productos (activos e inactivos) de la base de datos
  * @returns {Promise<Array>} Lista de productos
  */
@@ -23,7 +46,7 @@ async function obtenerProductos() {
         console.log("Intentando obtener productos de Supabase...");
         const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?select=*`, {
             method: 'GET',
-            headers: headers
+            headers: getDynamicHeaders()
         });
 
         console.log("Status de respuesta de Supabase:", response.status);
@@ -51,7 +74,7 @@ async function obtenerProductoPorId(id) {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id}&select=*`, {
             method: 'GET',
-            headers: headers
+            headers: getDynamicHeaders()
         });
 
         if (!response.ok) {
@@ -148,12 +171,12 @@ async function subirFotoProducto(file) {
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `${fileName}`;
 
+        // Obtener headers dinámicos y sobrescribir Content-Type para el archivo
+        const dynamicHeaders = getDynamicHeaders();
         const response = await fetch(`${SUPABASE_URL}/storage/v1/object/productos/${filePath}`, {
             method: 'POST',
             headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                // Especificamos explícitamente el tipo MIME original del archivo
+                ...dynamicHeaders,
                 'Content-Type': file.type
             },
             body: file
@@ -182,7 +205,7 @@ async function crearProducto(producto) {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/producto`, {
             method: 'POST',
             headers: {
-                ...headers,
+                ...getDynamicHeaders(),
                 'Prefer': 'return=representation' // Para forzar que devuelva el objeto insertado
             },
             body: JSON.stringify(producto)
