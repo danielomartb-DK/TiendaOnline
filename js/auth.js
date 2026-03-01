@@ -179,9 +179,9 @@ class AuthManager {
             } else {
                 // No Logeado
                 container.innerHTML = `
-                    <a href="login.html" class="flex flex-col items-start leading-tight cursor-pointer hover:underline">
-                        <span class="text-xs text-slate-300">Hola, Inicia Sesión</span>
-                        <span class="text-sm font-bold">Cuenta y Listas</span>
+                    <a href="index.html" class="flex flex-col items-start leading-tight cursor-pointer hover:underline cursor-not-allowed">
+                        <span class="text-xs text-slate-300">Hola, ${userName}</span>
+                        <span class="text-sm font-bold">Mi Cuenta</span>
                     </a>
                 `;
             }
