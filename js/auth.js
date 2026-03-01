@@ -159,9 +159,9 @@ class AuthManager {
 
                 container.innerHTML = `
                     <div class="relative cursor-pointer group flex flex-col items-start leading-tight">
-                        <span class="text-xs text-slate-300">Hello, ${userName}</span>
+                        <span class="text-xs text-slate-300">Hola, ${userName}</span>
                         <div class="flex items-center gap-1">
-                            <span class="text-sm font-bold">Account</span>
+                            <span class="text-sm font-bold">Mi Cuenta</span>
                             <span class="material-symbols-outlined text-[1rem]">arrow_drop_down</span>
                         </div>
                         
