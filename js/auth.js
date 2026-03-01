@@ -1,6 +1,6 @@
-/**
- * JS/Auth.js - Autenticación con Supabase
- * Maneja el registro, inicio de sesión y persistencia del usuario.
+﻿/**
+ * JS/Auth.js - AutenticaciÃ³n con Supabase
+ * Maneja el registro, inicio de sesiÃ³n y persistencia del usuario.
  */
 
 class AuthManager {
@@ -14,7 +14,7 @@ class AuthManager {
     }
 
     /**
-     * Obtiene la sesión actual desde localStorage
+     * Obtiene la sesiÃ³n actual desde localStorage
      */
     getSession() {
         const session = localStorage.getItem(this.sessionKey);
@@ -29,7 +29,7 @@ class AuthManager {
     }
 
     /**
-     * Guarda la nueva sesión y actualiza el estado interno
+     * Guarda la nueva sesiÃ³n y actualiza el estado interno
      */
     setSession(sessionData) {
         localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
@@ -38,7 +38,7 @@ class AuthManager {
     }
 
     /**
-     * Cierra la sesión
+     * Cierra la sesiÃ³n
      */
     logout() {
         localStorage.removeItem(this.sessionKey);
@@ -48,7 +48,7 @@ class AuthManager {
     }
 
     /**
-     * Iniciar Sesión (Email & Password)
+     * Iniciar SesiÃ³n (Email & Password)
      */
     async login(email, password) {
         try {
@@ -65,12 +65,12 @@ class AuthManager {
 
             if (!response.ok) {
                 if (data.error_code === 'email_not_confirmed' || data.msg === 'Email not confirmed') {
-                    throw new Error('Revisa tu bandeja de entrada: hemos enviado un correo para confirmar tu cuenta antes de iniciar sesión.');
+                    throw new Error('Revisa tu bandeja de entrada: hemos enviado un correo para confirmar tu cuenta antes de iniciar sesiÃ³n.');
                 }
-                const errorMsg = data.message || data.error_description || data.msg || 'Error al iniciar sesión';
-                // Traducir mensajes comunes de Supabase al español para mejor UX
+                const errorMsg = data.message || data.error_description || data.msg || 'Error al iniciar sesiÃ³n';
+                // Traducir mensajes comunes de Supabase al espaÃ±ol para mejor UX
                 if (errorMsg === 'Invalid login credentials') {
-                    throw new Error('Correo o contraseña incorrectos.');
+                    throw new Error('Correo o contraseÃ±a incorrectos.');
                 }
                 throw new Error(errorMsg);
             }
@@ -108,9 +108,9 @@ class AuthManager {
                 throw new Error(errorMsg);
             }
 
-            // Si Supabase devuelve un objeto user en data (y no data.session), es porque requiere confirmación.
+            // Si Supabase devuelve un objeto user en data (y no data.session), es porque requiere confirmaciÃ³n.
             if (!data.session && data.user) {
-                throw new Error('¡Registro exitoso! Por favor ve a tu correo electrónico y haz clic en el enlace para confirmar tu cuenta y poder iniciar sesión.');
+                throw new Error('Â¡Registro exitoso! Por favor ve a tu correo electrÃ³nico y haz clic en el enlace para confirmar tu cuenta y poder iniciar sesiÃ³n.');
             }
 
             if (data.session) {
@@ -140,7 +140,7 @@ class AuthManager {
     }
 
     /**
-     * Cambia la barra de navegación basado en el estado
+     * Cambia la barra de navegaciÃ³n basado en el estado
      */
     updateUI() {
         const authContainers = document.querySelectorAll('.auth-container-ui');
@@ -180,7 +180,7 @@ class AuthManager {
                 // No Logeado
                 container.innerHTML = `
                     <a href="login.html" class="flex flex-col items-start leading-tight cursor-pointer hover:underline">
-                        <span class="text-xs text-slate-300">Hello, Inicia Sesi�n</span>
+                        <span class="text-xs text-slate-300">Hola, Inicia Sesión</span>
                         <span class="text-sm font-bold">Cuenta y Listas</span>
                     </a>
                 `;
@@ -191,3 +191,4 @@ class AuthManager {
 
 // Instanciar Auth Manager globalmente
 window.novaAuth = new AuthManager();
+
