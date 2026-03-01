@@ -57,6 +57,36 @@ async function initApp() {
     if (refs.btnRetry) {
         refs.btnRetry.addEventListener('click', initApp);
     }
+
+    // Inicializar buscador en vivo
+    initBuscador();
+}
+
+/**
+ * Inicializa la lógica del buscador de la navbar principal en tiempo real
+ */
+function initBuscador() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+
+        // Si no hay texto, pintamos todos los productos
+        if (!query) {
+            renderizarProductos(state.productos);
+            return;
+        }
+
+        // Si hay texto, filtramos por título o descripción que coincidan
+        const productosFiltrados = state.productos.filter(p => {
+            const nombre = p.nombre ? p.nombre.toLowerCase() : '';
+            const desc = p.descripcion ? p.descripcion.toLowerCase() : '';
+            return nombre.includes(query) || desc.includes(query);
+        });
+
+        renderizarProductos(productosFiltrados);
+    });
 }
 
 /**
