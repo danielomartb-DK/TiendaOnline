@@ -171,12 +171,11 @@ async function subirFotoProducto(file) {
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        // Obtener headers dinámicos y sobrescribir Content-Type para el archivo
-        const dynamicHeaders = getDynamicHeaders();
+        // Usar headers por defecto (anon key) para el Storage para evitar conflictos con RLS de usuario si el bucket es público
         const response = await fetch(`${SUPABASE_URL}/storage/v1/object/productos/${filePath}`, {
             method: 'POST',
             headers: {
-                ...dynamicHeaders,
+                ...headers,
                 'Content-Type': file.type
             },
             body: file
