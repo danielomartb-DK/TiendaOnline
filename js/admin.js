@@ -60,6 +60,9 @@ function initAdminPanel() {
             // A. Subir imagen a Supabase Storage
             const urlImagenReales = await subirFotoProducto(file);
 
+            // Generar un código aleatorio para el producto
+            const randomCode = 'PROD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
             // B. Crear objeto Producto para BD
             const nuevoProducto = {
                 nombre: document.getElementById('prodNombre').value.trim(),
@@ -67,7 +70,9 @@ function initAdminPanel() {
                 stock: parseInt(document.getElementById('prodStock').value),
                 descripcion: document.getElementById('prodDesc').value.trim(),
                 imagen_url: urlImagenReales,
-                estado: true // Activo por defecto
+                estado: true, // Activo por defecto
+                id_tipo_producto: 1, // 1 = General/Otros (Ajustar si hay selector de categorías)
+                codigo: randomCode
             };
 
             // C. Insertar en tabla "producto"

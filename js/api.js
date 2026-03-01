@@ -184,7 +184,7 @@ async function subirFotoProducto(file) {
 
         if (!response.ok) {
             const err = await response.json();
-            throw new Error(err.message || 'Error al subir la imagen a Storage');
+            throw new Error('[STORAGE] ' + (err.message || 'Error al subir la imagen a Storage'));
         }
 
         // Retornar la URL pública estandarizada de Supabase
@@ -216,9 +216,9 @@ async function crearProducto(producto) {
             console.error('Error insertando en la BD:', errBody);
             try {
                 const err = JSON.parse(errBody);
-                throw new Error(err.message || 'Error al crear el producto');
+                throw new Error('[DATABASE] ' + (err.message || 'Error al crear el producto'));
             } catch (e) {
-                throw new Error('Error al crear el producto en la BD');
+                throw new Error('[DATABASE] Error al crear el producto en la BD');
             }
         }
 
