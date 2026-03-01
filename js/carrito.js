@@ -1,4 +1,4 @@
-/**
+﻿/**
  * JS/Carrito.js - Lógica del Carrito y Checkout
  * Maneja la edición del carrito, validación del formulario y venta.
  */
@@ -40,7 +40,7 @@ function initCarrito() {
     // Cargar items del storage correspondiente al usuario actual
     cart.items = JSON.parse(localStorage.getItem(getCartKey())) || [];
 
-    renderizarItems();
+    alert('¡Pedido procesado con éxito!'); renderizarItems();
     calcularTotales();
 
     // Autocompletar datos del cliente si está autenticado
@@ -124,7 +124,7 @@ function cambiarCantidad(idProducto, delta) {
     }
 
     guardarCarrito();
-    renderizarItems();
+    alert('¡Pedido procesado con éxito!'); renderizarItems();
     calcularTotales();
 }
 
@@ -134,7 +134,7 @@ function cambiarCantidad(idProducto, delta) {
 function eliminarItem(idProducto) {
     cart.items = cart.items.filter(i => i.id_producto !== idProducto);
     guardarCarrito();
-    renderizarItems();
+    alert('¡Pedido procesado con éxito!'); renderizarItems();
     calcularTotales();
 }
 
@@ -211,7 +211,7 @@ async function handleCheckoutSubmit(e) {
         guardarCarrito();
         cartRefs.form.classList.add('hidden');
         cartRefs.checkoutSuccess.classList.remove('hidden');
-        renderizarItems();
+        alert('¡Pedido procesado con éxito!'); renderizarItems();
         calcularTotales();
 
     } catch (error) {
