@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>NovaStore | Panel de Administración</title>
+    <title>NovaStore | Panel de AdministraciÃ³n</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
@@ -83,7 +83,7 @@
 
 <body class="bg-background-light text-slate-900 font-display min-h-screen flex flex-col">
 
-    <!-- Barra de Navegación -->
+    <!-- Barra de NavegaciÃ³n -->
     <header
         class="fixed top-0 left-0 right-0 z-50 bg-brand-blue text-white shadow-md h-16 flex items-center px-4 md:px-10">
         <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-4">
@@ -116,8 +116,8 @@
                     <span class="material-symbols-outlined text-primary text-4xl">inventory_2</span>
                     Agregar Nuevo Producto
                 </h2>
-                <p class="text-slate-500 mb-8 pb-6 border-b border-slate-100">Carga un nuevo artículo al catálogo de
-                    NovaStore. Las imágenes se subirán automáticamente a Supabase Storage.</p>
+                <p class="text-slate-500 mb-8 pb-6 border-b border-slate-100">Carga un nuevo artÃ­culo al catÃ¡logo de
+                    NovaStore. Las imÃ¡genes se subirÃ¡n automÃ¡ticamente a Supabase Storage.</p>
 
                 <form id="adminProductForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -145,18 +145,18 @@
                                 placeholder="10" />
                         </div>
 
-                        <!-- Descripción -->
+                        <!-- DescripciÃ³n -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Descripción General
+                            <label class="block text-sm font-bold text-slate-700 mb-2">DescripciÃ³n General
                                 (Opcional)</label>
                             <textarea id="prodDesc" rows="3"
                                 class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                                placeholder="Añade detalles del producto..."></textarea>
+                                placeholder="AÃ±ade detalles del producto..."></textarea>
                         </div>
 
                         <!-- Imagen -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Fotografía del Producto</label>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">FotografÃ­a del Producto</label>
                             <div class="flex items-center justify-center w-full">
                                 <label for="prodImagen"
                                     class="flex flex-col items-center justify-center w-full h-48 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
@@ -187,17 +187,17 @@
                     <button type="submit" id="btnSubmitProducto"
                         class="w-full bg-primary text-brand-blue font-bold py-4 rounded-xl text-lg hover:brightness-110 shadow-lg shadow-primary/30 transition-all flex justify-center items-center gap-3">
                         <span class="material-symbols-outlined">add_circle</span>
-                        Guardar Producto en el Catálogo
+                        Guardar Producto en el CatÃ¡logo
                     </button>
                 </form>
             </div>
         </div>
     </main>
 
-    <!-- Notificación Toast -->
+    <!-- NotificaciÃ³n Toast -->
     <div id="toast" class="toast">
         <span class="material-symbols-outlined" style="color: #4caf50;">check_circle</span>
-        <span id="toastMessage">¡Producto creado con éxito!</span>
+        <span id="toastMessage">Â¡Producto creado con Ã©xito!</span>
     </div>
 
     <!-- Scripts -->
@@ -207,3 +207,4 @@
 </body>
 
 </html>
+

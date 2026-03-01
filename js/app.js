@@ -1,5 +1,5 @@
-/**
- * JS/App.js - Lógica Principal (index.html)
+﻿/**
+ * JS/App.js - LÃ³gica Principal (index.html)
  * Renderiza productos desde Supabase y maneja el carrito.
  */
 
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initApp();
 });
 
-// Función auxiliar para obtener la key del carrito basada en el usuario actual
+// FunciÃ³n auxiliar para obtener la key del carrito basada en el usuario actual
 function getCartKey() {
     if (window.novaAuth && window.novaAuth.user && window.novaAuth.user.user) {
         return `PixelWear_cart_${window.novaAuth.user.user.id}`;
@@ -15,7 +15,7 @@ function getCartKey() {
     return 'PixelWear_cart_anon';
 }
 
-// Estado local de la aplicación
+// Estado local de la aplicaciÃ³n
 const state = {
     productos: [],
     carrito: []
@@ -33,10 +33,10 @@ const refs = {
 };
 
 /**
- * Inicializa la aplicación
+ * Inicializa la aplicaciÃ³n
  */
 async function initApp() {
-    // Cargar el carrito según el usuario
+    // Cargar el carrito segÃºn el usuario
     state.carrito = JSON.parse(localStorage.getItem(getCartKey())) || [];
 
     actualizarContadorCarrito();
@@ -60,7 +60,7 @@ async function initApp() {
 }
 
 /**
- * Renderiza el HTML dinámico de cada producto en el DOM
+ * Renderiza el HTML dinÃ¡mico de cada producto en el DOM
  */
 function renderizarProductos(productos) {
     if (!productos || productos.length === 0) {
@@ -84,7 +84,7 @@ function renderizarProductos(productos) {
         } else if (isLowStock) {
             stockBadge = '<span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Solo ' + stockQty + ' disponibles</span>';
         } else if (price > 100) {
-            stockBadge = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Envío Gratis</span>';
+            stockBadge = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">EnvÃ­o Gratis</span>';
         }
 
         // Imagen: usa la de la BD, o un fallback de Unsplash
@@ -142,7 +142,7 @@ function agregarAlCarrito(idProducto) {
         if (itemCarrito.cantidad < producto.stock) {
             itemCarrito.cantidad += 1;
         } else {
-            console.warn('Límite de stock alcanzado para este producto.');
+            console.warn('LÃ­mite de stock alcanzado para este producto.');
             return;
         }
     } else {
@@ -158,7 +158,7 @@ function agregarAlCarrito(idProducto) {
 
     localStorage.setItem(getCartKey(), JSON.stringify(state.carrito));
     actualizarContadorCarrito();
-    mostrarToast('¡Agregado al Carrito!');
+    mostrarToast('Â¡Agregado al Carrito!');
 }
 
 /**
@@ -171,7 +171,7 @@ function actualizarContadorCarrito() {
 }
 
 /**
- * Muestra una notificación temporal
+ * Muestra una notificaciÃ³n temporal
  */
 function mostrarToast(msg) {
     if (!refs.toast) return;
@@ -190,7 +190,7 @@ function mostrarLoader(isVisible) {
 
 function usarDatosDePrueba() {
     const mockData = [
-        { id_producto: 1, nombre: 'Audífonos Premium Inalámbricos', precio: 299.00, stock: 15, imagen_url: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=400' },
+        { id_producto: 1, nombre: 'AudÃ­fonos Premium InalÃ¡mbricos', precio: 299.00, stock: 15, imagen_url: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=400' },
         { id_producto: 2, nombre: 'Reloj Minimalista de Cuero 42mm', precio: 150.00, stock: 5, imagen_url: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=400' },
         { id_producto: 3, nombre: 'Tenis Deportivos Aero-Run', precio: 89.00, stock: 40, imagen_url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400' },
         { id_producto: 4, nombre: 'Parlante Inteligente NovaLink', precio: 45.00, stock: 0, imagen_url: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?auto=format&fit=crop&q=80&w=400' }
@@ -198,3 +198,4 @@ function usarDatosDePrueba() {
     state.productos = mockData;
     renderizarProductos(mockData);
 }
+

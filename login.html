@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -55,7 +55,7 @@
             }
         }
     </style>
-    <title>Inicia Sesi�n - NovaStore</title>
+    <title>Inicia Sesión - NovaStore</title>
 </head>
 
 <body
@@ -82,21 +82,22 @@
         <div
             class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg p-8 transform transition-all">
 
-            <h1 class="text-3xl font-black mb-2" id="formTitle">Inicia Sesi�n</h1>
-            <p class="text-slate-500 mb-8" id="formSubtitle">Welcome back. Enter your credentials to access your
-                account.</p>
+            <h1 class="text-3xl font-black mb-2" id="formTitle">Inicia Sesión</h1>
+            <p class="text-slate-500 mb-8" id="formSubtitle">Bienvenido de nuevo. Ingresa tus credenciales para acceder
+                a tu
+                cuenta.</p>
 
             <form id="authForm" class="space-y-5">
                 <!-- Name Field (Only used in Register mode) -->
                 <div id="nameFieldGroup" class="hidden flex-col gap-2">
-                    <label class="text-sm font-bold">Full Name</label>
+                    <label class="text-sm font-bold">Nombre Completo</label>
                     <input type="text" id="regName"
                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-primary focus:ring-primary p-3"
-                        placeholder="John Doe">
+                        placeholder="Juan Pérez">
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label class="text-sm font-bold">Email address</label>
+                    <label class="text-sm font-bold">Correo Electrónico</label>
                     <input type="email" id="email" required
                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-primary focus:ring-primary p-3"
                         placeholder="email@example.com">
@@ -104,9 +105,9 @@
 
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
-                        <label class="text-sm font-bold">Password</label>
-                        <a href="#" class="text-xs text-primary font-bold hover:underline" id="forgotPwdLink">Forgot
-                            password?</a>
+                        <label class="text-sm font-bold">Contraseña</label>
+                        <a href="#" class="text-xs text-primary font-bold hover:underline" id="forgotPwdLink">¿Olvidaste
+                            tu contraseña?</a>
                     </div>
                     <input type="password" id="password" required
                         class="w-full rounded-lg border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-primary focus:ring-primary p-3"
@@ -117,21 +118,21 @@
                 <div id="errorAlert"
                     class="hidden bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg border border-red-200 dark:border-red-900/50 text-sm font-medium flex gap-2 items-center">
                     <span class="material-symbols-outlined text-lg">error</span>
-                    <span id="errorMsg">Invalid credentials</span>
+                    <span id="errorMsg">Credenciales inválidas</span>
                 </div>
 
                 <button type="submit" id="btnSubmit"
                     class="w-full bg-primary hover:bg-orange-500 text-slate-900 hover:-translate-y-0.5 transition-all font-black py-4 rounded-xl shadow-lg shadow-primary/20 flex justify-center items-center gap-2">
-                    Continue <span class="material-symbols-outlined">login</span>
+                    Continuar <span class="material-symbols-outlined">login</span>
                 </button>
             </form>
 
             <!-- Toggle Register/Login -->
             <div class="mt-8 text-center border-t border-slate-100 dark:border-slate-800 pt-6">
                 <p class="text-sm text-slate-500">
-                    <span id="toggleText">New to NovaStore?</span>
-                    <button id="btnToggleMode" class="text-primary font-bold hover:underline ml-1">Create an
-                        account</button>
+                    <span id="toggleText">¿Eres nuevo en PixelWear?</span>
+                    <button id="btnToggleMode" class="text-primary font-bold hover:underline ml-1">Crea una
+                        cuenta</button>
                 </p>
             </div>
         </div>
@@ -140,11 +141,11 @@
     <!-- Footer Minimal -->
     <footer class="text-slate-400 text-xs py-8 text-center border-t border-slate-100 dark:border-slate-800">
         <div class="flex justify-center gap-4 mb-4">
-            <a href="#" class="hover:text-primary">Conditions of Use</a>
-            <a href="#" class="hover:text-primary">Privacy Notice</a>
-            <a href="#" class="hover:text-primary">Help</a>
+            <a href="#" class="hover:text-primary">Condiciones de Uso</a>
+            <a href="#" class="hover:text-primary">Aviso de Privacidad</a>
+            <a href="#" class="hover:text-primary">Ayuda</a>
         </div>
-        <p>© 2024 NovaStore.com, Inc. or its affiliates</p>
+        <p>© 2024 PixelWear.com, Inc. o sus afiliados</p>
     </footer>
 
     <!-- Scripts -->
@@ -178,19 +179,19 @@
                 errorAlert.classList.add('hidden');
 
                 if (isLoginMode) {
-                    formTitle.textContent = 'Inicia Sesi�n';
-                    formSubtitle.textContent = 'Welcome back. Enter your credentials to access your account.';
-                    btnSubmit.innerHTML = 'Continue <span class="material-symbols-outlined">login</span>';
-                    toggleText.textContent = 'New to NovaStore?';
-                    btnToggleMode.textContent = 'Create an account';
+                    formTitle.textContent = 'Inicia Sesión';
+                    formSubtitle.textContent = 'Bienvenido de nuevo. Ingresa tus credenciales para acceder a tu cuenta.';
+                    btnSubmit.innerHTML = 'Continuar <span class="material-symbols-outlined">login</span>';
+                    toggleText.textContent = '¿Eres nuevo en PixelWear?';
+                    btnToggleMode.textContent = 'Crea una cuenta';
                     nameFieldGroup.classList.add('hidden');
                     forgotPwdLink.classList.remove('hidden');
                 } else {
-                    formTitle.textContent = 'Create Account';
-                    formSubtitle.textContent = 'Join NovaStore to shop faster and track your orders.';
-                    btnSubmit.innerHTML = 'Sign Up <span class="material-symbols-outlined">person_add</span>';
-                    toggleText.textContent = 'Already have an account?';
-                    btnToggleMode.textContent = 'Inicia Sesi�n';
+                    formTitle.textContent = 'Crear Cuenta';
+                    formSubtitle.textContent = 'Únete a PixelWear para comprar más rápido y rastrear tus pedidos.';
+                    btnSubmit.innerHTML = 'Registrarse <span class="material-symbols-outlined">person_add</span>';
+                    toggleText.textContent = '¿Ya tienes una cuenta?';
+                    btnToggleMode.textContent = 'Inicia Sesión';
                     nameFieldGroup.classList.remove('hidden');
                     forgotPwdLink.classList.add('hidden');
                 }
@@ -207,7 +208,7 @@
                 // Bloquear UI
                 btnSubmit.disabled = true;
                 const originalText = btnSubmit.innerHTML;
-                btnSubmit.innerHTML = '<span class="spinner"></span> Processing...';
+                btnSubmit.innerHTML = '<span class="spinner"></span> Procesando...';
 
                 try {
                     if (isLoginMode) {
@@ -219,7 +220,7 @@
                     // Supabase retorna sesión
                     window.location.href = 'index.html';
                 } catch (err) {
-                    errorMsg.textContent = err.message || 'Authentication error occurred.';
+                    errorMsg.textContent = err.message || 'Ocurrió un error de autenticación.';
                     errorAlert.classList.remove('hidden');
                 } finally {
                     btnSubmit.disabled = false;
