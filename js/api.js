@@ -96,7 +96,22 @@ async function obtenerProductoPorId(id) {
  */
 async function registrarCliente(datosCliente) {
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/cliente?on_conflict=email`, {
+        // 1. Primero intentar buscar al cliente por su documento o email
+        const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/cliente?or=(documento.eq.${datosCliente.documento},email.eq.${datosCliente.email})&select=*`, {
+            method: 'GET',
+            headers: headers
+        });
+
+        if (getResponse.ok) {
+            const existentes = await getResponse.json();
+            if (existentes && existentes.length > 0) {
+                // Cliente existente, devolver el primero encontrado (ID)
+                return existentes[0];
+            }
+        }
+
+        // 2. Si no existe, procedemos a crearlo normalmente
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/cliente`, {
             method: 'POST',
             headers: {
                 ...headers,
@@ -106,8 +121,13 @@ async function registrarCliente(datosCliente) {
         });
 
         if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.message || 'Error al registrar cliente');
+            const errBody = await response.text();
+            try {
+                const err = JSON.parse(errBody);
+                throw new Error(err.message || 'Error al registrar cliente');
+            } catch (e) {
+                throw new Error('Error al registrar cliente: ' + errBody);
+            }
         }
 
         const data = await response.json();
