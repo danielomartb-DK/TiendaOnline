@@ -173,7 +173,7 @@ async function handleCheckoutSubmit(e) {
         nombres: formData.get('nombres'),
         apellidos: formData.get('apellidos'),
         email: formData.get('email'),
-        numero_documento: formData.get('documento'),
+        documento: formData.get('documento'),
         telefono: formData.get('telefono') || '',
         direccion: formData.get('direccion')
     };
