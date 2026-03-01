@@ -224,9 +224,9 @@ async function crearProducto(producto) {
             console.error('Error insertando en la BD:', errBody);
             try {
                 const err = JSON.parse(errBody);
-                throw new Error('[DATABASE] ' + (err.message || 'Error al crear el producto'));
+                throw new Error('[DATABASE] ' + (err.message || errBody));
             } catch (e) {
-                throw new Error('[DATABASE] Error al crear el producto en la BD');
+                throw new Error('[DATABASE] Error al crear el producto en la BD: ' + errBody);
             }
         }
 
