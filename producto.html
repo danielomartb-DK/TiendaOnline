@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NovaStore | Detalles del Producto</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff9900",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#231b0f",
+                        "brand-blue": "#131921",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #231b0f;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #ff9900;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background-light text-slate-900 font-display min-h-screen flex flex-col">
+
+    <!-- Barra de Navegación -->
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-brand-blue text-white shadow-md h-16 flex items-center px-4 md:px-10">
+        <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-4">
+
+            <a href="index.html" class="flex items-center gap-2 shrink-0">
+                <div class="text-primary size-8">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z"
+                            fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black tracking-tight hidden sm:block">NovaStore</h1>
+            </a>
+
+            <div class="flex-1 max-w-2xl mx-4 hidden sm:block">
+                <div class="relative flex items-center w-full">
+                    <input
+                        class="w-full h-10 px-4 pr-12 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary focus:outline-none border-none"
+                        placeholder="Busca productos, marcas y más..." type="text" />
+                    <button
+                        class="absolute right-0 bg-primary h-10 px-4 rounded-r-lg hover:bg-orange-500 text-brand-blue flex items-center justify-center">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 shrink-0">
+                <div class="auth-container-ui hidden lg:flex">
+                    <!-- auth.js handles this -->
+                </div>
+                <a href="carrito.html"
+                    class="relative cursor-pointer group flex items-center hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+                    <span id="cartCounter"
+                        class="absolute -top-1 -right-1 bg-primary text-brand-blue text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-brand-blue">0</span>
+                    <span class="hidden md:inline ml-1 font-bold">Carrito</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="pt-24 pb-12 flex-1">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-10">
+            <!-- Breadcrumbs -->
+            <nav class="text-sm text-slate-500 mb-6 flex items-center gap-2">
+                <a href="index.html" class="hover:underline hover:text-primary">Inicio</a>
+                <span class="material-symbols-outlined text-[1rem]">chevron_right</span>
+                <span class="text-slate-900 font-medium">Detalles del Producto</span>
+            </nav>
+
+            <!-- Loader -->
+            <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+                <p class="text-slate-500 font-medium mt-2">Cargando producto...</p>
+            </div>
+
+            <!-- Error o No encontrado -->
+            <div id="errorMessage"
+                class="hidden text-center py-20 bg-white rounded-2xl shadow-sm border border-slate-200">
+                <span class="material-symbols-outlined text-6xl text-slate-300 mb-4 block">search_off</span>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Producto no encontrado</h2>
+                <p class="text-slate-500 mb-6">El producto que buscas no existe o ha sido retirado.</p>
+                <a href="index.html"
+                    class="bg-primary text-brand-blue font-bold px-6 py-3 rounded-lg hover:brightness-110 transition-all">Regresar
+                    a la Tienda</a>
+            </div>
+
+            <!-- Contenedor del Producto -->
+            <div id="productContainer"
+                class="hidden grid grid-cols-1 md:grid-cols-2 gap-10 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de Página Fijo Minimizado -->
+    <footer class="bg-brand-blue text-slate-300 py-6 px-4 md:px-10 border-t border-slate-800 mt-auto">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-primary font-black text-xl">
+                <svg class="size-6" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z"
+                        fill="currentColor"></path>
+                </svg>
+                NovaStore
+            </div>
+            <p class="text-xs text-slate-500">&copy; 2024 NovaStore.com. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Notificación Toast -->
+    <div id="toast" class="toast">
+        <span class="material-symbols-outlined" style="color: #4caf50;">check_circle</span>
+        <span id="toastMessage">Producto agregado al carrito</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/producto.js"></script>
+</body>
+
+</html>
