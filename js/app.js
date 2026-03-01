@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función auxiliar para obtener la key del carrito basada en el usuario actual
 function getCartKey() {
     if (window.novaAuth && window.novaAuth.user && window.novaAuth.user.user) {
-        return `novastore_cart_${window.novaAuth.user.user.id}`;
+        return `PixelWear_cart_${window.novaAuth.user.user.id}`;
     }
-    return 'novastore_cart_anon';
+    return 'PixelWear_cart_anon';
 }
 
 // Estado local de la aplicación

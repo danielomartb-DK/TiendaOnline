@@ -41,5 +41,5 @@ http.createServer((req, res) => {
         }
     });
 }).listen(PORT, () => {
-    console.log('NovaStore corriendo en: http://localhost:' + PORT);
+    console.log('PixelWear corriendo en: http://localhost:' + PORT);
 });

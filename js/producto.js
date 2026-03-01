@@ -21,9 +21,9 @@ let carritoLocal = [];
 
 function getCartKey() {
     if (window.novaAuth && window.novaAuth.user && window.novaAuth.user.user) {
-        return `novastore_cart_${window.novaAuth.user.user.id}`;
+        return `PixelWear_cart_${window.novaAuth.user.user.id}`;
     }
-    return 'novastore_cart_anon';
+    return 'PixelWear_cart_anon';
 }
 
 async function initProducto() {
@@ -63,7 +63,7 @@ function renderizarDetalles(p) {
     productoRefs.container.classList.remove('hidden');
 
     // Cambiar dinámicamente el título de la pestaña HTML
-    document.title = `${p.nombre} | NovaStore`;
+    document.title = `${p.nombre} | PixelWear`;
 
     const price = Number(p.precio) || 0;
     const formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 2 });
@@ -85,7 +85,7 @@ function renderizarDetalles(p) {
 
     const fallbackImage = 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800';
     const imagenUrl = p.imagen_url || fallbackImage;
-    const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia NovaStore. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
+    const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia PixelWear. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
 
     productoRefs.container.innerHTML = `
         <!-- Galería (A la izquierda) -->
@@ -139,7 +139,7 @@ function renderizarDetalles(p) {
                     ${btnText}
                 </button>
                 <div class="flex items-center gap-4 text-xs text-slate-500 justify-center mt-2 font-medium">
-                    <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">verified</span> Compra Segura NovaStore</div>
+                    <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">verified</span> Compra Segura PixelWear</div>
                     <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">local_shipping</span> Envío Gratis a nivel nacional</div>
                 </div>
             </div>

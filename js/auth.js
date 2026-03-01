@@ -7,7 +7,7 @@ class AuthManager {
     constructor() {
         this.supabaseUrl = SUPABASE_URL; // Viene de api.js
         this.supabaseKey = SUPABASE_KEY; // Viene de api.js
-        this.sessionKey = 'novastore_session';
+        this.sessionKey = 'PixelWear_session';
         this.user = this.getSession();
 
         this.initUI();
@@ -180,8 +180,8 @@ class AuthManager {
                 // No Logeado
                 container.innerHTML = `
                     <a href="login.html" class="flex flex-col items-start leading-tight cursor-pointer hover:underline">
-                        <span class="text-xs text-slate-300">Hello, Sign in</span>
-                        <span class="text-sm font-bold">Account & Lists</span>
+                        <span class="text-xs text-slate-300">Hello, Inicia Sesión</span>
+                        <span class="text-sm font-bold">Cuenta y Listas</span>
                     </a>
                 `;
             }
