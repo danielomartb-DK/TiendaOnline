@@ -216,7 +216,7 @@ async function handleCheckoutSubmit(e) {
 
     } catch (error) {
         console.error('Error en checkout:', error);
-        alert('Hubo un error al procesar tu pedido. Inténtalo de nuevo.');
+        alert('Hubo un error al procesar tu pedido:\n' + error.message);
         cartRefs.btnCheckout.disabled = false;
         cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined">lock</span> Realizar Pedido';
     }
