@@ -97,14 +97,18 @@
 <body class="bg-background-light text-slate-900 font-display">
 
     <!-- Barra de NavegaciÃ³n Superior Fija -->
+    <!-- HEADER DINÁMICO CON IDENTIDAD PIXELWEAR -->
     <header
-        class="fixed top-0 left-0 right-0 z-50 bg-brand-blue text-white shadow-md h-16 flex items-center px-4 md:px-10">
-        <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-4">
+        class="fixed top-0 left-0 right-0 z-50 bg-[#0f1013] border-b-2 border-cyan-500 shadow-[0_4px_30px_rgba(0,183,255,0.15)] text-white h-[74px] flex items-center px-4 md:px-10 transition-all duration-300">
+        <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-6">
 
-            <!-- Logo -->
-            <a href="index.html" class="flex items-center gap-2 shrink-0">
-                <img src="assets/images/PixelWear_logo.png" alt="PixelWear Logo"
-                    class="h-12 md:h-14 w-auto object-contain">
+            <!-- Logo Integrado -->
+            <a href="index.html" class="flex items-center gap-2 shrink-0 group">
+                <div
+                    class="relative overflow-hidden rounded-xl bg-transparent transition-transform duration-300 group-hover:scale-105">
+                    <img src="assets/images/PixelWear_logo.png" alt="PixelWear Logo"
+                        class="h-14 md:h-[60px] w-auto object-contain mix-blend-screen opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_8px_rgba(0,200,255,0.5)]">
+                </div>
             </a>
 
             <!-- Barra de Búsqueda -->
