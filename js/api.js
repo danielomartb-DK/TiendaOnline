@@ -98,7 +98,10 @@ async function registrarCliente(datosCliente) {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/cliente?on_conflict=email`, {
             method: 'POST',
-            headers: headers,
+            headers: {
+                ...headers,
+                'Prefer': 'return=representation'
+            },
             body: JSON.stringify(datosCliente)
         });
 
@@ -124,7 +127,10 @@ async function registrarVenta(datosVenta) {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/venta`, {
             method: 'POST',
-            headers: headers,
+            headers: {
+                ...headers,
+                'Prefer': 'return=representation'
+            },
             body: JSON.stringify(datosVenta)
         });
 
@@ -147,7 +153,10 @@ async function registrarDetallesVenta(detallesVenta) {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/detalle_venta`, {
             method: 'POST',
-            headers: headers,
+            headers: {
+                ...headers,
+                'Prefer': 'return=representation'
+            },
             body: JSON.stringify(detallesVenta)
         });
 
