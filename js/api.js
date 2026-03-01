@@ -46,7 +46,7 @@ async function obtenerProductos() {
         console.log("Intentando obtener productos de Supabase...");
         const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?select=*`, {
             method: 'GET',
-            headers: getDynamicHeaders()
+            headers: headers
         });
 
         console.log("Status de respuesta de Supabase:", response.status);

@@ -40,7 +40,7 @@ function initCarrito() {
     // Cargar items del storage correspondiente al usuario actual
     cart.items = JSON.parse(localStorage.getItem(getCartKey())) || [];
 
-    alert('¡Pedido procesado con éxito!'); renderizarItems();
+    renderizarItems();
     calcularTotales();
 
     // Autocompletar datos del cliente si está autenticado
@@ -124,7 +124,7 @@ function cambiarCantidad(idProducto, delta) {
     }
 
     guardarCarrito();
-    alert('¡Pedido procesado con éxito!'); renderizarItems();
+    renderizarItems();
     calcularTotales();
 }
 
@@ -134,7 +134,7 @@ function cambiarCantidad(idProducto, delta) {
 function eliminarItem(idProducto) {
     cart.items = cart.items.filter(i => i.id_producto !== idProducto);
     guardarCarrito();
-    alert('¡Pedido procesado con éxito!'); renderizarItems();
+    renderizarItems();
     calcularTotales();
 }
 
@@ -211,7 +211,8 @@ async function handleCheckoutSubmit(e) {
         guardarCarrito();
         cartRefs.form.classList.add('hidden');
         cartRefs.checkoutSuccess.classList.remove('hidden');
-        alert('¡Pedido procesado con éxito!'); renderizarItems();
+        alert('¡Pedido procesado con éxito!');
+        renderizarItems();
         calcularTotales();
 
     } catch (error) {
