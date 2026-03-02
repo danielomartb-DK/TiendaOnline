@@ -74,7 +74,7 @@ async function obtenerProductoPorId(id) {
     try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id}&select=*`, {
             method: 'GET',
-            headers: getDynamicHeaders()
+            headers: headers
         });
 
         if (!response.ok) {
@@ -254,6 +254,57 @@ async function crearProducto(producto) {
         return data[0];
     } catch (error) {
         console.error('API Error (crearProducto):', error);
+        throw error;
+    }
+}
+
+/**
+ * Actualiza un producto existente en la base de datos
+ * @param {number|string} id_producto - ID del producto a actualizar
+ * @param {Object} datos - Objeto con los campos a actualizar
+ */
+async function actualizarProducto(id_producto, datos) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id_producto}`, {
+            method: 'PATCH',
+            headers: {
+                ...getDynamicHeaders(),
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(datos)
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            throw new Error('[DATABASE] Error al actualizar el producto: ' + errBody);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('API Error (actualizarProducto):', error);
+        throw error;
+    }
+}
+
+/**
+ * Elimina un producto de la base de datos
+ * @param {number|string} id_producto - ID del producto a eliminar
+ */
+async function eliminarProducto(id_producto) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id_producto}`, {
+            method: 'DELETE',
+            headers: {
+                ...getDynamicHeaders()
+            }
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            throw new Error('[DATABASE] Error al eliminar el producto: ' + errBody);
+        }
+        return true;
+    } catch (error) {
+        console.error('API Error (eliminarProducto):', error);
         throw error;
     }
 }

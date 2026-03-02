@@ -66,7 +66,7 @@ function renderizarDetalles(p) {
     document.title = `${p.nombre} | PixelWear`;
 
     const price = Number(p.precio) || 0;
-    const formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    const formattedPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(price) : '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
     const stockQty = Number(p.stock) || 0;
     const outOfStock = stockQty <= 0;
     const isLowStock = stockQty > 0 && stockQty <= 5;
@@ -81,67 +81,121 @@ function renderizarDetalles(p) {
     } else {
         stockBadge = '<span class="inline-block bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full text-xs uppercase mb-4">En Stock: Envío Inmediato</span>';
     }
+
+    // Agregar indicador exclusivo de Stock para el Admin, por encima del badge normal de usuario
+    if (window.novaAuth && window.novaAuth.isAdmin()) {
+        stockBadge = `<span class="inline-block bg-slate-900 border border-cyan-500 shadow-[0_0_10px_rgba(0,183,255,0.2)] text-cyan-400 font-bold px-3 py-1 rounded-full text-[10px] tracking-widest uppercase mb-4 mr-2"><span class="material-symbols-outlined text-[12px] mr-1 align-middle">inventory_2</span>Stock Físico (BBDD): ${stockQty} unds</span>` + stockBadge;
+    }
+
     const fallbackImage = 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800';
     const imagenUrl = p.imagen_url || fallbackImage;
     const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia PixelWear. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
 
+    let adminPanelHtml = '';
+    if (window.novaAuth && window.novaAuth.isAdmin()) {
+        adminPanelHtml = `
+            <div class="mt-8 p-6 bg-slate-900 border-2 border-cyan-500 rounded-xl shadow-[0_0_20px_rgba(0,183,255,0.1)] col-span-1 md:col-span-2">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2 mb-6">
+                    <span class="material-symbols-outlined text-cyan-400">admin_panel_settings</span> Editor en Vivo
+                </h3>
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400 font-bold uppercase track">Nombre del Producto</label>
+                        <input type="text" id="editNombre" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" value="${p.nombre}">
+                    </div>
+                    <div>
+                         <label class="text-xs text-slate-400 font-bold uppercase track">Descripción</label>   
+                         <textarea id="editDesc" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" rows="4">${description}</textarea>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label class="text-xs text-slate-400 font-bold uppercase track">Precio Base (USD)</label>
+                            <input type="number" id="editPrecio" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" value="${p.precio}">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs text-slate-400 font-bold uppercase track">Unidades Stock</label>
+                            <input type="number" id="editStock" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" value="${p.stock}">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 font-bold uppercase track">Reemplazar Imagen (Opcional)</label>
+                        <input type="file" id="editImagen" class="w-full text-slate-300 rounded-lg p-2 border border-slate-700 mt-1 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-brand-blue hover:file:bg-cyan-400 cursor-pointer" accept="image/*">
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 mt-4">
+                        <button onclick="guardarEdicion(${p.id_producto})" class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg">
+                            <span class="material-symbols-outlined font-bold">save</span> Guardar Cambios
+                        </button>
+                        <button onclick="borrarProductoActual(${p.id_producto})" class="flex-1 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500 font-bold py-3 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg group">
+                            <span class="material-symbols-outlined font-bold group-hover:animate-bounce">delete</span> Eliminar Ítem
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     productoRefs.container.innerHTML = `
-        <!-- Galería (A la izquierda) -->
-        <div class="flex flex-col gap-4">
-            <div class="relative bg-slate-50 border border-slate-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
-                <img src="${imagenUrl}" alt="${p.nombre}" class="max-w-full max-h-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-500" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Galería (A la izquierda) -->
+            <div class="flex flex-col gap-4">
+                <div class="relative bg-slate-50 border border-slate-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
+                    <img src="${imagenUrl}" alt="${p.nombre}" class="max-w-full max-h-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-500" />
+                </div>
+                <!-- Thumbnails de ejemplo -->
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="aspect-square bg-slate-50 rounded-lg border-2 border-primary overflow-hidden p-1 cursor-pointer">
+                        <img src="${imagenUrl}" class="w-full h-full object-contain" />
+                    </div>
+                </div>
             </div>
-            <!-- Thumbnails de ejemplo -->
-            <div class="grid grid-cols-4 gap-2">
-                <div class="aspect-square bg-slate-50 rounded-lg border-2 border-primary overflow-hidden p-1 cursor-pointer">
-                    <img src="${imagenUrl}" class="w-full h-full object-contain" />
+
+            <!-- Info Principal (A la derecha) -->
+            <div class="flex flex-col">
+                ${stockBadge}
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-2 leading-tight">${p.nombre}</h1>
+                
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex text-primary">
+                        <span class="material-symbols-outlined text-lg fill-1">star</span>
+                        <span class="material-symbols-outlined text-lg fill-1">star</span>
+                        <span class="material-symbols-outlined text-lg fill-1">star</span>
+                        <span class="material-symbols-outlined text-lg fill-1">star</span>
+                        <span class="material-symbols-outlined text-lg fill-1">star_half</span>
+                    </div>
+                    <span class="text-sm text-slate-500 font-medium line-underline hover:underline cursor-pointer">Ver 120 reseñas</span>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-4xl font-black text-slate-900">${formattedPrice}</p>
+                    <p class="text-sm text-slate-500 mt-1">Garantía de Devolución de 30 Días | Pagos Seguros</p>
+                </div>
+
+                <div class="mb-8 border-t border-b border-slate-100 py-6">
+                    <h3 class="font-bold text-slate-900 mb-2">Acerca de este artículo</h3>
+                    <p class="text-slate-600 leading-relaxed text-sm">${description}</p>
+                </div>
+
+                <!-- Botón de Compra -->
+                <div class="flex flex-col gap-3 mt-auto">
+                    <button 
+                        id="btnAgregar"
+                        class="w-full py-4 rounded-xl font-black text-lg shadow-lg flex items-center justify-center gap-2 transition-all ${btnClass}" 
+                        ${outOfStock ? 'disabled' : ''}
+                        onclick="agregarAlCarritoLocal(${p.id_producto})"
+                    >
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        ${btnText}
+                    </button>
+                    <div class="flex items-center gap-4 text-xs text-slate-500 justify-center mt-2 font-medium">
+                        <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">verified</span> Compra Segura PixelWear</div>
+                        <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">local_shipping</span> Envío Gratis a nivel nacional</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Info Principal (A la derecha) -->
-        <div class="flex flex-col">
-            ${stockBadge}
-            <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-2 leading-tight">${p.nombre}</h1>
-            
-            <div class="flex items-center gap-2 mb-6">
-                <div class="flex text-primary">
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star_half</span>
-                </div>
-                <span class="text-sm text-slate-500 font-medium line-underline hover:underline cursor-pointer">Ver 120 reseñas</span>
-            </div>
-
-            <div class="mb-8">
-                <p class="text-4xl font-black text-slate-900">$${formattedPrice}</p>
-                <p class="text-sm text-slate-500 mt-1">Garantía de Devolución de 30 Días | Pagos Seguros</p>
-            </div>
-
-            <div class="mb-8 border-t border-b border-slate-100 py-6">
-                <h3 class="font-bold text-slate-900 mb-2">Acerca de este artículo</h3>
-                <p class="text-slate-600 leading-relaxed text-sm">${description}</p>
-            </div>
-
-            <!-- Botón de Compra -->
-            <div class="flex flex-col gap-3 mt-auto">
-                <button 
-                    id="btnAgregar"
-                    class="w-full py-4 rounded-xl font-black text-lg shadow-lg flex items-center justify-center gap-2 transition-all ${btnClass}" 
-                    ${outOfStock ? 'disabled' : ''}
-                    onclick="agregarAlCarritoLocal(${p.id_producto})"
-                >
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    ${btnText}
-                </button>
-                <div class="flex items-center gap-4 text-xs text-slate-500 justify-center mt-2 font-medium">
-                    <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">verified</span> Compra Segura PixelWear</div>
-                    <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[1rem]">local_shipping</span> Envío Gratis a nivel nacional</div>
-                </div>
-            </div>
-        </div>
+        <!-- Renderizado Condicional del Editor de Admin -->
+        ${adminPanelHtml}
     `;
 }
 
@@ -199,3 +253,63 @@ function mostrarToast(msg) {
     setTimeout(() => { productoRefs.toast.classList.remove('show'); }, 3000);
 }
 
+// --- CONTROLES DE ADMINISTRADOR --- //
+
+async function guardarEdicion(id_producto) {
+    if (!window.novaAuth || !window.novaAuth.isAdmin()) {
+        alert("Acceso denegado: Se requiere estatus de Administrador.");
+        return;
+    }
+
+    const btn = document.querySelector(`button[onclick="guardarEdicion(${id_producto})"]`);
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Subiendo...';
+    btn.disabled = true;
+    btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+    try {
+        const nombre = document.getElementById('editNombre').value;
+        const descripcion = document.getElementById('editDesc').value;
+        const precio = Number(document.getElementById('editPrecio').value);
+        const stock = Number(document.getElementById('editStock').value);
+        const fileInput = document.getElementById('editImagen');
+
+        const updates = { nombre, descripcion, precio, stock };
+
+        // Si se seleccionó una imagen nueva, usar el API endpoint para subir a Bucket storage
+        if (fileInput.files.length > 0) {
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">cloud_upload</span> Cifrando Foto...';
+            const imgUrl = await subirFotoProducto(fileInput.files[0]);
+            updates.imagen_url = imgUrl; // Agregando la URL a los updates
+        }
+
+        await actualizarProducto(id_producto, updates);
+
+        window.location.reload(); // Recargar para ver los cambios nativamente
+    } catch (e) {
+        alert('Hubo un error modificando el producto: ' + e.message);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.classList.remove('opacity-70', 'cursor-not-allowed');
+    }
+}
+
+async function borrarProductoActual(id_producto) {
+    if (!window.novaAuth || !window.novaAuth.isAdmin()) return;
+
+    if (!confirm('🛑 ¿Estás totalmente seguro de RETIRAR este producto de PixelWear? Esta acción es instantánea y no puede deshacerse.')) return;
+
+    const btn = document.querySelector(`button[onclick="borrarProductoActual(${id_producto})"]`);
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">delete</span> Destruyendo...';
+    btn.disabled = true;
+
+    try {
+        await eliminarProducto(id_producto);
+        alert('El producto ha sido eliminado de la base de datos satisfactoriamente.');
+        window.location.href = 'index.html'; // Devolver a vitrina
+    } catch (e) {
+        alert('Error intentando purgar de DB: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined font-bold group-hover:animate-bounce">delete</span> Eliminar Ítem';
+    }
+}

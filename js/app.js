@@ -70,7 +70,8 @@ function initBuscador() {
     if (!searchInput) return;
 
     searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
+        // Normalizar quitando tildes y pasando a minúsculas
+        const query = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
         // Si no hay texto, pintamos todos los productos
         if (!query) {
@@ -78,10 +79,10 @@ function initBuscador() {
             return;
         }
 
-        // Si hay texto, filtramos por título o descripción que coincidan
+        // Si hay texto, filtramos por título o descripción que coincidan (ignorando tildes)
         const productosFiltrados = state.productos.filter(p => {
-            const nombre = p.nombre ? p.nombre.toLowerCase() : '';
-            const desc = p.descripcion ? p.descripcion.toLowerCase() : '';
+            const nombre = p.nombre ? p.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
+            const desc = p.descripcion ? p.descripcion.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
             return nombre.includes(query) || desc.includes(query);
         });
 
@@ -102,7 +103,7 @@ function renderizarProductos(productos) {
 
     refs.grid.innerHTML = productos.map(p => {
         const price = Number(p.precio) || 0;
-        const formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const formattedPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(price) : '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
         const stockQty = Number(p.stock) || 0;
         const isLowStock = stockQty > 0 && stockQty <= 5;
         const outOfStock = stockQty <= 0;
@@ -114,7 +115,7 @@ function renderizarProductos(productos) {
         } else if (isLowStock) {
             stockBadge = '<span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Solo ' + stockQty + ' disponibles</span>';
         } else if (price > 100) {
-            stockBadge = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">EnvÃ­o Gratis</span>';
+            stockBadge = '<span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase">Envío Gratis</span>';
         }
 
         // Imagen: usa la de la BD, o un fallback de Unsplash
@@ -145,7 +146,7 @@ function renderizarProductos(productos) {
             + '</div>'
             + '<div class="mt-auto">'
             + '<div class="flex items-baseline gap-2 mb-3">'
-            + '<span class="text-2xl font-bold text-slate-900 dark:text-white">$' + formattedPrice + '</span>'
+            + '<span class="text-2xl font-bold text-slate-900 dark:text-white">' + formattedPrice + '</span>'
             + '</div>'
             + '<button class="w-full bg-primary text-brand-blue font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ' + disabledClass + '" onclick="agregarAlCarrito(' + p.id_producto + ')" ' + (outOfStock ? 'disabled' : '') + '>'
             + '<span class="material-symbols-outlined text-xl">shopping_cart</span>'

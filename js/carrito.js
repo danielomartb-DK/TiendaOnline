@@ -84,15 +84,15 @@ function renderizarItems() {
     if (cartRefs.orderSummary) cartRefs.orderSummary.classList.remove('hidden');
 
     cartRefs.itemsContainer.innerHTML = cart.items.map(item => {
-        const itemTotal = (item.precio * item.cantidad).toLocaleString('en-US', { minimumFractionDigits: 2 });
-        const unitPrice = item.precio.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const itemTotal = window.CurrencyManager ? window.CurrencyManager.formatPrice(item.precio * item.cantidad) : '$' + (item.precio * item.cantidad).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const unitPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(item.precio) : '$' + item.precio.toLocaleString('en-US', { minimumFractionDigits: 2 });
         const imgUrl = item.imagen_url || 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=200';
 
         return '<div class="bg-white border border-slate-200 rounded-xl p-4 flex gap-4 items-center shadow-sm">'
             + '<img src="' + imgUrl + '" alt="' + item.nombre + '" class="w-20 h-20 object-cover rounded-lg flex-shrink-0" />'
             + '<div class="flex-1 min-w-0">'
             + '<h4 class="font-medium text-sm text-slate-900 truncate">' + item.nombre + '</h4>'
-            + '<p class="text-xs text-slate-400 mt-1">Precio unit.: $' + unitPrice + '</p>'
+            + '<p class="text-xs text-slate-400 mt-1">Precio unit.: ' + unitPrice + '</p>'
             + '<div class="flex items-center gap-2 mt-2">'
             + '<button onclick="cambiarCantidad(' + item.id_producto + ', -1)" class="w-7 h-7 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-lg font-bold text-slate-600">−</button>'
             + '<span class="text-sm font-bold w-6 text-center">' + item.cantidad + '</span>'
@@ -100,7 +100,7 @@ function renderizarItems() {
             + '</div>'
             + '</div>'
             + '<div class="text-right flex-shrink-0">'
-            + '<p class="font-bold text-lg text-slate-900">$' + itemTotal + '</p>'
+            + '<p class="font-bold text-lg text-slate-900">' + itemTotal + '</p>'
             + '<button onclick="eliminarItem(' + item.id_producto + ')" class="text-red-500 hover:text-red-700 text-xs mt-2 flex items-center gap-1 ml-auto">'
             + '<span class="material-symbols-outlined text-sm">delete</span> Quitar'
             + '</button>'
@@ -146,8 +146,8 @@ function calcularTotales() {
     const subtotal = cart.items.reduce((acc, i) => acc + (i.precio * i.cantidad), 0);
 
     if (cartRefs.itemCount) cartRefs.itemCount.textContent = totalItems;
-    if (cartRefs.subtotal) cartRefs.subtotal.textContent = '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    if (cartRefs.total) cartRefs.total.textContent = '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    if (cartRefs.subtotal) cartRefs.subtotal.textContent = window.CurrencyManager ? window.CurrencyManager.formatPrice(subtotal) : '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    if (cartRefs.total) cartRefs.total.textContent = window.CurrencyManager ? window.CurrencyManager.formatPrice(subtotal) : '$' + subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
 }
 
 /**
