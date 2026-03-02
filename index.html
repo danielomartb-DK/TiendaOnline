@@ -167,7 +167,7 @@
         </div>
     </header>
 
-    <main class="pt-20 pb-12">
+    <main class="pt-2 pb-12 md:pt-4">
         <!-- Banner Principal -->
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 mb-8">
             <div class="relative rounded-xl overflow-hidden min-h-[300px] md:min-h-[420px] bg-cover bg-center flex items-center px-8 md:px-16"
@@ -320,6 +320,15 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+        // Forzar inicio al tope de página al recargar
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        window.onload = function () {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        };
+    </script>
     <script src="js/api.js?v=9"></script>
     <script src="js/auth.js?v=5"></script>
     <script src="js/app.js?v=3"></script>

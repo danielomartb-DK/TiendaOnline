@@ -92,21 +92,51 @@
 
 <body class="bg-background-light text-slate-900 font-display min-h-screen flex flex-col">
 
-    <!-- Barra de NavegaciÃ³n -->
-    <header
-        class="fixed top-0 left-0 right-0 z-50 bg-brand-blue text-white shadow-md h-16 flex items-center px-4 md:px-10">
-        <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-4">
+    <!-- TOP BAR INFORMATIVA -->
+    <div
+        class="hidden md:flex bg-black text-slate-300 text-xs py-2 px-10 justify-between items-center border-b border-white/5 relative z-50">
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1"><span
+                    class="material-symbols-outlined text-[14px] text-cyan-500">local_shipping</span> Envío Gratis en
+                pedidos sobre $99</span>
+            <span class="flex items-center gap-1"><span
+                    class="material-symbols-outlined text-[14px] text-primary">verified_user</span> Garantía de 12
+                Meses</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <a href="#" class="hover:text-cyan-400 transition-colors">Rastrear Orden</a>
+            <a href="#" class="hover:text-cyan-400 transition-colors">Soporte Tecnológico</a>
+            <span class="border-l border-white/20 pl-4">USD ($)</span>
+        </div>
+    </div>
 
-            <a href="index.html" class="flex items-center gap-2 shrink-0">
-                <img src="assets/images/PixelWear_logo.png" alt="PixelWear Logo"
-                    class="h-12 md:h-14 w-auto object-contain">
+    <!-- Barra de Navegación -->
+    <header
+        class="sticky top-0 left-0 right-0 z-40 bg-[#0f1013]/95 backdrop-blur-md border-b-2 border-cyan-500 shadow-[0_4px_30px_rgba(0,183,255,0.15)] text-white h-[74px] flex items-center px-4 md:px-10 transition-all duration-300">
+        <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-6">
+
+            <!-- Identidad de Marca CSS (Logo) PRO -->
+            <a href="index.html" class="flex items-center gap-3 shrink-0 group cursor-pointer select-none">
+                <div
+                    class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(0,183,255,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(0,183,255,0.6)] group-hover:rotate-3">
+                    <span class="material-symbols-outlined text-white text-2xl md:text-3xl"
+                        style="font-variation-settings: 'FILL' 1;">diamond</span>
+                </div>
+                <div class="flex flex-col justify-center translate-y-[2px]">
+                    <span class="text-xl md:text-2xl font-black tracking-widest text-white leading-none">PIXEL<span
+                            class="text-cyan-400">WEAR</span></span>
+                    <span
+                        class="text-[0.55rem] md:text-[0.65rem] font-bold tracking-[0.25em] text-cyan-500 leading-none mt-1 uppercase">Tech
+                        & Style</span>
+                </div>
             </a>
 
+            <!-- Barra de Búsqueda -->
             <div class="flex-1 max-w-2xl mx-4 hidden sm:block">
                 <div class="relative flex items-center w-full">
-                    <input
+                    <input id="searchInput"
                         class="w-full h-10 px-4 pr-12 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary focus:outline-none border-none"
-                        placeholder="Busca productos, marcas y mÃ¡s..." type="text" />
+                        placeholder="Busca productos, marcas y más..." type="text" />
                     <button
                         class="absolute right-0 bg-primary h-10 px-4 rounded-r-lg hover:bg-orange-500 text-brand-blue flex items-center justify-center">
                         <span class="material-symbols-outlined">search</span>
@@ -114,12 +144,15 @@
                 </div>
             </div>
 
+            <!-- Cuenta y Carrito -->
             <div class="flex items-center gap-6 shrink-0">
                 <div class="auth-container-ui hidden lg:flex">
-                    <!-- auth.js handles this -->
+                    <a href="login.html" class="flex flex-col items-start leading-tight cursor-pointer hover:underline">
+                        <span class="text-xs text-slate-300">Hola, Inicia Sesión</span>
+                        <span class="text-sm font-bold">Mi Cuenta</span>
+                    </a>
                 </div>
-                <a href="carrito.html"
-                    class="relative cursor-pointer group flex items-center hover:text-primary transition-colors">
+                <a href="carrito.html" class="relative cursor-pointer group flex items-center">
                     <span class="material-symbols-outlined text-3xl">shopping_cart</span>
                     <span id="cartCounter"
                         class="absolute -top-1 -right-1 bg-primary text-brand-blue text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-brand-blue">0</span>
@@ -164,18 +197,72 @@
         </div>
     </main>
 
-    <!-- Pie de PÃ¡gina Fijo Minimizado -->
-    <footer class="bg-brand-blue text-slate-300 py-6 px-4 md:px-10 border-t border-slate-800 mt-auto">
-        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <img src="assets/images/PixelWear_logo.png" alt="PixelWear Logo"
-                    class="h-16 md:h-20 w-auto opacity-80 transform scale-125 origin-left select-none grayscale hover:grayscale-0 transition-all duration-300">
+    <!-- Pie de Página Enriquecido (Megamenu) -->
+    <footer class="bg-[#0f1013] text-slate-300 pt-16 pb-8 mt-12 border-t border-cyan-900/50">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-10">
+            <!-- Sección Superior: Suscripción y Redes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 pb-12 border-b border-slate-800">
+                <div>
+                    <h4 class="text-white text-xl font-bold mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-cyan-400">mail</span>
+                        Suscríbete al Boletín Pixel
+                    </h4>
+                    <p class="text-sm text-slate-400 mb-4 max-w-md">Recibe acceso anticipado a los últimos drops de
+                        tecnología, hardware exclusivo y ofertas de temporada directamente en tu correo.</p>
+                    <form class="flex max-w-md">
+                        <input type="email" placeholder="Tu correo electrónico..."
+                            class="flex-1 bg-brand-blue border border-slate-700 rounded-l-lg px-4 py-2 text-sm focus:outline-none focus:border-cyan-500 text-white placeholder-slate-500">
+                        <button type="button"
+                            class="bg-cyan-500 text-black px-6 py-2 rounded-r-lg font-bold hover:bg-cyan-400 transition-colors">Unirme</button>
+                    </form>
+                </div>
+                <div class="md:text-right flex flex-col md:items-end justify-center">
+                    <h4 class="text-white font-bold mb-4">Conéctate al Circuito</h4>
+                    <div class="flex items-center gap-4">
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
+                            <span class="font-bold text-lg group-hover:scale-110 transition-transform">X</span>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
+                            <span class="font-bold text-lg group-hover:scale-110 transition-transform">IG</span>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
+                            <span class="font-bold text-lg group-hover:scale-110 transition-transform">FB</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <p class="text-xs text-slate-500">&copy; 2024 PixelWear.com. Todos los derechos reservados.</p>
+
+            <!-- Enlaces Normales -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <!-- Se omiten subenlaces para simplicidad, heredando la estructura -->
+            </div>
+
+            <!-- Base del Pie de Página -->
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Identidad de Marca CSS (Logo) Footer -->
+                <a href="index.html" class="flex items-center gap-3 shrink-0 group cursor-pointer select-none">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_10px_rgba(0,183,255,0.4)] transition-all duration-300 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <span class="material-symbols-outlined text-white text-xl"
+                            style="font-variation-settings: 'FILL' 1;">diamond</span>
+                    </div>
+                    <div class="flex flex-col justify-center translate-y-[1px]">
+                        <span
+                            class="text-xl font-black tracking-widest text-slate-400 group-hover:text-white transition-colors leading-none">PIXEL<span
+                                class="text-slate-500 group-hover:text-cyan-400 transition-colors">WEAR</span></span>
+                    </div>
+                </a>
+                <div class="flex flex-col md:flex-row items-center gap-4 text-xs text-slate-500">
+                    <p>&copy; 2024-2026 PixelWear System. Todos los derechos reservados.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- NotificaciÃ³n Toast -->
+    <!-- Notificación Toast -->
     <div id="toast" class="toast">
         <span class="material-symbols-outlined" style="color: #4caf50;">check_circle</span>
         <span id="toastMessage">Producto agregado al carrito</span>
@@ -188,7 +275,3 @@
 </body>
 
 </html>
-
-
-
-
