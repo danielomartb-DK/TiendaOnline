@@ -85,7 +85,7 @@ function renderizarDetalles(p) {
         const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia PixelWear. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
 
         productoRefs.container.innerHTML = `
-        <!-- GalerÃ­a (A la izquierda) -->
+        <!-- Galería (A la izquierda) -->
         <div class="flex flex-col gap-4">
             <div class="relative bg-slate-50 border border-slate-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
                 <img src="${imagenUrl}" alt="${p.nombre}" class="max-w-full max-h-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-500" />
@@ -115,6 +115,7 @@ function renderizarDetalles(p) {
             </div>
 
             <div class="mb-8">
+                <p class="text-4xl font-black text-slate-900">$${formattedPrice}</p>
                 <p class="text-sm text-slate-500 mt-1">Garantía de Devolución de 30 Días | Pagos Seguros</p>
             </div>
 
@@ -123,7 +124,7 @@ function renderizarDetalles(p) {
                 <p class="text-slate-600 leading-relaxed text-sm">${description}</p>
             </div>
 
-            <!-- BotÃ³n de Compra -->
+            <!-- Botón de Compra -->
             <div class="flex flex-col gap-3 mt-auto">
                 <button 
                     id="btnAgregar"
