@@ -87,10 +87,17 @@
     <header
         class="fixed top-0 left-0 right-0 z-50 bg-brand-blue text-white shadow-md h-16 flex items-center px-4 md:px-10">
         <div class="max-w-[1440px] w-full mx-auto flex items-center justify-between gap-4">
-            <a href="index.html" class="flex items-center gap-2 shrink-0">
-                <img src="assets/images/PixelWear_logo.png" alt="PixelWear Logo"
-                    class="h-12 md:h-14 w-auto object-contain">
-                <span class="text-sm font-bold text-primary ml-1 uppercase tracking-widest mt-1">Admin</span>
+            <a href="index.html" class="flex items-center gap-2 shrink-0 group">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(0,183,255,0.4)] transition-transform duration-300 group-hover:scale-110">
+                    <span class="material-symbols-outlined text-white text-2xl"
+                        style="font-variation-settings: 'FILL' 1;">diamond</span>
+                </div>
+                <div class="flex flex-col justify-center translate-y-[2px]">
+                    <span class="text-lg font-black tracking-widest text-white leading-none">PIXEL<span
+                            class="text-cyan-400">WEAR</span></span>
+                    <span class="text-[0.55rem] font-bold text-primary ml-1 uppercase tracking-widest mt-1">Admin</span>
+                </div>
             </a>
             <div class="flex items-center gap-6 shrink-0">
                 <div class="auth-container-ui hidden lg:flex">
@@ -201,7 +208,3 @@
 </body>
 
 </html>
-
-
-
-
