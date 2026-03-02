@@ -41,10 +41,10 @@ function actualizarIconosTema() {
 
         if (isDark) {
             // Modo Oscuro -> JinWoo
-            icon.innerHTML = '<img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="w-6 h-6 rounded-full object-cover border border-[#4f46e5] shadow-[0_0_8px_rgba(79,70,229,0.8)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
+            icon.innerHTML = '<img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="w-9 h-9 rounded-full object-cover border-2 border-[#4f46e5] shadow-[0_0_12px_rgba(79,70,229,0.9)] pointer-events-none transition-all duration-300 group-hover:scale-110" />';
         } else {
             // Modo Claro -> Rengoku
-            icon.innerHTML = '<img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="w-6 h-6 rounded-full object-cover border border-[#f97316] shadow-[0_0_8px_rgba(249,115,22,0.8)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
+            icon.innerHTML = '<img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="w-9 h-9 rounded-full object-cover border-2 border-[#f97316] shadow-[0_0_12px_rgba(249,115,22,0.9)] pointer-events-none transition-all duration-300 group-hover:scale-110" />';
         }
     });
 }
