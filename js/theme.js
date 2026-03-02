@@ -71,15 +71,11 @@ class ThemeParticleEngine {
 
     emitFire() {
         // Fuego intenso, dinámico y orgánico subiendo por la izquierda (Rengoku)
-        const p = 12; // padding del inset (-inset-3)
-        const innerWidth = this.width - p * 2;
-        const innerHeight = this.height - p * 2;
-
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'fire',
-                x: p + (Math.random() * innerWidth * 0.7), // Zona izquierda y centro
-                y: p + innerHeight * 0.8 + Math.random() * 15, // Nace cerca de la base
+                x: Math.random() * (this.width * 0.7), // Zona izquierda y centro
+                y: this.height * 0.8 + Math.random() * 15, // Nace cerca de la base
                 size: Math.random() * 18 + 10, // Más grandes para que sobresalgan
                 speedY: Math.random() * -2.5 - 1.5, // Sube rápido
                 speedX: (Math.random() - 0.5) * 2, // Esparcimiento lateral orgánico
@@ -92,15 +88,11 @@ class ThemeParticleEngine {
 
     emitShadow() {
         // Sombras oscuras negro y morado saliendo por la derecha (JinWoo)
-        const p = 12; // padding del inset
-        const innerWidth = this.width - p * 2;
-        const innerHeight = this.height - p * 2;
-
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'shadow',
-                x: p + innerWidth * 0.3 + (Math.random() * innerWidth * 0.7), // Zona derecha y centro
-                y: p + innerHeight / 2 + (Math.random() - 0.5) * 25, // Emisión central más amplia
+                x: this.width * 0.3 + (Math.random() * this.width * 0.7), // Zona derecha y centro
+                y: this.height / 2 + (Math.random() - 0.5) * 25, // Emisión central más amplia
                 size: Math.random() * 25 + 15, // Nubes oscuras densas y pesadas
                 speedY: (Math.random() - 0.5) * 1.5 - 0.5, // Sube levemente como humo
                 speedX: (Math.random() - 0.5) * 2 - 0.5, // Empuja un poco a la izquierda
