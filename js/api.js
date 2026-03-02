@@ -317,7 +317,7 @@ async function obtenerVentas() {
     try {
         // Usamos la sintaxis relacional de PostgREST para hacer JOIN implícito de la tabla cliente
         // suponiendo que la foreign key en `venta` hacia `cliente` está bien definida en Supabase
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/venta?select=*,cliente(*)&order=fecha_venta.desc`, {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/venta?select=*,cliente(*)&order=fecha.desc`, {
             method: 'GET',
             headers: getDynamicHeaders() // Usar token de autenticación del admin
         });

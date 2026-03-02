@@ -136,7 +136,7 @@ function initAdminPanel() {
         }
 
         function actualizarContadorPendientes() {
-            const pendientes = ventasGlobales.filter(v => v.estado === 'pendiente');
+            const pendientes = ventasGlobales.filter(v => typeof v.estado === 'string' && v.estado.toLowerCase() !== 'entregado');
             const badge = document.getElementById('badgePendientes');
             if (badge) {
                 badge.textContent = pendientes.length;
@@ -155,7 +155,15 @@ function initAdminPanel() {
             if (!tbody) return;
 
             // Filtrar y ordenar
-            const ventasFiltradas = ventasGlobales.filter(v => v.estado === filtroActual);
+            const ventasFiltradas = ventasGlobales.filter(v => {
+                if (!v.estado) return false;
+                const estadoLower = v.estado.toLowerCase();
+                if (filtroActual === 'pendiente') {
+                    return estadoLower !== 'entregado';
+                } else {
+                    return estadoLower === 'entregado';
+                }
+            });
 
             if (ventasFiltradas.length === 0) {
                 tbody.innerHTML = `
@@ -201,7 +209,7 @@ function initAdminPanel() {
                             </span>
                         </td>
                         <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top text-center w-32">
-                            ${filtroActual === 'pendiente' ? `
+                            ${(typeof venta.estado === 'string' && venta.estado.toLowerCase() !== 'entregado') ? `
                                 <button onclick="window.cambiarEstadoOrden(${venta.id_venta}, 'entregado', this)" class="bg-cyan-50 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 w-full hover:bg-cyan-500 hover:text-white transition-all px-3 py-2 rounded-lg font-bold text-sm shadow-sm border border-cyan-200 dark:border-cyan-800 flex items-center justify-center gap-1">
                                     <span class="material-symbols-outlined text-lg">local_shipping</span> Enviar
                                 </button>
