@@ -86,8 +86,21 @@
             <button onclick="toggleTheme()"
                 class="relative w-20 h-8 md:w-24 md:h-10 bg-slate-200 dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 flex items-center group shrink-0 z-10"
                 title="Cambiar Tema (Anime)">
+
+                <!-- Track de Efectos Visuales -->
+                <div class="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                    <!-- Efecto oscuro Jin-Woo -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-l from-blue-600/40 via-indigo-900/10 to-transparent opacity-100 dark:opacity-0 transition-opacity duration-500 shadow-[inset_-15px_0_20px_rgba(79,70,229,0.5)]">
+                    </div>
+                    <!-- Efecto llameante Rengoku -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-orange-500/50 via-red-500/10 to-transparent opacity-0 dark:opacity-100 transition-opacity duration-500 shadow-[inset_15px_0_20px_rgba(249,115,22,0.5)]">
+                    </div>
+                </div>
+
                 <div
-                    class="absolute inset-x-0 flex justify-between px-2.5 text-xl pointer-events-none text-slate-700 dark:text-slate-300">
+                    class="absolute inset-x-0 flex justify-between px-2.5 text-xl pointer-events-none text-slate-700 dark:text-slate-300 z-10">
                     <span class="opacity-100 drop-shadow-md">🌞</span>
                     <span class="opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">🌙</span>
                 </div>
