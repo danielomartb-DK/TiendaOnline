@@ -132,55 +132,68 @@
 
     <main class="pt-24 pb-12 flex-1 relative">
         <div class="max-w-[800px] mx-auto px-4">
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
+            <div
+                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm p-8 transition-colors duration-300">
                 <h2 class="text-3xl font-black mb-2 flex items-center gap-3">
                     <span class="material-symbols-outlined text-primary text-4xl">inventory_2</span>
                     Agregar Nuevo Producto
                 </h2>
-                <p class="text-slate-500 mb-8 pb-6 border-b border-slate-100">Carga un nuevo artículo al catálogo de
+                <p
+                    class="text-slate-500 dark:text-slate-400 mb-8 pb-6 border-b border-slate-100 dark:border-slate-700 transition-colors duration-300">
+                    Carga un nuevo artículo al catálogo de
                     PixelWear. Las imágenes se subirán automáticamente a Supabase Storage.</p>
 
                 <form id="adminProductForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Nombre del Producto -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Nombre del Producto</label>
+                            <label
+                                class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 transition-colors">Nombre
+                                del Producto</label>
                             <input type="text" id="prodNombre" required
-                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                                 placeholder="Ej. Laptop Gaming Asus ROG Strix" />
                         </div>
 
                         <!-- Precio -->
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Precio ($)</label>
+                            <label
+                                class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 transition-colors">Precio
+                                ($)</label>
                             <input type="number" step="0.01" min="0" id="prodPrecio" required
-                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                                 placeholder="0.00" />
                         </div>
 
                         <!-- Stock -->
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Stock Inicial (Unidades)</label>
+                            <label
+                                class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 transition-colors">Stock
+                                Inicial (Unidades)</label>
                             <input type="number" min="0" id="prodStock" required
-                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                                 placeholder="10" />
                         </div>
 
                         <!-- Descripción -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Descripción General
+                            <label
+                                class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 transition-colors">Descripción
+                                General
                                 (Opcional)</label>
                             <textarea id="prodDesc" rows="3"
-                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                                 placeholder="Añade detalles del producto..."></textarea>
                         </div>
 
                         <!-- Imagen -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Fotografía del Producto</label>
+                            <label
+                                class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 transition-colors">Fotografía
+                                del Producto</label>
                             <div class="flex items-center justify-center w-full">
                                 <label for="prodImagen"
-                                    class="flex flex-col items-center justify-center w-full h-48 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                                    class="flex flex-col items-center justify-center w-full h-48 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-xl cursor-pointer bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <span
                                             class="material-symbols-outlined text-5xl text-slate-400 mb-3 block">cloud_upload</span>
