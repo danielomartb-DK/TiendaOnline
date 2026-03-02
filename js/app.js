@@ -189,7 +189,7 @@ function agregarAlCarrito(idProducto) {
 
     localStorage.setItem(getCartKey(), JSON.stringify(state.carrito));
     actualizarContadorCarrito();
-    mostrarToast('Â¡Agregado al Carrito!');
+    mostrarToast('¡Agregado al Carrito!');
 }
 
 /**
