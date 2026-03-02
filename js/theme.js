@@ -70,34 +70,42 @@ class ThemeParticleEngine {
     }
 
     emitFire() {
-        // Fuego intenso, dinámico y orgánico subiendo por la izquierda
-        if (Math.random() < 0.9) {
+        // Fuego intenso, dinámico y orgánico subiendo por la izquierda (Rengoku)
+        const p = 12; // padding del inset (-inset-3)
+        const innerWidth = this.width - p * 2;
+        const innerHeight = this.height - p * 2;
+
+        if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'fire',
-                x: Math.random() * (this.width * 0.5) + (this.width * 0.05), // Zona izquierda principal
-                y: this.height + Math.random() * 5,
-                size: Math.random() * 12 + 6,
-                speedY: Math.random() * -2 - 1.5,
-                speedX: (Math.random() - 0.5) * 1.2,
+                x: p + (Math.random() * innerWidth * 0.7), // Zona izquierda y centro
+                y: p + innerHeight * 0.8 + Math.random() * 15, // Nace cerca de la base
+                size: Math.random() * 18 + 10, // Más grandes para que sobresalgan
+                speedY: Math.random() * -2.5 - 1.5, // Sube rápido
+                speedX: (Math.random() - 0.5) * 2, // Esparcimiento lateral orgánico
                 life: 1,
-                decay: Math.random() * 0.02 + 0.015,
-                hue: Math.random() * 30 + 10 // Entre rojo intenso y naranja/amarillo
+                decay: Math.random() * 0.025 + 0.015,
+                hue: Math.random() * 25 + 5 // Rojo a Naranja oscuro/brillante (5 a 30)
             });
         }
     }
 
     emitShadow() {
-        // Sombras oscuras tipo humo azulado saliendo por la derecha
-        if (Math.random() < 0.8) {
+        // Sombras oscuras negro y morado saliendo por la derecha (JinWoo)
+        const p = 12; // padding del inset
+        const innerWidth = this.width - p * 2;
+        const innerHeight = this.height - p * 2;
+
+        if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'shadow',
-                x: this.width - (Math.random() * (this.width * 0.5) + (this.width * 0.05)),
-                y: this.height / 2 + (Math.random() - 0.5) * 20, // Humo emana desde el centro vert
-                size: Math.random() * 18 + 10,
-                speedY: (Math.random() - 0.5) * 1.5 - 0.2,
-                speedX: Math.random() * -1.5 - 0.5, // Empuja hacia el centro/izquierda
+                x: p + innerWidth * 0.3 + (Math.random() * innerWidth * 0.7), // Zona derecha y centro
+                y: p + innerHeight / 2 + (Math.random() - 0.5) * 25, // Emisión central más amplia
+                size: Math.random() * 25 + 15, // Nubes oscuras densas y pesadas
+                speedY: (Math.random() - 0.5) * 1.5 - 0.5, // Sube levemente como humo
+                speedX: (Math.random() - 0.5) * 2 - 0.5, // Empuja un poco a la izquierda
                 life: 1,
-                decay: Math.random() * 0.012 + 0.01
+                decay: Math.random() * 0.018 + 0.012
             });
         }
     }
@@ -108,19 +116,15 @@ class ThemeParticleEngine {
 
         const isDark = document.documentElement.classList.contains('dark');
 
-        // Emisión y Combustión
-        // Si Rengoku (Light) está actuando: emite fuego para defender su terreno, JinWoo intenta tomarlo
-        // Si JinWoo (Dark) está actuando: Sombra domina, Rengoku sobrevive levemente
+        // Emisión Invertida a petición del usuario
         if (isDark) {
-            // Activo JinWoo -> Sombras fuman fuerte desde la derecha
-            this.emitShadow();
-            if (Math.random() < 0.3) this.emitShadow(); // Emisión de refuerzo
-            if (Math.random() < 0.2) this.emitFire();   // Llamas débiles sobreviviendo
-        } else {
-            // Activo Rengoku -> Fuego ruge desde la izquierda
+            // Cuando activo JinWoo (Noche), el track a la izquierda se inunda de FUEGO
             this.emitFire();
-            if (Math.random() < 0.3) this.emitFire();   // Llamas furiosas
-            if (Math.random() < 0.2) this.emitShadow(); // Sombras escondidas
+            if (Math.random() < 0.6) this.emitFire(); // Doble inyección (llena y sobresale)
+        } else {
+            // Cuando activo Rengoku (Día), el track a la derecha emana SOMBRAS (Negro/Morado)
+            this.emitShadow();
+            if (Math.random() < 0.6) this.emitShadow(); // Doble inyección densa
         }
 
         // --- RENDERIZADO DE FUEGO ---
@@ -145,12 +149,11 @@ class ThemeParticleEngine {
                 if (currentSize < 0) currentSize = 0;
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
-                // Color degrades based on life (starts yellow/orange, ends red)
-                let currentHue = p.hue + (1 - p.life) * 15;
+                let currentHue = p.hue + (1 - p.life) * 35; // Viaja de rojo a amarillo puro
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `hsla(${currentHue}, 100%, 70%, ${p.life})`);
-                gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 50%, ${p.life * 0.8})`);
-                gradient.addColorStop(1, `hsla(${currentHue}, 100%, 30%, 0)`);
+                gradient.addColorStop(0, `hsla(${currentHue + 20}, 100%, 75%, ${p.life})`); // Núcleo candente brillante
+                gradient.addColorStop(0.3, `hsla(${currentHue}, 100%, 55%, ${p.life * 0.9})`); // Naranja intermedio
+                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 40%, 0)`); // Glow disipado exterior
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
@@ -158,7 +161,7 @@ class ThemeParticleEngine {
         }
 
         // --- RENDERIZADO DE SOMBRAS Y HUMO ---
-        // Normal composition blending para que se vea humo denso oscuro sumergiendo a los otros pixeles
+        // Normal composition blending para oscurecer y fumar el background
         this.ctx.globalCompositeOperation = 'source-over';
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
@@ -180,10 +183,10 @@ class ThemeParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Glow azul espectral tenue + núcleo profundamente negro/azul
-                gradient.addColorStop(0, `rgba(5, 8, 15, ${p.life * 0.9})`);
-                gradient.addColorStop(0.5, `rgba(15, 25, 45, ${p.life * 0.7})`);
-                gradient.addColorStop(1, `rgba(40, 80, 200, 0)`);
+                // Oscuridad Jin-Woo: Negro Profundo y Morado Oscuro/Frío
+                gradient.addColorStop(0, `rgba(5, 0, 15, ${p.life * 0.95})`); // Núcleo casi negro
+                gradient.addColorStop(0.4, `rgba(30, 5, 65, ${p.life * 0.8})`); // Aura morada densa
+                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`); // Difuminado morado brillante externo
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
