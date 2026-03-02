@@ -62,7 +62,7 @@ class ThemeParticleEngine {
     }
 
     resize() {
-        const rect = this.canvas.parentElement.getBoundingClientRect();
+        const rect = this.canvas.getBoundingClientRect(); // Tomar la escala física expandida (-inset)
         this.canvas.width = rect.width;
         this.canvas.height = rect.height;
         this.width = this.canvas.width;
