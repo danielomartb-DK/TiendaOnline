@@ -194,7 +194,7 @@ async function handleCheckoutSubmit(e) {
             estado: 'pendiente'
         });
 
-        // 3. Registrar detalles
+        // 3. Registrar detalles y reducir stock
         if (venta && venta.id_venta) {
             const detalles = cart.items.map(item => ({
                 id_venta: venta.id_venta,
@@ -204,6 +204,17 @@ async function handleCheckoutSubmit(e) {
                 subtotal: item.precio * item.cantidad
             }));
             await registrarDetallesVenta(detalles);
+
+            // Deducción transaccional de bodega (stock negativo = resta)
+            for (const item of cart.items) {
+                try {
+                    await actualizarStock(item.id_producto, -item.cantidad);
+                } catch (stockErr) {
+                    console.error(`Inconsistencia descontando stock del producto ${item.id_producto}:`, stockErr);
+                    // Decidimos no truncar el checkout en caso de error para no frustrar la venta,
+                    // pero dejamos el log para el administrador.
+                }
+            }
         }
 
         // 4. Éxito

@@ -139,6 +139,45 @@ async function registrarCliente(datosCliente) {
 }
 
 /**
+ * Modifica directamente el stock físico sumando o restando (para ventas o devoluciones)
+ * @param {number|string} id_producto - ID del producto a alterar
+ * @param {number} diferencial - Valor positivo (sumar) o negativo (restar) a aplicar
+ */
+async function actualizarStock(id_producto, diferencial) {
+    try {
+        // Obtenemos la capa base de cuántos hay
+        const responseData = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id_producto}&select=stock`, {
+            method: 'GET',
+            headers: getDynamicHeaders()
+        });
+
+        if (!responseData.ok) throw new Error('Error al leer Stock Base');
+        const [prodRow] = await responseData.json();
+
+        if (!prodRow) throw new Error('Producto no hallado');
+
+        const nuevoStock = Math.max(0, parseInt(prodRow.stock) + diferencial); // Evitar stock negativo
+
+        // Planificamos el reemplazo
+        const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/producto?id_producto=eq.${id_producto}`, {
+            method: 'PATCH',
+            headers: {
+                ...getDynamicHeaders(),
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ stock: nuevoStock })
+        });
+
+        if (!updateRes.ok) throw new Error('Error parchando el Stock');
+
+        return await updateRes.json();
+    } catch (error) {
+        console.error('API Error (actualizarStock):', error);
+        throw error;
+    }
+}
+
+/**
  * Crea una nueva orden de venta
  * @param {Object} datosVenta 
  * @returns {Promise<Object>} Venta creada
@@ -357,6 +396,30 @@ async function actualizarEstadoVenta(id_venta, nuevoEstado) {
         return await response.json();
     } catch (error) {
         console.error('API Error (actualizarEstadoVenta):', error);
+        throw error;
+    }
+}
+
+/**
+ * Obtiene las sub-filas de una compra específica (los ítems adquiridos) resolviendo el JOIN con producto
+ * @param {number|string} id_venta - ID primario de la Factura/Venta
+ * @returns {Promise<Array>} Lista estructurada del desglose de productos y sus detalles
+ */
+async function obtenerDetallesVenta(id_venta) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/detalle_venta?id_venta=eq.${id_venta}&select=*,producto(nombre,imagen_url,stock)`, {
+            method: 'GET',
+            headers: getDynamicHeaders()
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            throw new Error(`Error HTTP recuperando el recibo detallado: ${errBody}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('API Error (obtenerDetallesVenta):', error);
         throw error;
     }
 }

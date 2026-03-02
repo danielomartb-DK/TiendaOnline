@@ -180,11 +180,20 @@ function initAdminPanel() {
             let htmlString = '';
             ventasFiltradas.forEach(venta => {
                 const cliente = venta.cliente || {};
-                const fecha = new Date(venta.fecha_venta).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                // Parseo corregido de 'fecha', asegurando existencia y validación.
+                let fecha = 'Fecha Inválida';
+                if (venta.fecha) {
+                    const parsedDate = new Date(venta.fecha);
+                    if (!isNaN(parsedDate)) {
+                        fecha = parsedDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    }
+                }
+
                 const totalDisplay = window.CurrencyManager ? window.CurrencyManager.formatPrice(venta.total) : '$' + venta.total.toLocaleString();
 
                 htmlString += `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer" onclick="window.abrirDetallePedido(${venta.id_venta})">
                         <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top">
                             <span class="font-bold text-slate-800 dark:text-white block tracking-tight">#${venta.id_venta}</span>
                             <span class="text-xs text-slate-400 dark:text-slate-500">${fecha}</span>
@@ -208,7 +217,7 @@ function initAdminPanel() {
                                 ${totalDisplay}
                             </span>
                         </td>
-                        <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top text-center w-32">
+                        <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top text-center w-32" onclick="event.stopPropagation()">
                             ${(typeof venta.estado === 'string' && venta.estado.toLowerCase() !== 'entregado') ? `
                                 <button onclick="window.cambiarEstadoOrden(${venta.id_venta}, 'entregado', this)" class="bg-cyan-50 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 w-full hover:bg-cyan-500 hover:text-white transition-all px-3 py-2 rounded-lg font-bold text-sm shadow-sm border border-cyan-200 dark:border-cyan-800 flex items-center justify-center gap-1">
                                     <span class="material-symbols-outlined text-lg">local_shipping</span> Enviar
@@ -253,9 +262,132 @@ function initAdminPanel() {
             }
         };
 
+        // --- Sistema de Modal de Detalles de Pedido ---
+
+        const modalDetalle = document.getElementById('modalDetallePedido');
+        const btnCerrarModal = document.getElementById('btnCerrarModal');
+
+        if (btnCerrarModal) {
+            btnCerrarModal.addEventListener('click', () => {
+                modalDetalle.close();
+            });
+            // Cerrar al clickear fuera del contenedor blanco
+            modalDetalle.addEventListener('click', (e) => {
+                if (e.target === modalDetalle) {
+                    modalDetalle.close();
+                }
+            });
+        }
+
+        window.abrirDetallePedido = async (id_venta) => {
+            const elOrden = document.getElementById('modalOrderId');
+            const elTotal = document.getElementById('modalTotalVenta');
+            const container = document.getElementById('modalItemsContainer');
+
+            // UI Base de carga
+            elOrden.textContent = '#' + id_venta;
+            elTotal.textContent = '...';
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center p-8 gap-3 text-slate-500">
+                    <span class="spinner" style="border-left-color: #ff9900;"></span>
+                    <span>Recuperando recibo desde la bóveda...</span>
+                </div>
+            `;
+
+            modalDetalle.showModal();
+
+            modalDetalle.showModal();
+
+            try {
+                // Sacar el total general de la factura del caché existente
+                const ventaMadre = ventasGlobales.find(v => v.id_venta === id_venta);
+                if (ventaMadre) {
+                    elTotal.textContent = window.CurrencyManager ? window.CurrencyManager.formatPrice(ventaMadre.total) : '$' + ventaMadre.total.toLocaleString();
+                }
+
+                // Solicitar detalles a DB
+                const detalles = await obtenerDetallesVenta(id_venta);
+
+                if (!detalles || detalles.length === 0) {
+                    container.innerHTML = `<div class="p-8 text-center text-slate-500 italic">No se encontraron productos para esta orden.</div>`;
+                    return;
+                }
+
+                // Generar filas
+                let htmlItems = '';
+                detalles.forEach(item => {
+                    const prodName = item.producto ? item.producto.nombre : 'Producto Removido';
+                    const prodImg = item.producto ? item.producto.imagen_url : '';
+                    const itemPrice = Number(item.precio_unitario);
+                    const precioDisplay = window.CurrencyManager ? window.CurrencyManager.formatPrice(itemPrice) : '$' + itemPrice.toLocaleString();
+                    const subtotalDisplay = window.CurrencyManager ? window.CurrencyManager.formatPrice(itemPrice * item.cantidad) : '$' + (itemPrice * item.cantidad).toLocaleString();
+
+                    htmlItems += `
+                        <div id="modal-item-${item.id_producto}" class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group relative overflow-hidden">
+                            <img src="${prodImg}" alt="${prodName}" class="w-16 h-16 object-cover rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900" onerror="this.src='https://placehold.co/100x100?text=No+Img'">
+                            
+                            <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                <h4 class="font-bold text-slate-800 dark:text-white truncate" title="${prodName}">${prodName}</h4>
+                                <div class="text-sm text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-2">
+                                    <span class="font-medium px-2 py-0.5 bg-slate-100 dark:bg-slate-700 rounded-md text-xs">${item.cantidad} uni.</span>
+                                    <span>× ${precioDisplay}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-right flex flex-col justify-center items-end pr-2">
+                                <span class="font-black text-slate-900 dark:text-white mb-1">${subtotalDisplay}</span>
+                                <button onclick="window.devolverItem(${item.id_venta}, ${item.id_producto}, ${item.cantidad}, '${prodName}', event)" class="text-xs font-bold text-red-500 flex items-center gap-1 hover:text-red-700 transition-colors bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">
+                                    <span class="material-symbols-outlined text-[14px]">cancel</span> Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = htmlItems;
+
+            } catch (error) {
+                console.error("Error cargando detalles del modal:", error);
+                container.innerHTML = `
+                    <div class="p-8 text-center text-red-500 flex flex-col items-center gap-2">
+                        <span class="material-symbols-outlined text-4xl">error</span>
+                        <span class="font-bold">Error de conexión. No se pudo obtener el desglose.</span>
+                    </div>
+                `;
+            }
+        };
+
         // Escuchar clics en los Tabs
         const btnTabPendientes = document.getElementById('tabPendientes');
         const btnTabEntregados = document.getElementById('tabEntregados');
+
+        window.devolverItem = async (idVenta, idProducto, cantidad, prodName) => {
+            if (!confirm(`⚠️ ¿Estás seguro de cancelar ${cantidad} unds de '${prodName}'?\n\nEsto devolverá el stock automáticamente al inventario general.`)) return;
+
+            const btn = event.currentTarget;
+            const card = document.getElementById(`modal-item-${idProducto}`);
+
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner" style="width:12px; height:12px; border-width:2px; border-left-color:red;"></span>';
+            btn.disabled = true;
+
+            try {
+                // Modificar el stock sumando (revertir)
+                await actualizarStock(idProducto, cantidad);
+
+                // Efecto visual de eliminación en Admin
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                btn.parentElement.innerHTML = '<span class="text-red-500 font-bold text-xs mt-2">Reintegrado</span>';
+
+                mostrarToast(`Stock Reintegrado Exitosamente (+${cantidad})`);
+            } catch (err) {
+                console.error("Fallo al devolver Item:", err);
+                alert("Ocurrió un error al contactar el Inventario: " + err.message);
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        };
 
         if (btnTabPendientes && btnTabEntregados) {
             btnTabPendientes.addEventListener('click', () => {
