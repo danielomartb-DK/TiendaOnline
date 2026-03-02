@@ -36,14 +36,15 @@ function actualizarIconosTema() {
     const themeIcons = document.querySelectorAll('.theme-icon-toggle');
 
     themeIcons.forEach(icon => {
+        // Remover clases de material symbols si la tienen para evitar colisión de tamaño
+        icon.classList.remove('material-symbols-outlined');
+
         if (isDark) {
-            icon.textContent = 'light_mode';
-            icon.classList.replace('text-slate-800', 'text-yellow-400');
-            icon.classList.replace('hover:bg-slate-200', 'hover:bg-slate-700');
+            // Modo Oscuro -> JinWoo
+            icon.innerHTML = '<img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="w-6 h-6 rounded-full object-cover border border-[#4f46e5] shadow-[0_0_8px_rgba(79,70,229,0.8)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
         } else {
-            icon.textContent = 'dark_mode';
-            icon.classList.replace('text-yellow-400', 'text-slate-800');
-            icon.classList.replace('hover:bg-slate-700', 'hover:bg-slate-200');
+            // Modo Claro -> Rengoku
+            icon.innerHTML = '<img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="w-6 h-6 rounded-full object-cover border border-[#f97316] shadow-[0_0_8px_rgba(249,115,22,0.8)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
         }
     });
 }
