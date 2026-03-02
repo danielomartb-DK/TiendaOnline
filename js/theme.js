@@ -41,12 +41,164 @@ function actualizarIconosTema() {
 
         if (isDark) {
             // Modo Oscuro -> JinWoo
-            icon.innerHTML = '<img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="w-full h-full rounded-full object-cover border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
+            icon.innerHTML = `
+                <canvas class="avatarAnimeCanvas absolute -inset-6 pointer-events-none z-0"></canvas>
+                <img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
+            `;
         } else {
             // Modo Claro -> Rengoku
-            icon.innerHTML = '<img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="w-full h-full rounded-full object-cover border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />';
+            icon.innerHTML = `
+                <canvas class="avatarAnimeCanvas absolute -inset-6 pointer-events-none z-0"></canvas>
+                <img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
+            `;
+        }
+
+        // Iniciar el aura del avatar
+        const avatarCanvas = icon.querySelector('.avatarAnimeCanvas');
+        if (avatarCanvas) {
+            // Cancelar el motor de aura si ya existe uno anterior
+            if (icon.avatarEngine) icon.avatarEngine.stop();
+            icon.avatarEngine = new AvatarParticleEngine(avatarCanvas, isDark ? 'shadow' : 'fire');
         }
     });
+}
+// --- Motor Avanzado de Partículas para Avatares (Auras) ---
+class AvatarParticleEngine {
+    constructor(canvas, type) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.type = type; // 'fire' or 'shadow'
+        this.particles = [];
+        this.isActive = true;
+
+        this.resize();
+        this.resizeHandler = () => this.resize();
+        window.addEventListener('resize', this.resizeHandler);
+
+        this.animate = this.animate.bind(this);
+        this.animationId = requestAnimationFrame(this.animate);
+    }
+
+    stop() {
+        this.isActive = false;
+        window.removeEventListener('resize', this.resizeHandler);
+        cancelAnimationFrame(this.animationId);
+    }
+
+    resize() {
+        if (!this.canvas.parentElement) return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+
+        // Radio del retrato (el padre tiene un tamaño aproximado de 56px-64px, el canvas es mayor por -inset)
+        const parentRect = this.canvas.parentElement.getBoundingClientRect();
+        this.avatarRadius = parentRect.width / 2;
+        this.centerX = this.width / 2;
+        this.centerY = this.height / 2;
+    }
+
+    emit() {
+        if (this.width === 0) this.resize();
+        if (this.width === 0) return;
+
+        if (this.type === 'fire') {
+            if (Math.random() < 0.9) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = this.avatarRadius + (Math.random() * 2 - 1);
+                this.particles.push({
+                    x: this.centerX + Math.cos(angle) * r,
+                    y: this.centerY + Math.sin(angle) * r,
+                    size: Math.random() * 8 + 4,
+                    speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
+                    speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5, // Sube un poco
+                    life: 1,
+                    decay: Math.random() * 0.03 + 0.02,
+                    hue: Math.random() * 25 + 5
+                });
+            }
+        } else {
+            if (Math.random() < 0.9) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = this.avatarRadius + (Math.random() * 2 - 1);
+                this.particles.push({
+                    x: this.centerX + Math.cos(angle) * r,
+                    y: this.centerY + Math.sin(angle) * r,
+                    size: Math.random() * 12 + 6,
+                    speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
+                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5),
+                    life: 1,
+                    decay: Math.random() * 0.02 + 0.015
+                });
+            }
+        }
+    }
+
+    animate() {
+        if (!this.isActive) return;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        this.emit();
+        if (Math.random() < 0.5) this.emit();
+
+        if (this.type === 'fire') {
+            this.ctx.globalCompositeOperation = 'screen';
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                let p = this.particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    this.particles.splice(i, 1);
+                    continue;
+                }
+
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life;
+                if (currentSize < 0) currentSize = 0;
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+
+                let currentHue = p.hue + (1 - p.life) * 35;
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life})`);
+                gradient.addColorStop(1, `hsla(${currentHue}, 100%, 30%, 0)`);
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+            }
+        } else {
+            this.ctx.globalCompositeOperation = 'source-over';
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                let p = this.particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    this.particles.splice(i, 1);
+                    continue;
+                }
+
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life;
+                if (currentSize < 0) currentSize = 0;
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                gradient.addColorStop(0, `rgba(10, 5, 25, ${p.life * 0.9})`);
+                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.6})`);
+                gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+            }
+        }
+
+        this.animationId = requestAnimationFrame(this.animate);
+    }
 }
 
 // --- Motor Avanzado de Partículas para el Anime Theme Toggle ---

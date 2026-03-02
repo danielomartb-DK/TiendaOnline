@@ -90,9 +90,10 @@
                     class="relative w-20 h-8 md:w-24 md:h-10 bg-slate-300 dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 flex items-center group shrink-0 order-2 md:order-none"
                     title="Cambiar Tema (Anime)">
 
-                    <!-- Canvas Engine Overlay para Partículas Anime (Llamas y Sombras) -->
-                    <canvas
-                        class="themeAnimeCanvas absolute inset-0 w-full h-full pointer-events-none rounded-full z-0"></canvas>
+                    <!-- Contenedor estricto para recortar partículas del fondo -->
+                    <div class="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-0">
+                        <canvas class="themeAnimeCanvas absolute inset-0 w-full h-full"></canvas>
+                    </div>
                     <span
                         class="theme-icon-toggle absolute -left-2 top-1/2 -translate-y-1/2 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform dark:translate-x-10 md:dark:translate-x-12 z-10 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center"></span>
                 </button>
