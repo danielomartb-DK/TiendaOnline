@@ -70,40 +70,34 @@ class ThemeParticleEngine {
     }
 
     emitFire() {
-        // Fuego orgánico contenido. pX compensa el -inset-4 (aprox 16px) del canvas
-        const pX = 16;
-        const innerW = this.width - (pX * 2);
-
+        // Fuego intenso, dinámico y orgánico contenido (Rengoku)
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'fire',
-                x: pX + 8 + (Math.random() * innerW * 0.45), // Nace bien pegado a la izquierda (Rengoku)
-                y: this.height * 0.55 + Math.random() * 8, // Nace en el centro-bajo, no hasta el fondo
-                size: Math.random() * 12 + 8, // Vuelve a ser visible pero contenido
-                speedY: Math.random() * -1.8 - 0.8, // Sube constante
-                speedX: (Math.random() - 0.5) * 1.5,
+                x: Math.random() * (this.width * 0.5) + (this.width * 0.05), // Zona izquierda principal
+                y: this.height * 0.8 + Math.random() * 5, // Nace cerca de la base interior
+                size: Math.random() * 12 + 6, // Tamaño orgánico
+                speedY: Math.random() * -2 - 1.5, // Sube rápido
+                speedX: (Math.random() - 0.5) * 1.2, // Esparcimiento lateral
                 life: 1,
-                decay: Math.random() * 0.035 + 0.02,
-                hue: Math.random() * 25 + 5
+                decay: Math.random() * 0.02 + 0.015,
+                hue: Math.random() * 30 + 10 // Entre rojo intenso y naranja/amarillo
             });
         }
     }
 
     emitShadow() {
-        // Sombras oscuras tipo Monarch.
-        const pX = 16;
-        const innerW = this.width - (pX * 2);
-
+        // Sombras oscuras negro y morado saliendo por la derecha (JinWoo)
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'shadow',
-                x: this.width - pX - 8 - (Math.random() * innerW * 0.45), // Nace bien pegado a la derecha (JinWoo)
-                y: this.height * 0.5 + (Math.random() - 0.5) * 12, // Centro vertical estricto
-                size: Math.random() * 18 + 10, // Humo denso
-                speedY: (Math.random() - 0.5) * 0.8, // Flota más estático
-                speedX: Math.random() * -1.2 - 0.2, // Tira hacia el centro/izquierda
+                x: this.width - (Math.random() * (this.width * 0.5) + (this.width * 0.05)), // Zona derecha
+                y: this.height / 2 + (Math.random() - 0.5) * 20, // Humo emana desde el centro vert
+                size: Math.random() * 18 + 10, // Nubes oscuras densas
+                speedY: (Math.random() - 0.5) * 1.5 - 0.2, // Sube levemente
+                speedX: Math.random() * -1.5 - 0.5, // Empuja hacia el centro/izquierda
                 life: 1,
-                decay: Math.random() * 0.025 + 0.015 // Muerte equilibrada
+                decay: Math.random() * 0.012 + 0.01
             });
         }
     }
