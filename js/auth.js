@@ -25,7 +25,9 @@ class AuthManager {
      * Verifica si el usuario actual es administrador
      */
     isAdmin() {
-        return this.user && this.user.user && this.user.user.email === 'danieltijaro28@gmail.com';
+        if (!this.user || !this.user.user) return false;
+        const adminMails = ['danieltijaro28@gmail.com', 'prueba123@gmail.com'];
+        return adminMails.includes(this.user.user.email);
     }
 
     /**
@@ -108,9 +110,9 @@ class AuthManager {
                 throw new Error(errorMsg);
             }
 
-            // Si Supabase devuelve un objeto user en data (y no data.session), es porque requiere confirmaciÃ³n.
+            // Si Supabase devuelve un objeto user en data (y no data.session), es porque requiere confirmación.
             if (!data.session && data.user) {
-                throw new Error('Â¡Registro exitoso! Por favor ve a tu correo electrÃ³nico y haz clic en el enlace para confirmar tu cuenta y poder iniciar sesiÃ³n.');
+                throw new Error('¡Registro exitoso! Por favor ve a tu correo electrónico y haz clic en el enlace para confirmar tu cuenta y poder iniciar sesión.');
             }
 
             if (data.session) {
