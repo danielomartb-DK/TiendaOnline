@@ -193,10 +193,14 @@ function initAdminPanel() {
                 const totalDisplay = window.CurrencyManager ? window.CurrencyManager.formatPrice(venta.total) : '$' + venta.total.toLocaleString();
 
                 htmlString += `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group cursor-pointer" onclick="window.abrirDetallePedido(${venta.id_venta})">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                         <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top">
-                            <span class="font-bold text-slate-800 dark:text-white block tracking-tight">#${venta.id_venta}</span>
-                            <span class="text-xs text-slate-400 dark:text-slate-500">${fecha}</span>
+                            <button onclick="window.abrirDetallePedido(${venta.id_venta})" class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all px-3 py-1.5 rounded-lg font-bold text-xs shadow-sm border border-indigo-200 dark:border-indigo-800 flex items-center justify-center gap-1.5 w-full whitespace-nowrap mb-2 shadow-[0_2px_10px_rgba(99,102,241,0.1)]">
+                                <span class="material-symbols-outlined text-[16px]">visibility</span> Ver Recibo
+                            </button>
+                            <div class="text-[11px] text-center text-slate-400 dark:text-slate-500 font-medium">
+                                #${venta.id_venta} • ${fecha}
+                            </div>
                         </td>
                         <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top font-medium text-slate-700 dark:text-slate-300">
                             ${cliente.nombres || 'Cliente'} ${cliente.apellidos || ''}
@@ -253,7 +257,7 @@ function initAdminPanel() {
 
                 renderizarTablaPedidos();
                 actualizarContadorPendientes();
-                mostrarToast(`¡Pedido #${id_venta} marcado como Enviado!`);
+                mostrarToast(`¡Pedido #${id_venta} ha sido transferido al panel 'Enviados'!`);
             } catch (error) {
                 console.error("Error cambiando estado:", error);
                 alert("Hubo un error al intentar actualizar el estado: " + error.message);
