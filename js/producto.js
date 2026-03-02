@@ -36,7 +36,7 @@ async function initProducto() {
     const idProducto = urlParams.get('id');
 
     if (!idProducto) {
-        mostrarError();
+        mostrarError("Error Técnico: No se detectó un ID de producto válido en el enlace de la URL.");
         return;
     }
 
@@ -44,7 +44,7 @@ async function initProducto() {
     try {
         currentProduct = await obtenerProductoPorId(idProducto);
         if (!currentProduct) {
-            mostrarError();
+            mostrarError(`Error Técnico: Supabase devolvió vacío (Null) para el Producto ID #${idProducto}`);
             return;
         }
 
@@ -53,7 +53,7 @@ async function initProducto() {
 
     } catch (error) {
         console.error("Error al cargar producto:", error);
-        mostrarError();
+        mostrarError(`Excepción de Red/CORS consultando ID #${idProducto}: ${error.message}`);
     }
 }
 
@@ -145,10 +145,14 @@ function renderizarDetalles(p) {
     `;
 }
 
-function mostrarError() {
+function mostrarError(mensajeDebug = "El producto que buscas no existe o ha sido retirado.") {
     productoRefs.loader.style.display = 'none';
     productoRefs.container.classList.add('hidden');
     productoRefs.errorMessage.classList.remove('hidden');
+
+    // Inyectar el log de error en la etiqueta <p> para alertar al cliente del por qué
+    const textError = productoRefs.errorMessage.querySelector('p');
+    if (textError) textError.textContent = mensajeDebug;
 }
 
 /**
