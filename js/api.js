@@ -308,3 +308,55 @@ async function eliminarProducto(id_producto) {
         throw error;
     }
 }
+
+/**
+ * Obtiene todas las ventas de la base de datos juntando la información del cliente
+ * @returns {Promise<Array>} Lista de ventas enriquecidas con datos del cliente
+ */
+async function obtenerVentas() {
+    try {
+        // Usamos la sintaxis relacional de PostgREST para hacer JOIN implícito de la tabla cliente
+        // suponiendo que la foreign key en `venta` hacia `cliente` está bien definida en Supabase
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/venta?select=*,cliente(*)&order=fecha_venta.desc`, {
+            method: 'GET',
+            headers: getDynamicHeaders() // Usar token de autenticación del admin
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            throw new Error(`Error HTTP recuperando ventas: ${response.status} - ${errBody}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('API Error (obtenerVentas):', error);
+        throw error;
+    }
+}
+
+/**
+ * Actualiza el estado de una venta (ej. 'pendiente' a 'entregado')
+ * @param {number|string} id_venta - ID de la orden
+ * @param {string} nuevoEstado - Nuevo estado a asignar
+ */
+async function actualizarEstadoVenta(id_venta, nuevoEstado) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/venta?id_venta=eq.${id_venta}`, {
+            method: 'PATCH',
+            headers: {
+                ...getDynamicHeaders(),
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ estado: nuevoEstado })
+        });
+
+        if (!response.ok) {
+            const errBody = await response.text();
+            throw new Error(`[DATABASE] Error actualizando el estado de la venta: ${errBody}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('API Error (actualizarEstadoVenta):', error);
+        throw error;
+    }
+}
