@@ -78,13 +78,14 @@ function renderizarDetalles(p) {
         stockBadge = '<span class="inline-block bg-red-100 text-red-700 font-bold px-3 py-1 rounded-full text-xs uppercase mb-4">Agotado Temporalmente</span>';
     } else if (isLowStock) {
         stockBadge = `<span class="inline-block bg-orange-100 text-orange-700 font-bold px-3 py-1 rounded-full text-xs uppercase mb-4">Solo quedan ${stockQty} unidades</span>`;
+    } else {
         stockBadge = '<span class="inline-block bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full text-xs uppercase mb-4">En Stock: Envío Inmediato</span>';
+    }
+    const fallbackImage = 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800';
+    const imagenUrl = p.imagen_url || fallbackImage;
+    const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia PixelWear. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
 
-        const fallbackImage = 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800';
-        const imagenUrl = p.imagen_url || fallbackImage;
-        const description = p.descripcion ? p.descripcion : 'Un producto premium y destacado dentro de la familia PixelWear. Construido con materiales de excelente calidad para brindar el mejor rendimiento en tu día a día.';
-
-        productoRefs.container.innerHTML = `
+    productoRefs.container.innerHTML = `
         <!-- Galería (A la izquierda) -->
         <div class="flex flex-col gap-4">
             <div class="relative bg-slate-50 border border-slate-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
@@ -142,55 +143,55 @@ function renderizarDetalles(p) {
             </div>
         </div>
     `;
-    }
+}
 
-    function mostrarError() {
-        productoRefs.loader.style.display = 'none';
-        productoRefs.container.classList.add('hidden');
-        productoRefs.errorMessage.classList.remove('hidden');
-    }
+function mostrarError() {
+    productoRefs.loader.style.display = 'none';
+    productoRefs.container.classList.add('hidden');
+    productoRefs.errorMessage.classList.remove('hidden');
+}
 
-    /**
-     * Agrega el producto al carrito de compras desde esta vista.
-     */
-    function agregarAlCarritoLocal(idProducto) {
-        if (!currentProduct || currentProduct.stock <= 0) return;
+/**
+ * Agrega el producto al carrito de compras desde esta vista.
+ */
+function agregarAlCarritoLocal(idProducto) {
+    if (!currentProduct || currentProduct.stock <= 0) return;
 
-        const itemCarrito = carritoLocal.find(item => item.id_producto === idProducto);
+    const itemCarrito = carritoLocal.find(item => item.id_producto === idProducto);
 
-        if (itemCarrito) {
-            if (itemCarrito.cantidad < currentProduct.stock) {
-                itemCarrito.cantidad += 1;
-            } else {
-                alert('Has alcanzado el lÃ­mite mÃ¡ximo de stock para este producto.');
-                return;
-            }
+    if (itemCarrito) {
+        if (itemCarrito.cantidad < currentProduct.stock) {
+            itemCarrito.cantidad += 1;
         } else {
-            carritoLocal.push({
-                id_producto: currentProduct.id_producto,
-                nombre: currentProduct.nombre,
-                precio: Number(currentProduct.precio),
-                imagen_url: currentProduct.imagen_url,
-                cantidad: 1,
-                stock: currentProduct.stock
-            });
+            alert('Has alcanzado el límite máximo de stock para este producto.');
+            return;
         }
-
-        localStorage.setItem(getCartKey(), JSON.stringify(carritoLocal));
-        actualizarContadorCarrito();
-        mostrarToast('Â¡Listo! Agregado a tu carrito.');
+    } else {
+        carritoLocal.push({
+            id_producto: currentProduct.id_producto,
+            nombre: currentProduct.nombre,
+            precio: Number(currentProduct.precio),
+            imagen_url: currentProduct.imagen_url,
+            cantidad: 1,
+            stock: currentProduct.stock
+        });
     }
 
-    function actualizarContadorCarrito() {
-        if (!productoRefs.cartCounter) return;
-        const totalItems = carritoLocal.reduce((acc, item) => acc + item.cantidad, 0);
-        productoRefs.cartCounter.textContent = totalItems > 99 ? '+99' : totalItems;
-    }
+    localStorage.setItem(getCartKey(), JSON.stringify(carritoLocal));
+    actualizarContadorCarrito();
+    mostrarToast('¡Listo! Agregado a tu carrito.');
+}
 
-    function mostrarToast(msg) {
-        if (!productoRefs.toast) return;
-        if (productoRefs.toastMsg && msg) productoRefs.toastMsg.textContent = msg;
-        productoRefs.toast.classList.add('show');
-        setTimeout(() => { productoRefs.toast.classList.remove('show'); }, 3000);
-    }
+function actualizarContadorCarrito() {
+    if (!productoRefs.cartCounter) return;
+    const totalItems = carritoLocal.reduce((acc, item) => acc + item.cantidad, 0);
+    productoRefs.cartCounter.textContent = totalItems > 99 ? '+99' : totalItems;
+}
+
+function mostrarToast(msg) {
+    if (!productoRefs.toast) return;
+    if (productoRefs.toastMsg && msg) productoRefs.toastMsg.textContent = msg;
+    productoRefs.toast.classList.add('show');
+    setTimeout(() => { productoRefs.toast.classList.remove('show'); }, 3000);
+}
 
