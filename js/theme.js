@@ -42,13 +42,13 @@ function actualizarIconosTema() {
         if (isDark) {
             // Modo Oscuro -> JinWoo
             icon.innerHTML = `
-                <canvas class="avatarAnimeCanvas absolute -inset-6 pointer-events-none z-0"></canvas>
+                <canvas class="avatarAnimeCanvas pointer-events-none z-0" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
                 <img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
             `;
         } else {
             // Modo Claro -> Rengoku
             icon.innerHTML = `
-                <canvas class="avatarAnimeCanvas absolute -inset-6 pointer-events-none z-0"></canvas>
+                <canvas class="avatarAnimeCanvas pointer-events-none z-0" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
                 <img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
             `;
         }
