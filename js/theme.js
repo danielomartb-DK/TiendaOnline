@@ -70,20 +70,20 @@ class ThemeParticleEngine {
     }
 
     emitFire() {
-        // Fuego orgánico contenido. pX margen lateral virtual interno del canvas
-        const pX = this.width * 0.15;
+        // Fuego orgánico contenido. pX compensa el -inset-4 (aprox 16px) del canvas
+        const pX = 16;
         const innerW = this.width - (pX * 2);
 
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'fire',
-                x: pX + (Math.random() * innerW * 0.5), // Lado izquierdo de la píldora virtual
-                y: this.height * 0.75 + Math.random() * 5, // Nace dentro de la parte inferior de la píldora
-                size: Math.random() * 10 + 6, // Pequeñas para que no crucen el borde
-                speedY: Math.random() * -1.5 - 0.5,
+                x: pX + 8 + (Math.random() * innerW * 0.45), // Nace bien pegado a la izquierda (Rengoku)
+                y: this.height * 0.55 + Math.random() * 8, // Nace en el centro-bajo, no hasta el fondo
+                size: Math.random() * 12 + 8, // Vuelve a ser visible pero contenido
+                speedY: Math.random() * -1.8 - 0.8, // Sube constante
                 speedX: (Math.random() - 0.5) * 1.5,
                 life: 1,
-                decay: Math.random() * 0.04 + 0.02, // Muerte rápida difuminada (evita bordes duros)
+                decay: Math.random() * 0.035 + 0.02,
                 hue: Math.random() * 25 + 5
             });
         }
@@ -91,19 +91,19 @@ class ThemeParticleEngine {
 
     emitShadow() {
         // Sombras oscuras tipo Monarch.
-        const pX = this.width * 0.15;
+        const pX = 16;
         const innerW = this.width - (pX * 2);
 
         if (Math.random() < 0.95) {
             this.particles.push({
                 type: 'shadow',
-                x: this.width - pX - (Math.random() * innerW * 0.5), // Lado derecho interno
-                y: this.height * 0.5 + (Math.random() - 0.5) * 15, // Centro vertical disperso
-                size: Math.random() * 15 + 8, // Nubes medianas
-                speedY: (Math.random() - 0.5) * 1,
-                speedX: Math.random() * -1.0 - 0.2, // Tira hacia la izquierda
+                x: this.width - pX - 8 - (Math.random() * innerW * 0.45), // Nace bien pegado a la derecha (JinWoo)
+                y: this.height * 0.5 + (Math.random() - 0.5) * 12, // Centro vertical estricto
+                size: Math.random() * 18 + 10, // Humo denso
+                speedY: (Math.random() - 0.5) * 0.8, // Flota más estático
+                speedX: Math.random() * -1.2 - 0.2, // Tira hacia el centro/izquierda
                 life: 1,
-                decay: Math.random() * 0.03 + 0.02 // Muerte rápida
+                decay: Math.random() * 0.025 + 0.015 // Muerte equilibrada
             });
         }
     }
