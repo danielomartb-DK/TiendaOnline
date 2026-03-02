@@ -222,9 +222,53 @@ async function handleCheckoutSubmit(e) {
         guardarCarrito();
         cartRefs.form.classList.add('hidden');
         cartRefs.checkoutSuccess.classList.remove('hidden');
-        alert('¡Pedido procesado con éxito!');
         renderizarItems();
         calcularTotales();
+
+        // Disparar el Modal Animado Temático en vez de Alert
+        const modalExito = document.getElementById('modalExitoCompra');
+        if (modalExito) {
+            const modalContenedor = document.getElementById('modalExitoContenedor');
+            const avatarImg = document.getElementById('modalAvatarImg');
+            const modalTitulo = document.getElementById('modalExitoTitulo');
+            const avatarGlow = document.getElementById('modalAvatarGlow');
+            const btnAceptar = document.getElementById('btnAceptarExito');
+
+            const isDark = document.documentElement.classList.contains('dark');
+
+            if (isDark) {
+                // Tema Jin-Woo
+                avatarImg.src = 'assets/images/avatar_jinwoo.png';
+                modalTitulo.textContent = '¡MISIÓN CUMPLIDA, CAZADOR!';
+                avatarGlow.className = 'absolute inset-0 rounded-full animate-ping opacity-20 bg-[#4f46e5]';
+                avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
+            } else {
+                // Tema Rengoku
+                avatarImg.src = 'assets/images/avatar_rengoku.png';
+                modalTitulo.textContent = '¡COMPRA FORJADA EN FUEGO!';
+                avatarGlow.className = 'absolute inset-0 rounded-full animate-ping opacity-20 bg-[#f97316]';
+                avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
+            }
+
+            modalExito.showModal();
+            // Animación de entrada scale-up
+            setTimeout(() => {
+                modalContenedor.classList.remove('scale-95', 'opacity-0');
+                modalContenedor.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            if (btnAceptar) {
+                btnAceptar.onclick = () => {
+                    // Animación de salida invertida
+                    modalContenedor.classList.remove('scale-100', 'opacity-100');
+                    modalContenedor.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modalExito.close();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 400);
+                };
+            }
+        }
 
     } catch (error) {
         console.error('Error en checkout:', error);
