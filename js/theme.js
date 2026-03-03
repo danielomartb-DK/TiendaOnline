@@ -267,11 +267,11 @@ class ThemeParticleEngine {
                 type: 'shadow',
                 x: cx + Math.cos(angle) * r,
                 y: cy + Math.sin(angle) * r,
-                size: Math.random() * 12 + 8, // Densidad controlada exterior
-                speedY: Math.sin(angle) * 0.5 - 0.5, // Flujo difuso
-                speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
+                size: Math.random() * 4 + 2, // 3x más delgado y fino
+                speedY: Math.sin(angle) * 0.3 - 0.2, // Flujo difuso lento
+                speedX: Math.cos(angle) * 0.3 + (Math.random() - 0.5) * 0.5,
                 life: 1,
-                decay: Math.random() * 0.025 + 0.015
+                decay: Math.random() * 0.04 + 0.02 // Muere más rápido para no crear masa espesa
             });
         }
     }
@@ -347,10 +347,10 @@ class ThemeParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Oscuridad Jin-Woo: Negro Profundo y Morado Oscuro/Frío
-                gradient.addColorStop(0, `rgba(5, 0, 15, ${p.life * 0.95})`); // Núcleo casi negro
-                gradient.addColorStop(0.4, `rgba(30, 5, 65, ${p.life * 0.8})`); // Aura morada densa
-                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`); // Difuminado morado brillante externo
+                // Oscuridad Jin-Woo: Negro Profundo y Morado Oscuro/Frío, ultra delgado
+                gradient.addColorStop(0, `rgba(5, 0, 15, ${p.life * 0.5})`); // Menos mancha negra
+                gradient.addColorStop(0.4, `rgba(30, 5, 65, ${p.life * 0.3})`); // Aura morada muy difuminada
+                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
