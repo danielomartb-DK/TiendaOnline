@@ -112,7 +112,7 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 20 + 15, // Más grandes para formar niebla continua
+                    size: Math.random() * 10 + 5, // Fuego interno normal Restaurado
                     speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
                     speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5,
                     life: 1,
@@ -127,9 +127,9 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 25 + 20, // Nubes de plasma muy grandes
+                    size: Math.random() * 14 + 10, // Nubes internas normales (14-10px) restauradas
                     speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
-                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5, // Leve tendencia hacia arriba
+                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5,
                     life: 1,
                     decay: Math.random() * 0.015 + 0.01
                 });
