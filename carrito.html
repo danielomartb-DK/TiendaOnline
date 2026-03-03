@@ -151,40 +151,54 @@
                 <!-- Resumen del Pedido -->
                 <div class="lg:col-span-1">
                     <div id="orderSummary"
-                        class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm sticky top-24">
-                        <h3 class="text-lg font-bold mb-4 pb-3 border-b border-slate-100">Resumen del Pedido</h3>
+                        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl p-6 shadow-sm dark:shadow-[0_0_30px_rgba(0,183,255,0.03)] sticky top-24 relative overflow-hidden transition-colors duration-300">
+                        <!-- Acento visual superior -->
+                        <div
+                            class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-orange-400 to-cyan-500">
+                        </div>
+
+                        <h3
+                            class="text-lg font-bold mb-4 pb-3 border-b border-slate-100 dark:border-slate-700/50 dark:text-white flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-xl">receipt_long</span>
+                            Resumen del Pedido
+                        </h3>
+
                         <div class="space-y-3 text-sm mb-4">
                             <div class="flex justify-between">
-                                <span class="text-slate-500">Subtotal (<span id="itemCount">0</span> Artículos)</span>
-                                <span id="subtotal" class="font-medium">$0.00</span>
+                                <span class="text-slate-500 dark:text-slate-400">Subtotal (<span id="itemCount">0</span>
+                                    Artículos)</span>
+                                <span id="subtotal" class="font-medium dark:text-slate-200">$0.00</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-slate-500">Envío</span>
-                                <span class="font-medium text-green-600">Gratis</span>
+                                <span class="text-slate-500 dark:text-slate-400">Envío</span>
+                                <span
+                                    class="font-bold text-green-600 dark:text-emerald-400 tracking-wide uppercase text-xs mt-0.5">Gratis</span>
                             </div>
                         </div>
-                        <div class="border-t border-slate-100 pt-4 mb-6">
+                        <div class="border-t border-slate-100 dark:border-slate-700/50 pt-4 mb-6">
                             <div class="flex justify-between items-center">
-                                <span class="text-lg font-bold">Total</span>
-                                <span id="total" class="text-2xl font-black text-primary">$0.00</span>
+                                <span class="text-lg font-bold dark:text-white">Total</span>
+                                <span id="total"
+                                    class="text-3xl font-black text-primary drop-shadow-[0_2px_10px_rgba(255,153,0,0.2)]">$0.00</span>
                             </div>
                         </div>
 
                         <!-- Formulario de Checkout -->
-                        <form id="checkoutForm" class="space-y-3">
-                            <h4 class="font-bold text-sm text-slate-700">Datos del Cliente</h4>
+                        <form id="checkoutForm" class="space-y-3 relative z-10">
+                            <h4 class="font-bold text-sm text-slate-700 dark:text-slate-300 mb-2 mt-4">Datos del Cliente
+                            </h4>
                             <input name="nombres" type="text" placeholder="Nombres" required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <input name="apellidos" type="text" placeholder="Apellidos" required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <input name="email" type="email" placeholder="Correo electrónico" required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <input name="documento" type="text" placeholder="Documento de identidad" required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <input name="telefono" type="tel" placeholder="Teléfono"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <input name="direccion" type="text" placeholder="Dirección de Envío" required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-primary focus:border-primary dark:focus:ring-cyan-500 dark:focus:border-cyan-500 focus:outline-none transition-all shadow-inner dark:shadow-none" />
                             <button type="submit" id="btnCheckout"
                                 class="w-full bg-primary text-brand-blue font-bold py-3 rounded-lg text-lg hover:brightness-110 shadow-[0_4px_15px_rgba(255,165,0,0.3)] transition-all flex items-center justify-center gap-2 mt-4 hover:-translate-y-0.5">
                                 <span class="material-symbols-outlined">rocket_launch</span>
