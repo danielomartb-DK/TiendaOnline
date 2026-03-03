@@ -111,11 +111,11 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 8 + 4,
+                    size: Math.random() * 20 + 15, // Más grandes para formar niebla continua
                     speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
-                    speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5, // Sube un poco
+                    speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5,
                     life: 1,
-                    decay: Math.random() * 0.03 + 0.02,
+                    decay: Math.random() * 0.02 + 0.015, // Desvanecimiento más lento
                     hue: Math.random() * 25 + 5
                 });
             }
@@ -126,11 +126,11 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 12 + 6,
+                    size: Math.random() * 25 + 20, // Nubes de plasma muy grandes
                     speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
-                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5),
+                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5, // Leve tendencia hacia arriba
                     life: 1,
-                    decay: Math.random() * 0.02 + 0.015
+                    decay: Math.random() * 0.015 + 0.01
                 });
             }
         }
@@ -161,12 +161,16 @@ class AvatarParticleEngine {
                 this.ctx.beginPath();
                 let currentSize = p.size * p.life;
                 if (currentSize < 0) currentSize = 0;
+
+                // Efecto orgánico estirando sutilmente la geometría en el eje vertical simulando fuego
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let currentHue = p.hue + (1 - p.life) * 35;
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life})`);
-                gradient.addColorStop(1, `hsla(${currentHue}, 100%, 30%, 0)`);
+                // Escalas de opacidad suaves para eliminar bordes duros de la esfera
+                gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life * 0.6})`);
+                gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 50%, ${p.life * 0.3})`);
+                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 30%, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
@@ -190,8 +194,9 @@ class AvatarParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `rgba(10, 5, 25, ${p.life * 0.9})`);
-                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.6})`);
+                // Bruma oscura suave de Jin Woo
+                gradient.addColorStop(0, `rgba(15, 10, 35, ${p.life * 0.5})`);
+                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.3})`);
                 gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
 
                 this.ctx.fillStyle = gradient;
