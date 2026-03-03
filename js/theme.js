@@ -385,11 +385,11 @@ class ThemeParticleEngine {
                 if (currentSize < 0) currentSize = 0;
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
-                let currentHue = p.hue + (1 - p.life) * 35; // Viaja de rojo a amarillo puro
+                let currentHue = p.hue + (1 - p.life) * 35; // Viaja de naranja a amarillo
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `hsla(${currentHue + 20}, 100%, 75%, ${p.life})`); // Núcleo candente brillante y definido
-                gradient.addColorStop(0.5, `hsla(${currentHue}, 100%, 55%, ${p.life * 0.8})`);
-                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 40%, 0)`);
+                gradient.addColorStop(0, `hsla(${currentHue}, 100%, 75%, ${p.life})`); // Núcleo candente
+                gradient.addColorStop(0.4, `hsla(${currentHue - 15}, 100%, 55%, ${p.life * 0.9})`); // Naranja intermedio
+                gradient.addColorStop(1, `hsla(${currentHue - 25}, 100%, 50%, 0)`); // Borde desapareciendo sin rojo manchado
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
@@ -419,10 +419,10 @@ class ThemeParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Oscuridad definida para esferas fantasmales
-                gradient.addColorStop(0, `rgba(20, 10, 50, ${p.life})`); // Núcleo sólido oscuro
-                gradient.addColorStop(0.5, `rgba(50, 20, 100, ${p.life * 0.8})`); // Aura morada concentrada
-                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`);
+                // Oscuridad ultra-densa para esferas fantasmales (Contraste visible en Modo Claro)
+                gradient.addColorStop(0, `rgba(5, 5, 20, ${p.life * 1.5})`); // Núcleo casi negro muy sólido
+                gradient.addColorStop(0.6, `rgba(30, 10, 80, ${p.life * 1.2})`); // Aura morada súper concentrada
+                gradient.addColorStop(1, `rgba(40, 10, 100, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
