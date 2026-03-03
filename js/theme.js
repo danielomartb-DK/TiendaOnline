@@ -170,8 +170,8 @@ class AvatarParticleEngine {
                 this.ctx.fill();
             }
         } else {
-            // Humo/Luz del Avatar Modo Oscuro (Jin-Woo)
-            this.ctx.globalCompositeOperation = 'screen'; // Luz Neón brillosa
+            // Humo/Luz del Avatar Modo Oscuro (Jin-Woo Original Materia Oscura)
+            this.ctx.globalCompositeOperation = 'source-over';
             for (let i = this.particles.length - 1; i >= 0; i--) {
                 let p = this.particles[i];
                 p.x += p.speedX;
@@ -189,10 +189,10 @@ class AvatarParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Brillo Cyan de Jin Woo (Eléctrico)
-                gradient.addColorStop(0, `rgba(96, 165, 250, ${p.life})`); // Núcleo Azul Claro Cyan
-                gradient.addColorStop(0.5, `rgba(37, 99, 235, ${p.life * 0.8})`); // Aura Azul
-                gradient.addColorStop(1, `rgba(30, 58, 138, 0)`); // Borde
+                // Bruma oscura suave de Jin Woo
+                gradient.addColorStop(0, `rgba(15, 10, 35, ${p.life * 0.5})`);
+                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.3})`);
+                gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
@@ -396,9 +396,9 @@ class ThemeParticleEngine {
             }
         }
 
-        // --- RENDERIZADO DE JIN-WOO (NEON AZUL REACTIVO) ---
-        // Usamos screen blend mode para que parezca luz emitida en vez de humo absorbente
-        this.ctx.globalCompositeOperation = 'screen';
+        // --- RENDERIZADO DE JIN-WOO (NEBULA MORADA ORIGINAL) ---
+        // Normal composition blending para oscurecer y fumar el background
+        this.ctx.globalCompositeOperation = 'source-over';
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
             let p = this.particles[i];
@@ -419,10 +419,10 @@ class ThemeParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Azul Neon Eléctrico
-                gradient.addColorStop(0, `rgba(96, 165, 250, ${p.life})`); // Núcleo sólido claro
-                gradient.addColorStop(0.5, `rgba(37, 99, 235, ${p.life * 0.8})`); // Aura azul concentrada
-                gradient.addColorStop(1, `rgba(30, 58, 138, 0)`);
+                // Oscuridad definida para esferas fantasmales
+                gradient.addColorStop(0, `rgba(20, 10, 50, ${p.life})`); // Núcleo sólido oscuro
+                gradient.addColorStop(0.5, `rgba(50, 20, 100, ${p.life * 0.8})`); // Aura morada concentrada
+                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
