@@ -235,36 +235,40 @@ class ThemeParticleEngine {
 
     emitFire(inner = false) {
         if (Math.random() < (inner ? 0.3 : 0.6)) {
-            let x, y;
+            let x, y, speedX, speedY;
             if (inner) {
-                // Interior distribuido
-                x = Math.random() * this.width;
-                y = Math.random() * this.height;
+                // Interior simulando Esferas/Chispas que salen de JinWoo (Slider a la Derecha) hacia la izquierda
+                const r = this.height / 2;
+                x = (this.width - r) - Math.random() * 10; // Sale del slider
+                y = r + (Math.random() - 0.5) * this.height * 0.7; // Dispersión vertical en la pista
+                speedX = -Math.random() * 2.0 - 0.5; // Disparo a la izquierda
+                speedY = (Math.random() - 0.5) * 0.5;
             } else {
                 // Delineado / Borde Exterior Fuego
                 const p = Math.random();
                 if (p < 0.45) { // Borde Arriba/Abajo
                     x = Math.random() * this.width;
-                    y = Math.random() > 0.5 ? Math.random() * 8 : this.height - Math.random() * 8;
+                    y = Math.random() > 0.5 ? Math.random() * 4 : this.height - Math.random() * 4;
                 } else { // Extremos Curvos
                     const angle = Math.random() * Math.PI;
                     const r = this.height / 2;
-                    // Lado derecho o Izquierdo
                     const isRight = Math.random() > 0.5;
                     x = isRight ? (this.width - r) + Math.sin(angle) * r : r - Math.sin(angle) * r;
                     y = r + Math.cos(angle) * r;
                 }
+                speedX = (Math.random() - 0.5) * 0.3;
+                speedY = (Math.random() - 0.5) * 0.3;
             }
 
             this.particles.push({
                 type: 'fire',
                 x: x,
                 y: y,
-                size: inner ? Math.random() * 12 + 6 : Math.random() * 6 + 3,
-                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : (Math.random() - 0.5) * 0.5,
-                speedX: inner ? (Math.random() - 0.5) * 0.6 : (Math.random() - 0.5) * 0.5,
+                size: inner ? Math.random() * 4 + 2.5 : Math.random() * 3 + 1.5, // Más esferas definidas, no nubes
+                speedY: speedY,
+                speedX: speedX,
                 life: 1,
-                decay: Math.random() * 0.03 + 0.02,
+                decay: inner ? Math.random() * 0.015 + 0.005 : Math.random() * 0.03 + 0.02, // Más lentas en morir el fondo
                 hue: Math.random() * 30 + 10
             });
         }
@@ -272,16 +276,20 @@ class ThemeParticleEngine {
 
     emitShadow(inner = false) {
         if (Math.random() < (inner ? 0.4 : 0.6)) {
-            let x, y;
+            let x, y, speedX, speedY;
             if (inner) {
-                x = Math.random() * this.width;
-                y = Math.random() * this.height;
+                // Interior simulando Esferas que salen de Rengoku (Slider a la Izquierda) hacia la derecha
+                const r = this.height / 2;
+                x = r + Math.random() * 10; // Sale del slider
+                y = r + (Math.random() - 0.5) * this.height * 0.7; // Dispersión
+                speedX = Math.random() * 2.0 + 0.5; // Disparo a la derecha
+                speedY = (Math.random() - 0.5) * 0.5;
             } else {
                 // Delineado / Borde Exterior Oscuro
                 const p = Math.random();
                 if (p < 0.45) { // Borde Arriba/Abajo
                     x = Math.random() * this.width;
-                    y = Math.random() > 0.5 ? Math.random() * 8 : this.height - Math.random() * 8;
+                    y = Math.random() > 0.5 ? Math.random() * 4 : this.height - Math.random() * 4;
                 } else { // Extremos Curvos
                     const angle = Math.random() * Math.PI;
                     const r = this.height / 2;
@@ -289,17 +297,19 @@ class ThemeParticleEngine {
                     x = isRight ? (this.width - r) + Math.sin(angle) * r : r - Math.sin(angle) * r;
                     y = r + Math.cos(angle) * r;
                 }
+                speedX = (Math.random() - 0.5) * 0.3;
+                speedY = (Math.random() - 0.5) * 0.3;
             }
 
             this.particles.push({
                 type: 'shadow',
                 x: x,
                 y: y,
-                size: inner ? Math.random() * 14 + 10 : Math.random() * 6 + 2,
-                speedY: (Math.random() - 0.5) * 0.6,
-                speedX: (Math.random() - 0.5) * 0.8,
+                size: inner ? Math.random() * 4 + 2.5 : Math.random() * 3 + 1.5, // Esferitas sólidas
+                speedY: speedY,
+                speedX: speedX,
                 life: 1,
-                decay: inner ? Math.random() * 0.015 + 0.01 : Math.random() * 0.03 + 0.02
+                decay: inner ? Math.random() * 0.015 + 0.005 : Math.random() * 0.03 + 0.02
             });
         }
     }
@@ -315,16 +325,16 @@ class ThemeParticleEngine {
             // Noche (JinWoo Switch): Borde de Sombra tenue, Núcleo de FUEGO
             this.emitShadow(false); // Borde
 
-            // Interior relleno masivamente de Fuego (Multiplicador x15 extremo)
-            for (let i = 0; i < 15; i++) {
+            // Interior relleno masivamente de Fuego (Rebajando de x15 Extremos a x6 Equilibrado)
+            for (let i = 0; i < 6; i++) {
                 this.emitFire(true);
             }
         } else {
             // Día (Rengoku Switch): Borde de Fuego tenue, Núcleo de SOMBRAS
             this.emitFire(false); // Borde
 
-            // Interior relleno masivamente de Sombras (Multiplicador x15 extremo)
-            for (let i = 0; i < 15; i++) {
+            // Interior relleno masivamente de Sombras (Rebajando de x15 Extremos a x6 Equilibrado)
+            for (let i = 0; i < 6; i++) {
                 this.emitShadow(true);
             }
         }
@@ -353,9 +363,9 @@ class ThemeParticleEngine {
 
                 let currentHue = p.hue + (1 - p.life) * 35; // Viaja de rojo a amarillo puro
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `hsla(${currentHue + 20}, 100%, 75%, ${p.life})`); // Núcleo candente brillante
-                gradient.addColorStop(0.3, `hsla(${currentHue}, 100%, 55%, ${p.life * 0.9})`); // Naranja intermedio
-                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 40%, 0)`); // Glow disipado exterior
+                gradient.addColorStop(0, `hsla(${currentHue + 20}, 100%, 75%, ${p.life})`); // Núcleo candente brillante y definido
+                gradient.addColorStop(0.5, `hsla(${currentHue}, 100%, 55%, ${p.life * 0.8})`);
+                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 40%, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
@@ -385,9 +395,9 @@ class ThemeParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Oscuridad Jin-Woo: Negro Profundo y Morado Oscuro/Frío, ultra delgado
-                gradient.addColorStop(0, `rgba(5, 0, 15, ${p.life * 0.5})`); // Menos mancha negra
-                gradient.addColorStop(0.4, `rgba(30, 5, 65, ${p.life * 0.3})`); // Aura morada muy difuminada
+                // Oscuridad definida para esferas, sin tanto difuminado de neblina
+                gradient.addColorStop(0, `rgba(20, 10, 50, ${p.life})`); // Núcleo sólido oscuro
+                gradient.addColorStop(0.5, `rgba(50, 20, 100, ${p.life * 0.8})`); // Aura morada concentrada
                 gradient.addColorStop(1, `rgba(80, 20, 160, 0)`);
 
                 this.ctx.fillStyle = gradient;
