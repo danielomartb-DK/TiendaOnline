@@ -435,12 +435,12 @@ class ThemeParticleEngine {
                 let currentSize = p.size * p.life; if (currentSize < 0) currentSize = 0;
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
-                // Azul Eléctrico brillante estilo Jin-Woo Neón (El color que pidió el cliente)
-                this.ctx.globalCompositeOperation = 'screen'; // Sumamos luz
+                // Oscuridad Morada del Modo Jinwoo Original (Fantasmal)
+                this.ctx.globalCompositeOperation = 'source-over'; // Restaurado para crear sombras
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                gradient.addColorStop(0, `rgba(96, 165, 250, ${p.life})`); // Azul claro cyan núcleo brillante
-                gradient.addColorStop(0.5, `rgba(37, 99, 235, ${p.life * 0.8})`); // Azul puro
-                gradient.addColorStop(1, `rgba(30, 58, 138, 0)`); // Borde difuminado
+                gradient.addColorStop(0, `rgba(20, 10, 50, ${p.life})`); // Núcleo sólido oscuro
+                gradient.addColorStop(0.5, `rgba(50, 20, 100, ${p.life * 0.8})`); // Aura morada concentrada
+                gradient.addColorStop(1, `rgba(80, 20, 160, 0)`); // Borde difuminado
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
