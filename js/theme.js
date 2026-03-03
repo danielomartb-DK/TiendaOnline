@@ -234,15 +234,20 @@ class ThemeParticleEngine {
     }
 
     emitFire() {
-        // Fuego leve y estirado (Rengoku en Switch superior)
+        // Fuego leve naciendo sólo del borde del círculo (Rengoku en Switch superior)
         if (Math.random() < 0.6) {
+            const angle = Math.random() * Math.PI * 2;
+            const r = (this.width / 2) * 0.75; // Approx borde del avatar (75% ancho)
+            const cx = this.width / 2;
+            const cy = this.height / 2;
+
             this.particles.push({
                 type: 'fire',
-                x: Math.random() * (this.width * 0.4) + (this.width * 0.1),
-                y: this.height * 0.8 + Math.random() * 5,
-                size: Math.random() * 8 + 4, // Más sutil
-                speedY: Math.random() * -1.5 - 0.5, // Ascenso suave
-                speedX: (Math.random() - 0.5) * 0.5, // Poco esparcimiento, alargado
+                x: cx + Math.cos(angle) * r,
+                y: cy + Math.sin(angle) * r,
+                size: Math.random() * 8 + 4, // Sutil radiación
+                speedY: Math.random() * -1.5 - 0.5, // Asciende o fluye radialmente
+                speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
                 life: 1,
                 decay: Math.random() * 0.03 + 0.02,
                 hue: Math.random() * 30 + 10
@@ -251,15 +256,20 @@ class ThemeParticleEngine {
     }
 
     emitShadow() {
-        // Sombras difuminadas y alargadas hacia la derecha (JinWoo)
+        // Sombras difuminadas emanando del borde del círculo (JinWoo)
         if (Math.random() < 0.6) {
+            const angle = Math.random() * Math.PI * 2;
+            const r = (this.width / 2) * 0.75; // Approx borde del avatar (75% ancho)
+            const cx = this.width / 2;
+            const cy = this.height / 2;
+
             this.particles.push({
                 type: 'shadow',
-                x: this.width - (Math.random() * (this.width * 0.4) + (this.width * 0.1)),
-                y: this.height / 2 + (Math.random() - 0.5) * 15,
-                size: Math.random() * 12 + 8, // Menos obvio
-                speedY: (Math.random() - 0.5) * 1.0 - 0.2,
-                speedX: Math.random() * -1.0 - 0.3, // Menos arrastre
+                x: cx + Math.cos(angle) * r,
+                y: cy + Math.sin(angle) * r,
+                size: Math.random() * 12 + 8, // Densidad controlada exterior
+                speedY: Math.sin(angle) * 0.5 - 0.5, // Flujo difuso
+                speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
                 life: 1,
                 decay: Math.random() * 0.025 + 0.015
             });
