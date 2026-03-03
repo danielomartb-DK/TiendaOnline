@@ -235,16 +235,34 @@ class ThemeParticleEngine {
 
     emitFire(inner = false) {
         if (Math.random() < (inner ? 0.3 : 0.6)) {
+            let x, y;
+            if (inner) {
+                // Interior distribuido
+                x = Math.random() * this.width;
+                y = Math.random() * this.height;
+            } else {
+                // Delineado / Borde Exterior Fuego
+                const p = Math.random();
+                if (p < 0.45) { // Borde Arriba/Abajo
+                    x = Math.random() * this.width;
+                    y = Math.random() > 0.5 ? Math.random() * 8 : this.height - Math.random() * 8;
+                } else { // Extremos Curvos
+                    const angle = Math.random() * Math.PI;
+                    const r = this.height / 2;
+                    // Lado derecho o Izquierdo
+                    const isRight = Math.random() > 0.5;
+                    x = isRight ? (this.width - r) + Math.sin(angle) * r : r - Math.sin(angle) * r;
+                    y = r + Math.cos(angle) * r;
+                }
+            }
+
             this.particles.push({
                 type: 'fire',
-                // Nace de a lo largo de todo el ancho del switch
-                x: Math.random() * this.width,
-                // Si es borde (exterior), nace desde abajo para simular fuego en el límite
-                // Si es inner (interior), nace distribuido en toda su altura
-                y: inner ? Math.random() * this.height : this.height * 0.9 + Math.random() * 2,
+                x: x,
+                y: y,
                 size: inner ? Math.random() * 12 + 6 : Math.random() * 6 + 3,
-                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : Math.random() * -1.2 - 0.2, // Tiende a subir
-                speedX: (Math.random() - 0.5) * 0.6,
+                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : (Math.random() - 0.5) * 0.5,
+                speedX: inner ? (Math.random() - 0.5) * 0.6 : (Math.random() - 0.5) * 0.5,
                 life: 1,
                 decay: Math.random() * 0.03 + 0.02,
                 hue: Math.random() * 30 + 10
@@ -254,14 +272,29 @@ class ThemeParticleEngine {
 
     emitShadow(inner = false) {
         if (Math.random() < (inner ? 0.4 : 0.6)) {
-            // Humo aleatorio en toda la pista
-            const startX = Math.random() * this.width;
-            const startY = Math.random() * this.height;
+            let x, y;
+            if (inner) {
+                x = Math.random() * this.width;
+                y = Math.random() * this.height;
+            } else {
+                // Delineado / Borde Exterior Oscuro
+                const p = Math.random();
+                if (p < 0.45) { // Borde Arriba/Abajo
+                    x = Math.random() * this.width;
+                    y = Math.random() > 0.5 ? Math.random() * 8 : this.height - Math.random() * 8;
+                } else { // Extremos Curvos
+                    const angle = Math.random() * Math.PI;
+                    const r = this.height / 2;
+                    const isRight = Math.random() > 0.5;
+                    x = isRight ? (this.width - r) + Math.sin(angle) * r : r - Math.sin(angle) * r;
+                    y = r + Math.cos(angle) * r;
+                }
+            }
 
             this.particles.push({
                 type: 'shadow',
-                x: startX,
-                y: inner ? startY : (Math.random() > 0.5 ? 0 : this.height), // Border = Nace en los extremos Y
+                x: x,
+                y: y,
                 size: inner ? Math.random() * 14 + 10 : Math.random() * 6 + 2,
                 speedY: (Math.random() - 0.5) * 0.6,
                 speedX: (Math.random() - 0.5) * 0.8,
