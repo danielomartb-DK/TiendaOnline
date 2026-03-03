@@ -236,6 +236,7 @@ async function handleCheckoutSubmit(e) {
 
             const isDark = document.documentElement.classList.contains('dark');
             const avatarCanvas = document.getElementById('modalAvatarCanvas');
+            const modalMensaje = document.getElementById('modalExitoMensaje');
 
             if (isDark) {
                 // Tema Jin-Woo
