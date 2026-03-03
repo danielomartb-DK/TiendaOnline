@@ -140,8 +140,8 @@ class AvatarParticleEngine {
         if (!this.isActive) return;
         this.ctx.clearRect(0, 0, this.width, this.height);
 
-        // Incrementar significativamente la densidad de partículas por fotograma
-        for (let i = 0; i < 4; i++) {
+        // Incrementar la densidad de partículas por fotograma (reducido a 3/4)
+        for (let i = 0; i < 3; i++) {
             this.emit();
         }
 
