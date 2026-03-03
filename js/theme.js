@@ -31,13 +31,13 @@ function actualizarIconosTema() {
         if (isDark) {
             // Modo Oscuro -> JinWoo
             icon.innerHTML = `
-                <canvas class="avatarAnimeCanvas pointer-events-none z-0" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
+                <canvas class="avatarAnimeCanvas pointer-events-none z-[-1]" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
                 <img src="assets/images/avatar_jinwoo.png" alt="JinWoo (Dark Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
             `;
         } else {
             // Modo Claro -> Rengoku
             icon.innerHTML = `
-                <canvas class="avatarAnimeCanvas pointer-events-none z-0" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
+                <canvas class="avatarAnimeCanvas pointer-events-none z-[-1]" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px;" width="120" height="120"></canvas>
                 <img src="assets/images/avatar_rengoku.png" alt="Rengoku (Light Mode)" class="relative z-10 w-full h-full rounded-full object-cover border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] pointer-events-none transition-transform duration-300 group-hover:scale-110" />
             `;
         }
@@ -414,15 +414,16 @@ class ThemeParticleEngine {
                 }
 
                 this.ctx.beginPath();
-                let currentSize = p.size * p.life;
+                // Aumentamos agresivamente el tamaño para que parezca una gran nube gaseosa en lugar de una canica dura
+                let currentSize = p.size * p.life * 2.5;
                 if (currentSize < 0) currentSize = 0;
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Oscuridad ultra-densa para esferas fantasmales (Contraste visible en Modo Claro)
-                gradient.addColorStop(0, `rgba(5, 5, 20, ${p.life * 1.5})`); // Núcleo casi negro muy sólido
-                gradient.addColorStop(0.6, `rgba(30, 10, 80, ${p.life * 1.2})`); // Aura morada súper concentrada
-                gradient.addColorStop(1, `rgba(40, 10, 100, 0)`);
+                // Niebla oscura ultra-difusa y translúcida (Contraste humo filtrado en Modo Claro)
+                gradient.addColorStop(0, `rgba(10, 5, 25, ${p.life * 0.7})`); // Núcleo oscurecido y suave
+                gradient.addColorStop(0.4, `rgba(30, 20, 60, ${p.life * 0.4})`); // Expansivo morado muy disipado
+                gradient.addColorStop(1, `rgba(40, 20, 80, 0)`); // Borde infinito invisible
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
