@@ -235,6 +235,7 @@ async function handleCheckoutSubmit(e) {
             const btnAceptar = document.getElementById('btnAceptarExito');
 
             const isDark = document.documentElement.classList.contains('dark');
+            const avatarCanvas = document.getElementById('modalAvatarCanvas');
 
             if (isDark) {
                 // Tema Jin-Woo
@@ -248,6 +249,11 @@ async function handleCheckoutSubmit(e) {
                 const resplandor = document.getElementById('modalExitoResplandor');
                 if (resplandor) resplandor.className = 'absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent pointer-events-none z-0';
                 if (btnAceptar) btnAceptar.className = 'relative z-10 bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-bold text-lg py-3 px-10 rounded-full shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 w-full flex items-center justify-center gap-2';
+
+                if (avatarCanvas && window.AvatarParticleEngine) {
+                    if (window.modalAvatarEngine) window.modalAvatarEngine.stop();
+                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'shadow');
+                }
             } else {
                 // Tema Rengoku
                 avatarImg.src = 'assets/images/avatar_rengoku.png';
@@ -260,6 +266,11 @@ async function handleCheckoutSubmit(e) {
                 const resplandor = document.getElementById('modalExitoResplandor');
                 if (resplandor) resplandor.className = 'absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-orange-300/10 to-transparent pointer-events-none z-0';
                 if (btnAceptar) btnAceptar.className = 'relative z-10 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-lg py-3 px-10 rounded-full shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 w-full flex items-center justify-center gap-2';
+
+                if (avatarCanvas && window.AvatarParticleEngine) {
+                    if (window.modalAvatarEngine) window.modalAvatarEngine.stop();
+                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'fire');
+                }
             }
 
             modalExito.showModal();
@@ -276,6 +287,10 @@ async function handleCheckoutSubmit(e) {
                     modalContenedor.classList.add('scale-95', 'opacity-0');
                     setTimeout(() => {
                         modalExito.close();
+                        if (window.modalAvatarEngine) {
+                            window.modalAvatarEngine.stop();
+                            window.modalAvatarEngine = null;
+                        }
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 400);
                 };
