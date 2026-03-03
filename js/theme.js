@@ -15,20 +15,9 @@
     }
 })();
 
-// Función global para que el botón la llame
 window.toggleTheme = function () {
-    const isDark = document.documentElement.classList.contains('dark');
-
-    if (isDark) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('PixelWear_theme', 'light');
-    } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('PixelWear_theme', 'dark');
-    }
-
-    // Actualizar iconos si existen en la página activa
-    actualizarIconosTema();
+    // Declaración vaciada aquí para evitar duplicación. La función real está al fondo de este archivo
+    // ligada permanentemente al scope global y al triggerBurst.
 };
 
 function actualizarIconosTema() {
@@ -233,6 +222,39 @@ class ThemeParticleEngine {
         this.height = this.canvas.height;
     }
 
+    triggerBurst(isDark) {
+        // Explosión Bimodal Masiva: Si vamos a la Oscuridad (JinWoo) explotamos destellos Azul Cian/Neón que llenan TODO el track.
+        // Si vamos a la Luz (Rengoku) explotamos rescoldos Naranja/Blanco.
+        const burstCount = 120; // Llenado masivo
+
+        for (let i = 0; i < burstCount; i++) {
+            // Repartido en toda la pista
+            const x = Math.random() * this.width;
+            const y = Math.random() * this.height;
+            // Velocidades drásticas hacia todos lados
+            const speedX = (Math.random() - 0.5) * 4;
+            const speedY = (Math.random() - 0.5) * 2;
+            const size = Math.random() * 8 + 4; // Pedazos grandes y pequeños
+
+            if (isDark) { // -> JinWoo (Oscuridad)
+                this.particles.push({
+                    type: 'burst_shadow', // Nuevo tipo reactivo de luz azul
+                    x: x, y: y, size: size, speedX: speedX, speedY: speedY,
+                    life: 1,
+                    decay: Math.random() * 0.015 + 0.005 // Tardan mucho en morir (fade out majestuoso)
+                });
+            } else { // -> Rengoku (Fuego Lleno)
+                this.particles.push({
+                    type: 'burst_fire', // Tipo de estela puramente ígnea brillante
+                    x: x, y: y, size: size, speedX: speedX, speedY: speedY,
+                    life: 1,
+                    decay: Math.random() * 0.015 + 0.005,
+                    hue: Math.random() * 20 + 20 // De naranja puro a amarillo candente
+                });
+            }
+        }
+    }
+
     emitFire(inner = false) {
         if (Math.random() < (inner ? 0.3 : 0.6)) {
             let x, y, speedX, speedY;
@@ -404,11 +426,50 @@ class ThemeParticleEngine {
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
             }
+
+            // --- BURSTS REACTIVOS --- 
+            if (p.type === 'burst_shadow') {
+                p.x += p.speedX; p.y += p.speedY; p.life -= p.decay;
+                if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life; if (currentSize < 0) currentSize = 0;
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+
+                // Azul Eléctrico brillante estilo Jin-Woo Neón (El color que pidió el cliente)
+                this.ctx.globalCompositeOperation = 'screen'; // Sumamos luz
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                gradient.addColorStop(0, `rgba(96, 165, 250, ${p.life})`); // Azul claro cyan núcleo brillante
+                gradient.addColorStop(0.5, `rgba(37, 99, 235, ${p.life * 0.8})`); // Azul puro
+                gradient.addColorStop(1, `rgba(30, 58, 138, 0)`); // Borde difuminado
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+            }
+
+            if (p.type === 'burst_fire') {
+                p.x += p.speedX; p.y += p.speedY; p.life -= p.decay;
+                if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life; if (currentSize < 0) currentSize = 0;
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+
+                this.ctx.globalCompositeOperation = 'screen';
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                gradient.addColorStop(0, `hsla(${p.hue + 10}, 100%, 75%, ${p.life})`); // Brillo naranja-amarillo fuerte
+                gradient.addColorStop(0.5, `hsla(${p.hue}, 100%, 50%, ${p.life * 0.8})`);
+                gradient.addColorStop(1, `hsla(${p.hue - 15}, 100%, 35%, 0)`);
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+            }
         }
 
         requestAnimationFrame(this.animate);
     }
 }
+
+// Variables Globales 
+window.appThemeEngines = []; // Referencias limpias 
 
 // Escuchar cuado el documento cargue para inicializar los iconos y el motor Canvas en su estado correcto
 document.addEventListener('DOMContentLoaded', () => {
@@ -416,8 +477,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inyectar el Particle Engine a todos los Canvas detectados
     document.querySelectorAll('.themeAnimeCanvas').forEach(canvas => {
-        new ThemeParticleEngine(canvas);
+        const eng = new ThemeParticleEngine(canvas);
+        window.appThemeEngines.push(eng); // Guardar para lanzar bursts desde botón global
     });
 });
+
+// Función global para que el botón la llame (reescrita para incluir el Burst Visual)
+window.toggleTheme = function () {
+    const isDark = document.documentElement.classList.contains('dark');
+    const newStateDark = !isDark;
+
+    if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('PixelWear_theme', 'light');
+    } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('PixelWear_theme', 'dark');
+    }
+
+    // Invocar el estallido masivo de estelas de luz en todos los NavBar sliders registrados
+    window.appThemeEngines.forEach(eng => eng.triggerBurst(newStateDark));
+
+    // Actualizar iconos gráficos 
+    actualizarIconosTema();
+};
 
 window.AvatarParticleEngine = AvatarParticleEngine;
