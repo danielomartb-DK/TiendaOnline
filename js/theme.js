@@ -105,63 +105,31 @@ class AvatarParticleEngine {
         if (this.width === 0) this.resize();
         if (this.width === 0) return;
 
-        const mainType = this.type; // Elemento afín (Borde)
-        const oppType = this.type === 'fire' ? 'shadow' : 'fire'; // Elemento contrario (Núcleo)
-
-        // 1. Emitir en el borde (Elemento Afín)
-        if (Math.random() < 0.8) {
-            const angle = Math.random() * Math.PI * 2;
-            const r = this.avatarRadius + (Math.random() * 2 - 1);
-            if (mainType === 'fire') {
+        if (this.type === 'fire') {
+            if (Math.random() < 0.9) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = this.avatarRadius + (Math.random() * 2 - 1);
                 this.particles.push({
-                    type: 'fire',
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 8 + 4, // Borde delgado
+                    size: Math.random() * 10 + 5, // Fuego interno normal Restaurado
                     speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
                     speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5,
                     life: 1,
-                    decay: Math.random() * 0.02 + 0.015,
+                    decay: Math.random() * 0.02 + 0.015, // Desvanecimiento más lento
                     hue: Math.random() * 25 + 5
-                });
-            } else {
-                this.particles.push({
-                    type: 'shadow',
-                    x: this.centerX + Math.cos(angle) * r,
-                    y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 6 + 3, // Borde fino
-                    speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
-                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5,
-                    life: 1,
-                    decay: Math.random() * 0.03 + 0.015
                 });
             }
-        }
-
-        // 2. Emitir en el núcleo interno (Elemento Invertido/Contrario)
-        if (Math.random() < 0.5) {
-            const angle = Math.random() * Math.PI * 2;
-            const innerR = Math.random() * (this.avatarRadius * 0.8); // 80% hacia adentro
-            if (oppType === 'fire') {
+        } else {
+            if (Math.random() < 0.9) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = this.avatarRadius + (Math.random() * 2 - 1);
                 this.particles.push({
-                    type: 'fire',
-                    x: this.centerX + Math.cos(angle) * innerR,
-                    y: this.centerY + Math.sin(angle) * innerR,
-                    size: Math.random() * 12 + 8, // Núcleo mediano
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    speedY: (Math.random() - 0.5) * 1.5 - 0.5, // Tiende a subir
-                    life: 1,
-                    decay: Math.random() * 0.02 + 0.015,
-                    hue: Math.random() * 25 + 5
-                });
-            } else {
-                this.particles.push({
-                    type: 'shadow',
-                    x: this.centerX + Math.cos(angle) * innerR,
-                    y: this.centerY + Math.sin(angle) * innerR,
-                    size: Math.random() * 16 + 10, // Sombras internas más grandes
-                    speedX: (Math.random() - 0.5) * 0.6,
-                    speedY: (Math.random() - 0.5) * 0.6,
+                    x: this.centerX + Math.cos(angle) * r,
+                    y: this.centerY + Math.sin(angle) * r,
+                    size: Math.random() * 14 + 10, // Nubes internas normales (14-10px) restauradas
+                    speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
+                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5,
                     life: 1,
                     decay: Math.random() * 0.015 + 0.01
                 });
@@ -182,63 +150,63 @@ class AvatarParticleEngine {
             this.emit();
         }
 
-        // Render Fire (Screen)
-        this.ctx.globalCompositeOperation = 'screen';
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            let p = this.particles[i];
-            if (p.type !== 'fire') continue;
+        if (this.type === 'fire') {
+            this.ctx.globalCompositeOperation = 'screen';
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                let p = this.particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= p.decay;
 
-            p.x += p.speedX;
-            p.y += p.speedY;
-            p.life -= p.decay;
+                if (p.life <= 0) {
+                    this.particles.splice(i, 1);
+                    continue;
+                }
 
-            if (p.life <= 0) {
-                this.particles.splice(i, 1);
-                continue;
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life;
+                if (currentSize < 0) currentSize = 0;
+
+                // Efecto orgánico estirando sutilmente la geometría en el eje vertical simulando fuego
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+
+                let currentHue = p.hue + (1 - p.life) * 35;
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                // Escalas de opacidad suaves para eliminar bordes duros de la esfera
+                gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life * 0.6})`);
+                gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 50%, ${p.life * 0.3})`);
+                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 30%, 0)`);
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
             }
+        } else {
+            this.ctx.globalCompositeOperation = 'source-over';
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                let p = this.particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= p.decay;
 
-            this.ctx.beginPath();
-            let currentSize = p.size * p.life;
-            if (currentSize < 0) currentSize = 0;
-            this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+                if (p.life <= 0) {
+                    this.particles.splice(i, 1);
+                    continue;
+                }
 
-            let currentHue = p.hue + (1 - p.life) * 35;
-            let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-            gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life * 0.6})`);
-            gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 50%, ${p.life * 0.3})`);
-            gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 30%, 0)`);
+                this.ctx.beginPath();
+                let currentSize = p.size * p.life;
+                if (currentSize < 0) currentSize = 0;
+                this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
-            this.ctx.fillStyle = gradient;
-            this.ctx.fill();
-        }
+                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+                // Bruma oscura suave de Jin Woo
+                gradient.addColorStop(0, `rgba(15, 10, 35, ${p.life * 0.5})`);
+                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.3})`);
+                gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
 
-        // Render Shadows (Source-Over)
-        this.ctx.globalCompositeOperation = 'source-over';
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            let p = this.particles[i];
-            if (p.type !== 'shadow') continue;
-
-            p.x += p.speedX;
-            p.y += p.speedY;
-            p.life -= p.decay;
-
-            if (p.life <= 0) {
-                this.particles.splice(i, 1);
-                continue;
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
             }
-
-            this.ctx.beginPath();
-            let currentSize = p.size * p.life;
-            if (currentSize < 0) currentSize = 0;
-            this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
-
-            let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-            gradient.addColorStop(0, `rgba(15, 10, 35, ${p.life * 0.5})`);
-            gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.3})`);
-            gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
-
-            this.ctx.fillStyle = gradient;
-            this.ctx.fill();
         }
 
         this.animationId = requestAnimationFrame(this.animate);
