@@ -235,18 +235,16 @@ class ThemeParticleEngine {
 
     emitFire(inner = false) {
         if (Math.random() < (inner ? 0.3 : 0.6)) {
-            const angle = Math.random() * Math.PI * 2;
-            const r = inner ? Math.random() * (this.width / 2) * 0.6 : (this.width / 2) * 0.75;
-            const cx = this.width / 2;
-            const cy = this.height / 2;
-
             this.particles.push({
                 type: 'fire',
-                x: cx + Math.cos(angle) * r,
-                y: cy + Math.sin(angle) * r,
-                size: inner ? Math.random() * 12 + 8 : Math.random() * 8 + 4,
-                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : Math.random() * -1.5 - 0.5,
-                speedX: inner ? (Math.random() - 0.5) * 0.5 : Math.cos(angle) * 0.8 + (Math.random() - 0.5),
+                // Nace de a lo largo de todo el ancho del switch
+                x: Math.random() * this.width,
+                // Si es borde (exterior), nace desde abajo para simular fuego en el límite
+                // Si es inner (interior), nace distribuido en toda su altura
+                y: inner ? Math.random() * this.height : this.height * 0.9 + Math.random() * 2,
+                size: inner ? Math.random() * 12 + 6 : Math.random() * 6 + 3,
+                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : Math.random() * -1.2 - 0.2, // Tiende a subir
+                speedX: (Math.random() - 0.5) * 0.6,
                 life: 1,
                 decay: Math.random() * 0.03 + 0.02,
                 hue: Math.random() * 30 + 10
@@ -256,20 +254,19 @@ class ThemeParticleEngine {
 
     emitShadow(inner = false) {
         if (Math.random() < (inner ? 0.4 : 0.6)) {
-            const angle = Math.random() * Math.PI * 2;
-            const r = inner ? Math.random() * (this.width / 2) * 0.6 : (this.width / 2) * 0.75;
-            const cx = this.width / 2;
-            const cy = this.height / 2;
+            // Humo aleatorio en toda la pista
+            const startX = Math.random() * this.width;
+            const startY = Math.random() * this.height;
 
             this.particles.push({
                 type: 'shadow',
-                x: cx + Math.cos(angle) * r,
-                y: cy + Math.sin(angle) * r,
-                size: inner ? Math.random() * 16 + 10 : Math.random() * 4 + 2,
-                speedY: inner ? (Math.random() - 0.5) * 0.5 : Math.sin(angle) * 0.3 - 0.2,
-                speedX: inner ? (Math.random() - 0.5) * 0.5 : Math.cos(angle) * 0.3 + (Math.random() - 0.5) * 0.5,
+                x: startX,
+                y: inner ? startY : (Math.random() > 0.5 ? 0 : this.height), // Border = Nace en los extremos Y
+                size: inner ? Math.random() * 14 + 10 : Math.random() * 6 + 2,
+                speedY: (Math.random() - 0.5) * 0.6,
+                speedX: (Math.random() - 0.5) * 0.8,
                 life: 1,
-                decay: inner ? Math.random() * 0.015 + 0.01 : Math.random() * 0.04 + 0.02
+                decay: inner ? Math.random() * 0.015 + 0.01 : Math.random() * 0.03 + 0.02
             });
         }
     }
