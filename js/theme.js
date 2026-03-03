@@ -234,34 +234,34 @@ class ThemeParticleEngine {
     }
 
     emitFire() {
-        // Fuego intenso, dinámico y orgánico contenido (Rengoku)
-        if (Math.random() < 0.95) {
+        // Fuego leve y estirado (Rengoku en Switch superior)
+        if (Math.random() < 0.6) {
             this.particles.push({
                 type: 'fire',
-                x: Math.random() * (this.width * 0.5) + (this.width * 0.05), // Zona izquierda principal
-                y: this.height * 0.8 + Math.random() * 5, // Nace cerca de la base interior
-                size: Math.random() * 12 + 6, // Tamaño orgánico
-                speedY: Math.random() * -2 - 1.5, // Sube rápido
-                speedX: (Math.random() - 0.5) * 1.2, // Esparcimiento lateral
+                x: Math.random() * (this.width * 0.4) + (this.width * 0.1),
+                y: this.height * 0.8 + Math.random() * 5,
+                size: Math.random() * 8 + 4, // Más sutil
+                speedY: Math.random() * -1.5 - 0.5, // Ascenso suave
+                speedX: (Math.random() - 0.5) * 0.5, // Poco esparcimiento, alargado
                 life: 1,
-                decay: Math.random() * 0.02 + 0.015,
-                hue: Math.random() * 30 + 10 // Entre rojo intenso y naranja/amarillo
+                decay: Math.random() * 0.03 + 0.02,
+                hue: Math.random() * 30 + 10
             });
         }
     }
 
     emitShadow() {
-        // Sombras oscuras negro y morado saliendo por la derecha (JinWoo)
-        if (Math.random() < 0.95) {
+        // Sombras difuminadas y alargadas hacia la derecha (JinWoo)
+        if (Math.random() < 0.6) {
             this.particles.push({
                 type: 'shadow',
-                x: this.width - (Math.random() * (this.width * 0.5) + (this.width * 0.05)), // Zona derecha
-                y: this.height / 2 + (Math.random() - 0.5) * 20, // Humo emana desde el centro vert
-                size: Math.random() * 18 + 10, // Nubes oscuras densas
-                speedY: (Math.random() - 0.5) * 1.5 - 0.2, // Sube levemente
-                speedX: Math.random() * -1.5 - 0.5, // Empuja hacia el centro/izquierda
+                x: this.width - (Math.random() * (this.width * 0.4) + (this.width * 0.1)),
+                y: this.height / 2 + (Math.random() - 0.5) * 15,
+                size: Math.random() * 12 + 8, // Menos obvio
+                speedY: (Math.random() - 0.5) * 1.0 - 0.2,
+                speedX: Math.random() * -1.0 - 0.3, // Menos arrastre
                 life: 1,
-                decay: Math.random() * 0.012 + 0.01
+                decay: Math.random() * 0.025 + 0.015
             });
         }
     }
@@ -272,15 +272,13 @@ class ThemeParticleEngine {
 
         const isDark = document.documentElement.classList.contains('dark');
 
-        // Emisión Invertida a petición del usuario
+        // Emisión Invertida sutil a petición del usuario
         if (isDark) {
-            // Cuando activo JinWoo (Noche), el track a la izquierda se inunda de FUEGO
             this.emitFire();
-            if (Math.random() < 0.6) this.emitFire(); // Doble inyección (llena y sobresale)
+            if (Math.random() < 0.3) this.emitFire();
         } else {
-            // Cuando activo Rengoku (Día), el track a la derecha emana SOMBRAS (Negro/Morado)
             this.emitShadow();
-            if (Math.random() < 0.6) this.emitShadow(); // Doble inyección densa
+            if (Math.random() < 0.3) this.emitShadow();
         }
 
         // --- RENDERIZADO DE FUEGO ---
