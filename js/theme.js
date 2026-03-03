@@ -140,8 +140,10 @@ class AvatarParticleEngine {
         if (!this.isActive) return;
         this.ctx.clearRect(0, 0, this.width, this.height);
 
-        this.emit();
-        if (Math.random() < 0.5) this.emit();
+        // Incrementar significativamente la densidad de partículas por fotograma
+        for (let i = 0; i < 4; i++) {
+            this.emit();
+        }
 
         if (this.type === 'fire') {
             this.ctx.globalCompositeOperation = 'screen';

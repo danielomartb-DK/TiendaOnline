@@ -262,8 +262,8 @@ async function handleCheckoutSubmit(e) {
                 modalTitulo.textContent = '¡COMPRA FORJADA EN FUEGO!';
                 modalTitulo.className = 'text-3xl font-black text-white mb-2 relative z-10 tracking-tight';
                 if (modalMensaje) modalMensaje.className = 'text-red-100 mb-8 relative z-10 text-sm px-2 font-medium';
-                avatarGlow.className = 'absolute inset-0 rounded-full animate-ping opacity-20 bg-[#f97316]';
-                avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
+                avatarGlow.className = 'absolute inset-0 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-40 bg-red-600';
+                avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#ef4444] shadow-[0_0_20px_rgba(239,68,68,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
 
                 // Colores ardientes del recuadro
                 modalContenedor.className = 'bg-gradient-to-br from-orange-600 via-orange-500 to-red-600 border-2 border-orange-400 rounded-3xl shadow-[0_0_50px_rgba(249,115,22,0.6)] w-full max-w-sm relative transform scale-95 opacity-0 transition-all duration-500 overflow-hidden flex flex-col items-center p-8 text-center';
