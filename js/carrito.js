@@ -254,7 +254,8 @@ async function handleCheckoutSubmit(e) {
 
                 if (avatarCanvas && window.AvatarParticleEngine) {
                     if (window.modalAvatarEngine) window.modalAvatarEngine.stop();
-                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'shadow');
+                    // Multiplicador del 30% (muy tenue) para mantener el Botón limpio en la Topbar
+                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'shadow', 0.3);
                 }
             } else {
                 // Tema Rengoku Fuego
@@ -273,7 +274,8 @@ async function handleCheckoutSubmit(e) {
 
                 if (avatarCanvas && window.AvatarParticleEngine) {
                     if (window.modalAvatarEngine) window.modalAvatarEngine.stop();
-                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'fire');
+                    // Multiplicador del 30% (muy tenue) para mantener el Botón limpio en la Topbar
+                    window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'fire', 0.3);
                 }
             }
 

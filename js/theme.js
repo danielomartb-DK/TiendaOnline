@@ -64,10 +64,11 @@ function actualizarIconosTema() {
 }
 // --- Motor Avanzado de Partículas para Avatares (Auras) ---
 class AvatarParticleEngine {
-    constructor(canvas, type) {
+    constructor(canvas, type = 'fire', densityMultiplier = 1) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.type = type; // 'fire' or 'shadow'
+        this.type = type; // 'fire' (Rengoku) o 'shadow' (Jin-Woo)
+        this.densityMultiplier = densityMultiplier;
         this.particles = [];
         this.isActive = true;
 
@@ -138,9 +139,16 @@ class AvatarParticleEngine {
 
     animate() {
         if (!this.isActive) return;
-        // Emitir un promedio de 1.5 partículas por fotograma (reducido a la mitad)
-        this.emit();
-        if (Math.random() < 0.5) this.emit();
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Emitir base según el multiplicador dinámico
+        for (let i = 0; i < Math.floor(3 * this.densityMultiplier); i++) {
+            this.emit();
+        }
+        // Intercalar las fracciones del multiplicador
+        if (Math.random() < ((3 * this.densityMultiplier) % 1)) {
+            this.emit();
+        }
 
         if (this.type === 'fire') {
             this.ctx.globalCompositeOperation = 'screen';
