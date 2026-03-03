@@ -237,12 +237,13 @@ class ThemeParticleEngine {
         if (Math.random() < (inner ? 0.3 : 0.6)) {
             let x, y, speedX, speedY;
             if (inner) {
-                // Interior simulando Esferas/Chispas que salen de JinWoo (Slider a la Derecha) hacia la izquierda
+                // Interior simulando Brasas Lentas o Cenizas que flotan elegantemente
                 const r = this.height / 2;
-                x = (this.width - r) - Math.random() * 10; // Sale del slider
-                y = r + (Math.random() - 0.5) * this.height * 0.7; // Dispersión vertical en la pista
-                speedX = -Math.random() * 2.0 - 0.5; // Disparo a la izquierda
-                speedY = (Math.random() - 0.5) * 0.5;
+                x = (this.width - r); // Origen cerca de JinWoo (Derecha)
+                y = r + (Math.random() - 0.5) * this.height * 0.4; // Dispersión vertical muy leve para dar sensación de concentración
+                speedX = -Math.random() * 0.4 - 0.1; // Flotar suave a la izquierda (vs anterior -2.5)
+                speedY = (Math.random() - 0.5) * 0.2; // Levitar tranquilamente
+
             } else {
                 // Delineado / Borde Exterior Fuego
                 const p = Math.random();
@@ -264,11 +265,11 @@ class ThemeParticleEngine {
                 type: 'fire',
                 x: x,
                 y: y,
-                size: inner ? Math.random() * 4 + 2.5 : Math.random() * 3 + 1.5, // Más esferas definidas, no nubes
+                size: inner ? Math.random() * 6 + 3 : Math.random() * 3 + 1.5, // Esferas irregulares pequeñas pero brillantes
                 speedY: speedY,
                 speedX: speedX,
                 life: 1,
-                decay: inner ? Math.random() * 0.015 + 0.005 : Math.random() * 0.03 + 0.02, // Más lentas en morir el fondo
+                decay: inner ? Math.random() * 0.008 + 0.004 : Math.random() * 0.03 + 0.02, // Extremadamente lentas en morir para que el glow perdure (Magic Floating)
                 hue: Math.random() * 30 + 10
             });
         }
@@ -278,12 +279,12 @@ class ThemeParticleEngine {
         if (Math.random() < (inner ? 0.4 : 0.6)) {
             let x, y, speedX, speedY;
             if (inner) {
-                // Interior simulando Esferas que salen de Rengoku (Slider a la Izquierda) hacia la derecha
+                // Interior simulando Sombras Lentas/Materia Oscura que flota elegantemente
                 const r = this.height / 2;
-                x = r + Math.random() * 10; // Sale del slider
-                y = r + (Math.random() - 0.5) * this.height * 0.7; // Dispersión
-                speedX = Math.random() * 2.0 + 0.5; // Disparo a la derecha
-                speedY = (Math.random() - 0.5) * 0.5;
+                x = r; // Origen cerca de Rengoku (Izquierda)
+                y = r + (Math.random() - 0.5) * this.height * 0.4; // Concentradas al centro
+                speedX = Math.random() * 0.4 + 0.1; // Flotar suave a la derecha (vs anterior +2.5)
+                speedY = (Math.random() - 0.5) * 0.2; // Levitar tranquilamente
             } else {
                 // Delineado / Borde Exterior Oscuro
                 const p = Math.random();
@@ -305,11 +306,11 @@ class ThemeParticleEngine {
                 type: 'shadow',
                 x: x,
                 y: y,
-                size: inner ? Math.random() * 4 + 2.5 : Math.random() * 3 + 1.5, // Esferitas sólidas
+                size: inner ? Math.random() * 6 + 3 : Math.random() * 3 + 1.5,
                 speedY: speedY,
                 speedX: speedX,
                 life: 1,
-                decay: inner ? Math.random() * 0.015 + 0.005 : Math.random() * 0.03 + 0.02
+                decay: inner ? Math.random() * 0.008 + 0.004 : Math.random() * 0.03 + 0.02 // Extremadamente lentas
             });
         }
     }
