@@ -350,3 +350,5 @@ document.addEventListener('DOMContentLoaded', () => {
         new ThemeParticleEngine(canvas);
     });
 });
+
+window.AvatarParticleEngine = AvatarParticleEngine;

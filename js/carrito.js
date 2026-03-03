@@ -242,6 +242,7 @@ async function handleCheckoutSubmit(e) {
                 avatarImg.src = 'assets/images/avatar_jinwoo.png';
                 modalTitulo.textContent = '¡MISIÓN CUMPLIDA, CAZADOR!';
                 modalTitulo.className = 'text-3xl font-black text-white mb-2 relative z-10 tracking-tight';
+                if (modalMensaje) modalMensaje.className = 'text-indigo-200 mb-8 relative z-10 text-sm px-2';
                 avatarGlow.className = 'absolute inset-0 rounded-full animate-ping opacity-20 bg-[#4f46e5]';
                 avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#4f46e5] shadow-[0_0_20px_rgba(79,70,229,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
 
@@ -255,17 +256,19 @@ async function handleCheckoutSubmit(e) {
                     window.modalAvatarEngine = new window.AvatarParticleEngine(avatarCanvas, 'shadow');
                 }
             } else {
-                // Tema Rengoku
+                // Tema Rengoku Fuego
                 avatarImg.src = 'assets/images/avatar_rengoku.png';
                 modalTitulo.textContent = '¡COMPRA FORJADA EN FUEGO!';
-                modalTitulo.className = 'text-3xl font-black text-orange-950 mb-2 relative z-10 tracking-tight';
+                modalTitulo.className = 'text-3xl font-black text-white mb-2 relative z-10 tracking-tight';
+                if (modalMensaje) modalMensaje.className = 'text-red-100 mb-8 relative z-10 text-sm px-2 font-medium';
                 avatarGlow.className = 'absolute inset-0 rounded-full animate-ping opacity-20 bg-[#f97316]';
                 avatarImg.className = 'relative w-full h-full object-cover rounded-full border-[3px] border-[#f97316] shadow-[0_0_20px_rgba(249,115,22,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3';
 
-                modalContenedor.className = 'bg-gradient-to-br from-orange-50 via-white to-orange-100 border-2 border-orange-200 rounded-3xl shadow-[0_0_50px_rgba(249,115,22,0.3)] w-full max-w-sm relative transform scale-95 opacity-0 transition-all duration-500 overflow-hidden flex flex-col items-center p-8 text-center';
+                // Colores ardientes del recuadro
+                modalContenedor.className = 'bg-gradient-to-br from-orange-600 via-orange-500 to-red-600 border-2 border-orange-400 rounded-3xl shadow-[0_0_50px_rgba(249,115,22,0.6)] w-full max-w-sm relative transform scale-95 opacity-0 transition-all duration-500 overflow-hidden flex flex-col items-center p-8 text-center';
                 const resplandor = document.getElementById('modalExitoResplandor');
-                if (resplandor) resplandor.className = 'absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-orange-300/10 to-transparent pointer-events-none z-0';
-                if (btnAceptar) btnAceptar.className = 'relative z-10 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-lg py-3 px-10 rounded-full shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 w-full flex items-center justify-center gap-2';
+                if (resplandor) resplandor.className = 'absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-400/40 via-red-500/10 to-transparent pointer-events-none z-0';
+                if (btnAceptar) btnAceptar.className = 'relative z-10 bg-white/20 backdrop-blur-md text-white border border-white/50 font-bold text-lg py-3 px-10 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.2)] hover:bg-white/30 hover:-translate-y-1 hover:scale-105 transition-all duration-300 w-full flex items-center justify-center gap-2';
 
                 if (avatarCanvas && window.AvatarParticleEngine) {
                     if (window.modalAvatarEngine) window.modalAvatarEngine.stop();
