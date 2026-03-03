@@ -282,16 +282,16 @@ class ThemeParticleEngine {
             // Noche (JinWoo Switch): Borde de Sombra tenue, Núcleo de FUEGO
             this.emitShadow(false); // Borde
 
-            // Interior relleno masivamente de Fuego (Multiplicador x3 solicitado)
-            for (let i = 0; i < 5; i++) {
+            // Interior relleno masivamente de Fuego (Multiplicador x15 extremo)
+            for (let i = 0; i < 15; i++) {
                 this.emitFire(true);
             }
         } else {
             // Día (Rengoku Switch): Borde de Fuego tenue, Núcleo de SOMBRAS
             this.emitFire(false); // Borde
 
-            // Interior relleno masivamente de Sombras (Multiplicador x3 solicitado)
-            for (let i = 0; i < 5; i++) {
+            // Interior relleno masivamente de Sombras (Multiplicador x15 extremo)
+            for (let i = 0; i < 15; i++) {
                 this.emitShadow(true);
             }
         }
