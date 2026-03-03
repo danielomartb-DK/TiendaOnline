@@ -233,11 +233,10 @@ class ThemeParticleEngine {
         this.height = this.canvas.height;
     }
 
-    emitFire() {
-        // Fuego leve naciendo sólo del borde del círculo (Rengoku en Switch superior)
-        if (Math.random() < 0.6) {
+    emitFire(inner = false) {
+        if (Math.random() < (inner ? 0.3 : 0.6)) {
             const angle = Math.random() * Math.PI * 2;
-            const r = (this.width / 2) * 0.75; // Approx borde del avatar (75% ancho)
+            const r = inner ? Math.random() * (this.width / 2) * 0.6 : (this.width / 2) * 0.75;
             const cx = this.width / 2;
             const cy = this.height / 2;
 
@@ -245,9 +244,9 @@ class ThemeParticleEngine {
                 type: 'fire',
                 x: cx + Math.cos(angle) * r,
                 y: cy + Math.sin(angle) * r,
-                size: Math.random() * 8 + 4, // Sutil radiación
-                speedY: Math.random() * -1.5 - 0.5, // Asciende o fluye radialmente
-                speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
+                size: inner ? Math.random() * 12 + 8 : Math.random() * 8 + 4,
+                speedY: inner ? (Math.random() - 0.5) * 1.5 - 0.5 : Math.random() * -1.5 - 0.5,
+                speedX: inner ? (Math.random() - 0.5) * 0.5 : Math.cos(angle) * 0.8 + (Math.random() - 0.5),
                 life: 1,
                 decay: Math.random() * 0.03 + 0.02,
                 hue: Math.random() * 30 + 10
@@ -255,11 +254,10 @@ class ThemeParticleEngine {
         }
     }
 
-    emitShadow() {
-        // Sombras difuminadas emanando del borde del círculo (JinWoo)
-        if (Math.random() < 0.6) {
+    emitShadow(inner = false) {
+        if (Math.random() < (inner ? 0.4 : 0.6)) {
             const angle = Math.random() * Math.PI * 2;
-            const r = (this.width / 2) * 0.75; // Approx borde del avatar (75% ancho)
+            const r = inner ? Math.random() * (this.width / 2) * 0.6 : (this.width / 2) * 0.75;
             const cx = this.width / 2;
             const cy = this.height / 2;
 
@@ -267,11 +265,11 @@ class ThemeParticleEngine {
                 type: 'shadow',
                 x: cx + Math.cos(angle) * r,
                 y: cy + Math.sin(angle) * r,
-                size: Math.random() * 4 + 2, // 3x más delgado y fino
-                speedY: Math.sin(angle) * 0.3 - 0.2, // Flujo difuso lento
-                speedX: Math.cos(angle) * 0.3 + (Math.random() - 0.5) * 0.5,
+                size: inner ? Math.random() * 16 + 10 : Math.random() * 4 + 2,
+                speedY: inner ? (Math.random() - 0.5) * 0.5 : Math.sin(angle) * 0.3 - 0.2,
+                speedX: inner ? (Math.random() - 0.5) * 0.5 : Math.cos(angle) * 0.3 + (Math.random() - 0.5) * 0.5,
                 life: 1,
-                decay: Math.random() * 0.04 + 0.02 // Muere más rápido para no crear masa espesa
+                decay: inner ? Math.random() * 0.015 + 0.01 : Math.random() * 0.04 + 0.02
             });
         }
     }
@@ -282,13 +280,19 @@ class ThemeParticleEngine {
 
         const isDark = document.documentElement.classList.contains('dark');
 
-        // Emisión Invertida sutil a petición del usuario
+        // Emisión Bimodal: El exterior dibuja su tema original, el interior dibuja el contrario masivamente
         if (isDark) {
-            this.emitFire();
-            if (Math.random() < 0.3) this.emitFire();
+            // Noche (JinWoo Switch): Borde de Sombra tenue, Núcleo de FUEGO
+            this.emitShadow(false); // Borde
+
+            this.emitFire(true);    // Interior lleno de Rengoku
+            if (Math.random() < 0.6) this.emitFire(true);
         } else {
-            this.emitShadow();
-            if (Math.random() < 0.3) this.emitShadow();
+            // Día (Rengoku Switch): Borde de Fuego tenue, Núcleo de SOMBRAS
+            this.emitFire(false); // Borde
+
+            this.emitShadow(true); // Interior lleno de Jinwoo
+            if (Math.random() < 0.6) this.emitShadow(true);
         }
 
         // --- RENDERIZADO DE FUEGO ---
