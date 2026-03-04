@@ -38,10 +38,10 @@ function actualizarIconosTema() {
         * { cursor: none !important; }
         
         @keyframes weaponStrike {
-            0%   { transform: rotate(-15deg) scale(1); }
-            30%  { transform: rotate(-80deg) scale(1.1); }
-            60%  { transform: rotate(40deg) scale(1.2) drop-shadow(0 0 15px rgba(6,182,212,0.8)); }
-            100% { transform: rotate(-15deg) scale(1); }
+            0%   { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); }
+            30%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-80deg) scale(1.1); }
+            60%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(40deg) scale(1.2) drop-shadow(0 0 15px var(--glow-color, rgba(6,182,212,0.8))); }
+            100% { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); }
         }
         
         .cursor-striking {
@@ -59,14 +59,30 @@ function actualizarIconosTema() {
     giantCursor.src = isDark ? 'assets/daga.svg' : 'assets/images/reng.svg';
 
     giantCursor.style.position = 'fixed';
-    giantCursor.style.width = '60px'; // Tamaño ajustado a la mitad del original colosal
-    giantCursor.style.height = '60px';
+
+    // Asignación Asimétrica de Dimensiones, Hotspots y Brillos
+    if (isDark) {
+        giantCursor.style.width = '60px';
+        giantCursor.style.height = '60px';
+        giantCursor.style.transformOrigin = '0% 0%';
+        giantCursor.style.setProperty('--tx', '0%');
+        giantCursor.style.setProperty('--ty', '0%');
+        giantCursor.style.setProperty('--glow-color', 'rgba(6,182,212,0.8)'); // Neon Cyan
+    } else {
+        giantCursor.style.width = '120px';
+        giantCursor.style.height = '120px';
+        // La Katana 120px tiene padding interno en el SVG; desplazamos su anclaje y posición para clavar la punta al mouse
+        giantCursor.style.transformOrigin = '15% 15%';
+        giantCursor.style.setProperty('--tx', '-15%');
+        giantCursor.style.setProperty('--ty', '-15%');
+        giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,0.8)'); // Naranja Ígneo
+    }
+
     giantCursor.style.pointerEvents = 'none'; // Clavado: Permite hacer clics *a través* de la imagen
     giantCursor.style.zIndex = '999999'; // Siempre encima de modales, alertas y canvas
 
-    // Enderezar y atar la base de la rotación exactamente a la punta del filo
-    giantCursor.style.transformOrigin = 'top left';
-    giantCursor.style.transform = 'rotate(-15deg)';
+    // Enderezar y atar la base de la rotación exactamente a las variables computadas
+    giantCursor.style.transform = 'translate(var(--tx), var(--ty)) rotate(-15deg)';
     giantCursor.style.transition = 'transform 0.1s ease-out';
     // Ocultar al inicio hasta mover el mouse para no estorbar en el borde (0,0)
     giantCursor.style.opacity = '0';
