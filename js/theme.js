@@ -37,11 +37,12 @@ function actualizarIconosTema() {
     style.innerHTML = `
         * { cursor: none !important; }
         
+        /* Separamos transform y filter. Drop-shadow anidado genera un contorno solido de color brillante. */
         @keyframes weaponStrike {
-            0%   { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); }
-            30%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-80deg) scale(1.1); }
-            60%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(40deg) scale(1.2) drop-shadow(0 0 15px var(--glow-color, rgba(6,182,212,0.8))); }
-            100% { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); }
+            0%   { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
+            30%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-80deg) scale(1.1); filter: var(--base-filter) brightness(1.2); }
+            60%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(40deg) scale(1.2); filter: var(--base-filter) brightness(1.5) drop-shadow(0 0 20px var(--glow-color, rgba(6,182,212,0.8))); }
+            100% { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
         }
         
         .cursor-striking {
@@ -74,9 +75,13 @@ function actualizarIconosTema() {
         // Equilibrio matemático: 20% es el margen real calculado entre el vacío y el centro de la hoja
         giantCursor.style.transformOrigin = '20% 20%';
         giantCursor.style.setProperty('--tx', '-20%');
-        giantCursor.style.setProperty('--ty', '-20%');
-        giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,0.8)'); // Naranja Ígneo
+        giantCursor.style.setProperty('--ty', 'calc(-20% - 8px)'); // Subida adicional de 8px solicitada
+        giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,1)'); // Naranja Ígneo Sólido
     }
+
+    // Inyectamos el contorno luminoso (Anillo) combinando multiples drop-shadow de 1px hacia todas las direcciones y un aura amplia
+    giantCursor.style.setProperty('--base-filter', 'drop-shadow(1px 1px 0px var(--glow-color)) drop-shadow(-1px -1px 0px var(--glow-color)) drop-shadow(1px -1px 0px var(--glow-color)) drop-shadow(-1px 1px 0px var(--glow-color)) drop-shadow(0 0 10px var(--glow-color))');
+    giantCursor.style.filter = 'var(--base-filter)';
 
     giantCursor.style.pointerEvents = 'none'; // Clavado: Permite hacer clics *a través* de la imagen
     giantCursor.style.zIndex = '999999'; // Siempre encima de modales, alertas y canvas
