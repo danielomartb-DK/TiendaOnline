@@ -102,7 +102,7 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 10 + 5, // Fuego interno normal Restaurado
+                    size: Math.random() * 4 + 1.5, // Fuego en esferas sutiles y pequeñas
                     speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
                     speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5,
                     life: 1,
