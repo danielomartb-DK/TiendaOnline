@@ -72,9 +72,9 @@ function actualizarIconosTema() {
         giantCursor.style.width = '120px';
         giantCursor.style.height = '120px';
         // La Katana 120px tiene padding interno en el SVG; desplazamos su anclaje y posición para clavar la punta al mouse
-        giantCursor.style.transformOrigin = '36% 36%';
-        giantCursor.style.setProperty('--tx', '-36%');
-        giantCursor.style.setProperty('--ty', '-36%');
+        giantCursor.style.transformOrigin = '6% 6%';
+        giantCursor.style.setProperty('--tx', '-6%');
+        giantCursor.style.setProperty('--ty', '-6%');
         giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,0.8)'); // Naranja Ígneo
     }
 
