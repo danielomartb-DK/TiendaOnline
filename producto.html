@@ -201,10 +201,13 @@
 
             <!-- Error o No encontrado -->
             <div id="errorMessage"
-                class="hidden text-center py-20 bg-white rounded-2xl shadow-sm border border-slate-200">
-                <span class="material-symbols-outlined text-6xl text-slate-300 mb-4 block">search_off</span>
-                <h2 class="text-2xl font-bold text-slate-800 mb-2">Producto no encontrado</h2>
-                <p class="text-slate-500 mb-6">El producto que buscas no existe o ha sido retirado.</p>
+                class="hidden text-center py-20 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+                <span
+                    class="material-symbols-outlined text-6xl text-slate-300 dark:text-slate-600 mb-4 block transition-colors duration-300">search_off</span>
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2 transition-colors duration-300">
+                    Producto no encontrado</h2>
+                <p class="text-slate-500 dark:text-slate-400 mb-6 transition-colors duration-300">El producto que buscas
+                    no existe o ha sido retirado.</p>
                 <a href="index.html"
                     class="bg-primary text-brand-blue font-bold px-6 py-3 rounded-lg hover:brightness-110 transition-all">Regresar
                     a la Tienda</a>
@@ -212,7 +215,7 @@
 
             <!-- Contenedor del Producto -->
             <div id="productContainer"
-                class="hidden flex flex-col gap-10 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10">
+                class="hidden flex flex-col gap-10 bg-white dark:bg-slate-800/95 rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.05)] border border-slate-200 dark:border-slate-700 p-6 md:p-10 transition-colors duration-300">
                 <!-- Se llena con JS -->
             </div>
         </div>

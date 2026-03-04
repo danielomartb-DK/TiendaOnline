@@ -138,12 +138,12 @@ function renderizarDetalles(p) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <!-- Galería (A la izquierda) -->
             <div class="flex flex-col gap-4">
-                <div class="relative bg-slate-50 border border-slate-100 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4">
+                <div class="relative bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden aspect-square flex items-center justify-center p-4 transition-colors duration-300">
                     <img src="${imagenUrl}" alt="${p.nombre}" class="max-w-full max-h-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-500" />
                 </div>
                 <!-- Thumbnails de ejemplo -->
                 <div class="grid grid-cols-4 gap-2">
-                    <div class="aspect-square bg-slate-50 rounded-lg border-2 border-primary overflow-hidden p-1 cursor-pointer">
+                    <div class="aspect-square bg-slate-50 dark:bg-slate-800/50 rounded-lg border-2 border-primary overflow-hidden p-1 cursor-pointer transition-colors duration-300">
                         <img src="${imagenUrl}" class="w-full h-full object-contain" />
                     </div>
                 </div>
@@ -152,7 +152,7 @@ function renderizarDetalles(p) {
             <!-- Info Principal (A la derecha) -->
             <div class="flex flex-col">
                 ${stockBadge}
-                <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-2 leading-tight">${p.nombre}</h1>
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 leading-tight transition-colors duration-300">${p.nombre}</h1>
                 
                 <div class="flex items-center gap-2 mb-6">
                     <div class="flex text-primary">
@@ -166,13 +166,13 @@ function renderizarDetalles(p) {
                 </div>
 
                 <div class="mb-8">
-                    <p class="text-4xl font-black text-slate-900">${formattedPrice}</p>
-                    <p class="text-sm text-slate-500 mt-1">Garantía de Devolución de 30 Días | Pagos Seguros</p>
+                    <p class="text-4xl font-black text-slate-900 dark:text-white transition-colors duration-300">${formattedPrice}</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 transition-colors duration-300">Garantía de Devolución de 30 Días | Pagos Seguros</p>
                 </div>
 
-                <div class="mb-8 border-t border-b border-slate-100 py-6">
-                    <h3 class="font-bold text-slate-900 mb-2">Acerca de este artículo</h3>
-                    <p class="text-slate-600 leading-relaxed text-sm">${description}</p>
+                <div class="mb-8 border-t border-b border-slate-100 dark:border-slate-800 py-6 transition-colors duration-300">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">Acerca de este artículo</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm transition-colors duration-300">${description}</p>
                 </div>
 
                 <!-- Botón de Compra -->
