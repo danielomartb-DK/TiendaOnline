@@ -31,10 +31,23 @@ function actualizarIconosTema() {
     let oldCursorEl = document.getElementById('pixelwear-giant-cursor');
     if (oldCursorEl) oldCursorEl.remove();
 
-    // 1. Forzar invisibilidad del cursor nativo de Windows para todo el sitio
+    // 1. Forzar invisibilidad del cursor nativo y declarar Animación de Ataque Táctico
     let style = document.createElement('style');
     style.id = 'pixelwear-dynamic-cursor-style';
-    style.innerHTML = `* { cursor: none !important; }`;
+    style.innerHTML = `
+        * { cursor: none !important; }
+        
+        @keyframes weaponStrike {
+            0%   { transform: translate(-10%, -10%) rotate(-45deg) scale(1); }
+            30%  { transform: translate(-10%, -10%) rotate(-100deg) scale(1.1); }
+            50%  { transform: translate(-30%, -10%) rotate(45deg) scale(1.2) drop-shadow(0 0 15px rgba(6,182,212,0.8)); }
+            100% { transform: translate(-10%, -10%) rotate(-45deg) scale(1); }
+        }
+        
+        .cursor-striking {
+            animation: weaponStrike 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+    `;
     document.head.appendChild(style);
 
     // 2. Crear Elemento Gráfico Flotante (Nuestra Daga/Katana 4x)
@@ -46,8 +59,8 @@ function actualizarIconosTema() {
     giantCursor.src = isDark ? 'assets/daga.svg' : 'assets/images/reng.svg';
 
     giantCursor.style.position = 'fixed';
-    giantCursor.style.width = '120px'; // Tamaño colosal (4 veces mayor al nativo de 32px)
-    giantCursor.style.height = '120px';
+    giantCursor.style.width = '60px'; // Tamaño ajustado a la mitad del original colosal
+    giantCursor.style.height = '60px';
     giantCursor.style.pointerEvents = 'none'; // Clavado: Permite hacer clics *a través* de la imagen
     giantCursor.style.zIndex = '999999'; // Siempre encima de modales, alertas y canvas
 
@@ -64,23 +77,19 @@ function actualizarIconosTema() {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             if (cursor) {
                 cursor.style.opacity = '1';
-                // Asignar offset posicional: La punta afilada arriba-izquierda
-                cursor.style.left = (e.clientX - 10) + 'px';
-                cursor.style.top = (e.clientY - 10) + 'px';
+                // Asignar offset posicional: La punta afilada arriba-izquierda ajustada a -2
+                cursor.style.left = (e.clientX - 2) + 'px';
+                cursor.style.top = (e.clientY - 2) + 'px';
             }
         });
 
-        // Efecto visual dinámico: Si clíckea, el sable "estoca" hacia adelante levemente
+        // Efecto visual dinámico: Animación fluida "tajo" en CSS 
         window.addEventListener('mousedown', () => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             if (cursor) {
-                cursor.style.transform = 'translate(-30%, -30%) rotate(-45deg) scale(0.85) drop-shadow(0 0 20px rgba(6, 182, 212, 0.8))';
-            }
-        });
-        window.addEventListener('mouseup', () => {
-            const cursor = document.getElementById('pixelwear-giant-cursor');
-            if (cursor) {
-                cursor.style.transform = 'translate(-10%, -10%) rotate(-45deg) scale(1) drop-shadow(0 0 0px transparent)';
+                cursor.classList.remove('cursor-striking');
+                void cursor.offsetWidth; // Disparar reflow forzado
+                cursor.classList.add('cursor-striking');
             }
         });
 
