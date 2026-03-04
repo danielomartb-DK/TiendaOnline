@@ -93,8 +93,15 @@ function actualizarIconosTema() {
     giantCursor.style.opacity = '0';
     document.body.appendChild(giantCursor);
 
-    // Inicializar Tracker de Posición Táctil Único
+    // Inicializar Tracker de Posición Táctil Único y Efectos de Sonido
     if (!window.isGiantCursorBound) {
+        // Pre-cargar audios mecánicos/mágicos en memoria
+        const katanaAudio = new Audio('assets/sounds/katana.mp3');
+        const daggerAudio = new Audio('assets/sounds/neon.mp3');
+        // Suavizar volumen para que no aturda en clics repetitivos
+        katanaAudio.volume = 0.5;
+        daggerAudio.volume = 0.4;
+
         window.addEventListener('mousemove', (e) => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             if (cursor) {
@@ -105,10 +112,22 @@ function actualizarIconosTema() {
             }
         });
 
-        // Efecto visual dinámico: Animación fluida "tajo" en CSS 
+        // Efecto visual y sonoro dinámico: Animación fluida "tajo" en CSS + Audio SFX
         window.addEventListener('mousedown', () => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
+            const isDarkModeActivo = document.documentElement.classList.contains('dark');
+
             if (cursor) {
+                // Detonar Sonido Electrizante / Cuchilla dependiendo del Héroe
+                if (isDarkModeActivo) {
+                    daggerAudio.currentTime = 0; // Resetear cabeza láser
+                    daggerAudio.play().catch(e => console.log('Sonido Daga bloqueado por navegador', e));
+                } else {
+                    katanaAudio.currentTime = 0; // Resetear cabeza metálica
+                    katanaAudio.play().catch(e => console.log('Sonido Katana bloqueado por navegador', e));
+                }
+
+                // Detonar Animación de Tajo Visual
                 cursor.classList.remove('cursor-striking');
                 void cursor.offsetWidth; // Disparar reflow forzado
                 cursor.classList.add('cursor-striking');
