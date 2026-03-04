@@ -35,6 +35,15 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+
+        /* Fix Webkit Autofill rompiendo Dark Mode en Checkout */
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover,
+        .dark input:-webkit-autofill:focus,
+        .dark input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
+            -webkit-text-fill-color: white !important;
+        }
     </style>
     <!-- Script de Persistencia de Tema Oscuro/Claro (Debe ir antes de cerrar head) -->
     <script src="js/theme.js"></script>
