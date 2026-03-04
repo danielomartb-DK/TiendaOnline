@@ -147,7 +147,10 @@ function actualizarIconosTema() {
                     daggerAudio.play().catch(er => console.log('Sin audio de daga:', er));
                 } else {
                     katanaAudio.currentTime = 0;
-                    katanaAudio.play().catch(er => console.log('Sin audio de katana:', er));
+                    // Retrasamos el audio de la katana ~120ms para que pegue justo cuando el corte baja (70% del keyframe CSS)
+                    setTimeout(() => {
+                        katanaAudio.play().catch(er => console.log('Sin audio de katana:', er));
+                    }, 120);
                 }
 
                 // Disparar las clases CSS de keyframes directos a la espada principal
