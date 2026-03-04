@@ -51,9 +51,9 @@ function actualizarIconosTema() {
                 filter: var(--base-filter) brightness(1.2); 
             }
             70% { 
-                /* Slash rapido descendente/horizontal MANTENIENDO estrictamente el centro atado al mouse (135° horizontal derecho) */
+                /* Slash rapido descendente/horizontal MANTENIENDO estrictamente el centro atado al mouse (-45° horizontal izquierdo) */
                 transform-origin: 50% 50%;
-                transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(135deg) scale(1.3);
+                transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(-45deg) scale(1.3);
                 filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); 
             }
             100% { 
