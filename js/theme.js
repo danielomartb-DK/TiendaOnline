@@ -36,8 +36,8 @@ function actualizarIconosTema() {
     if (isDark) {
         // Jin-Woo (Daga Neón)
         style.innerHTML = `
-            * { cursor: url('assets/daga.png') 0 0, auto !important; }
-            button, a, input, select, .cursor-pointer { cursor: url('assets/daga.png') 0 0, pointer !important; }
+            * { cursor: url('assets/daga.svg') 0 0, auto !important; }
+            button, a, input, select, .cursor-pointer { cursor: url('assets/daga.svg') 0 0, pointer !important; }
         `;
     } else {
         // Rengoku (Katana Ígnea)
