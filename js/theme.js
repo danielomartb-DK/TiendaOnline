@@ -45,15 +45,15 @@ function actualizarIconosTema() {
                 filter: var(--base-filter); 
             }
             25% { 
-                /* Mueve el centro de la hoja directamente a las coordenadas del mouse mientras la alza a 90°(vertical) */
+                /* Mueve el centro de la hoja directamente a las coordenadas del mouse mientras la alza a 45°(vertical hacia arriba) */
                 transform-origin: 50% 50%;
-                transform: translate(-50%, -50%) rotate(-60deg) scale(1.1);
+                transform: translate(-50%, -50%) rotate(45deg) scale(1.1);
                 filter: var(--base-filter) brightness(1.2); 
             }
             70% { 
-                /* Slash rapido descendente/horizontal MANTENIENDO estrictamente el centro atado al mouse */
+                /* Slash rapido descendente/horizontal MANTENIENDO estrictamente el centro atado al mouse (135° horizontal derecho) */
                 transform-origin: 50% 50%;
-                transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(75deg) scale(1.3);
+                transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(135deg) scale(1.3);
                 filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); 
             }
             100% { 
