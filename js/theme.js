@@ -111,17 +111,19 @@ class AvatarParticleEngine {
                 });
             }
         } else {
+            // MAGIC NEON CYAN (JIN-WOO)
             if (Math.random() < 0.9) {
                 const angle = Math.random() * Math.PI * 2;
                 const r = this.avatarRadius + (Math.random() * 2 - 1);
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 6 + 4, // Partículas de Materia Oscura muy pequeñas y sutiles
-                    speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
-                    speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5,
+                    size: Math.random() * 6 + 2, // Chispas definidas como las del fuego
+                    speedX: Math.cos(angle) * 0.8 + (Math.random() - 0.5),
+                    speedY: Math.sin(angle) * 0.8 - Math.random() * 1.5, // Propulsión leve hacia arriba
                     life: 1,
-                    decay: Math.random() * 0.02 + 0.015 // Rapidez de desvanecimiento para despejar visibilidad
+                    decay: Math.random() * 0.02 + 0.015,
+                    hue: Math.random() * 40 + 190 // Tonos Cyan a Azul Eléctrico
                 });
             }
         }
@@ -171,8 +173,8 @@ class AvatarParticleEngine {
                 this.ctx.fill();
             }
         } else {
-            // Humo/Luz del Avatar Modo Oscuro (Jin-Woo Original Materia Oscura)
-            this.ctx.globalCompositeOperation = 'source-over';
+            // Energía Cyan del Avatar Modo Oscuro (Jin-Woo Neón)
+            this.ctx.globalCompositeOperation = 'screen';
             for (let i = this.particles.length - 1; i >= 0; i--) {
                 let p = this.particles[i];
                 p.x += p.speedX;
@@ -189,11 +191,14 @@ class AvatarParticleEngine {
                 if (currentSize < 0) currentSize = 0;
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
+                let opacity = p.life * (p.type === 'shadow' ? 0.8 : 1);
+                let currentHue = p.hue + (1 - p.life) * 20; // Variación sutil a morado al decaer
+
                 let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Bruma oscura suave de Jin Woo
-                gradient.addColorStop(0, `rgba(15, 10, 35, ${p.life * 0.5})`);
-                gradient.addColorStop(0.5, `rgba(45, 15, 80, ${p.life * 0.3})`);
-                gradient.addColorStop(1, `rgba(80, 20, 150, 0)`);
+                // Brillo de neón penetrante azul glaciar
+                gradient.addColorStop(0, `hsla(${currentHue}, 100%, 75%, ${opacity})`);
+                gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 55%, ${opacity * 0.9})`);
+                gradient.addColorStop(1, `hsla(${currentHue}, 100%, 50%, 0)`);
 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fill();
