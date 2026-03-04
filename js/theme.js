@@ -299,8 +299,10 @@ class AvatarParticleEngine {
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let currentHue = p.hue + (1 - p.life) * 35;
-                // Partículas Sólidas (Aura Nítida en Alta Definición) sin desenfoque radial
-                this.ctx.fillStyle = `hsla(${currentHue}, 100%, 65%, ${p.life})`;
+                // Partículas Sólidas (Aura Nítida en Alta Definición): Aumentamos Lightness a 85% para imitar plasma ardiente
+                this.ctx.fillStyle = `hsla(${currentHue}, 100%, 85%, ${p.life})`;
+                this.ctx.fill();
+                // Doble pase Fill en modo Screen multiplica exponencialmente el impacto lumínico (Bloom FX gratuito)
                 this.ctx.fill();
             }
         } else {
