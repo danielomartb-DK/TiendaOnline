@@ -105,12 +105,34 @@ async function registrarCliente(datosCliente) {
         if (getResponse.ok) {
             const existentes = await getResponse.json();
             if (existentes && existentes.length > 0) {
-                // Cliente existente, devolver el primero encontrado (ID)
-                return existentes[0];
+                // Cliente existente: Modificamos silenciosamente su perfil viejo con los nuevos datos 
+                // del Checkout (nombres, direccion, telefono) para no dejar los obsoletos "Karla Tijaro" 
+                // para compras furturas donde "Daniel" decida usar el mismo email.
+                const oldClient = existentes[0];
+                const patchResp = await fetch(`${SUPABASE_URL}/rest/v1/cliente?id_cliente=eq.${oldClient.id_cliente}`, {
+                    method: 'PATCH',
+                    headers: {
+                        ...headers,
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+                        nombres: datosCliente.nombres,
+                        apellidos: datosCliente.apellidos,
+                        direccion: datosCliente.direccion,
+                        telefono: datosCliente.telefono
+                    })
+                });
+
+                if (patchResp.ok) {
+                    const actList = await patchResp.json();
+                    return actList[0];
+                } else {
+                     return oldClient; // Falla segura: retornar el viejo igual
+                }
             }
         }
 
-        // 2. Si no existe, procedemos a crearlo normalmente
+        // 2. Si definitivamente no existe, procedemos a crearlo normalmente
         const response = await fetch(`${SUPABASE_URL}/rest/v1/cliente`, {
             method: 'POST',
             headers: {
