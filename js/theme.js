@@ -95,11 +95,11 @@ function actualizarIconosTema() {
 
     // Inicializar Tracker de Posición Táctil Único y Efectos de Sonido
     if (!window.isGiantCursorBound) {
-        
+
         // --- MOTOR DE SONIDO MANUAL (ARCHIVOS LOCALES DEL USUARIO) ---
         // Por favor, coloca tus dos efectos de sonido hiper-realistas en la carpeta assets/sounds/
         const katanaAudio = new Audio('assets/sounds/katana_swing.mp3');
-        const daggerAudio = new Audio('assets/sounds/dagger_slash.mp3');
+        const daggerAudio = new Audio('assets/sounds/dagger_slash.m4a');
         katanaAudio.volume = 0.6;
         daggerAudio.volume = 0.6;
 
