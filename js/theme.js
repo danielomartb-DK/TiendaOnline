@@ -95,83 +95,13 @@ function actualizarIconosTema() {
 
     // Inicializar Tracker de Posición Táctil Único y Efectos de Sonido
     if (!window.isGiantCursorBound) {
-        // Motor Sintetizador WebAudio HQ (Zero Latency, Zero MP3s)
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-
-        function playSynthSlash(isDarkTheme) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            if (isDarkTheme) {
-                // Sonido Jin-Woo (Sable Corto Láser/Neón)
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                const filter = audioCtx.createBiquadFilter();
-
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
-                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.3);
-
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(3500, audioCtx.currentTime + 0.1);
-                filter.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
-
-                gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.35);
-            } else {
-                // Sonido Rengoku (Desenvaine Metálico/Katana Realista)
-                const bufferSize = audioCtx.sampleRate * 0.25;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1; // Fricción de acero crudo
-                }
-
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-
-                const noiseFilter = audioCtx.createBiquadFilter();
-                noiseFilter.type = 'bandpass';
-                noiseFilter.frequency.setValueAtTime(5000, audioCtx.currentTime);
-                noiseFilter.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
-
-                const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0, audioCtx.currentTime);
-                noiseGain.gain.linearRampToValueAtTime(1.5, audioCtx.currentTime + 0.02);
-                noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-
-                const osc = audioCtx.createOscillator();
-                osc.type = 'triangle'; // Resonancia del acero golpeando
-                osc.frequency.setValueAtTime(1800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.2);
-
-                const oscGain = audioCtx.createGain();
-                oscGain.gain.setValueAtTime(0, audioCtx.currentTime);
-                oscGain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.02);
-                oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-
-                osc.connect(oscGain);
-                oscGain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.2);
-
-                noise.connect(noiseFilter);
-                noiseFilter.connect(noiseGain);
-                noiseGain.connect(audioCtx.destination);
-
-                noise.start();
-            }
-        }
+        
+        // --- MOTOR DE SONIDO MANUAL (ARCHIVOS LOCALES DEL USUARIO) ---
+        // Por favor, coloca tus dos efectos de sonido hiper-realistas en la carpeta assets/sounds/
+        const katanaAudio = new Audio('assets/sounds/katana_swing.mp3');
+        const daggerAudio = new Audio('assets/sounds/dagger_slash.mp3');
+        katanaAudio.volume = 0.6;
+        daggerAudio.volume = 0.6;
 
         window.addEventListener('mousemove', (e) => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
@@ -188,8 +118,13 @@ function actualizarIconosTema() {
             const isDarkModeActivo = document.documentElement.classList.contains('dark');
 
             if (cursor) {
-                // Disparar las ondas sintéticas sin retardos de MP3
-                playSynthSlash(isDarkModeActivo);
+                if (isDarkModeActivo) {
+                    daggerAudio.currentTime = 0;
+                    daggerAudio.play().catch(e => console.log('Sin audio de daga:', e));
+                } else {
+                    katanaAudio.currentTime = 0;
+                    katanaAudio.play().catch(e => console.log('Sin audio de katana:', e));
+                }
 
                 // Detonar Animación de Tajo Visual
                 cursor.classList.remove('cursor-striking');
