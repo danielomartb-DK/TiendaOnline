@@ -37,21 +37,36 @@ function actualizarIconosTema() {
     style.innerHTML = `
         * { cursor: none !important; }
         
-        /* Animacion de Tajo Realista Centrado para Overlay Temporal */
-        @keyframes slashOverlay {
-            0%   { transform: translate(-50%, -50%) rotate(-15deg) scale(1); filter: var(--base-filter); opacity: 0; }
-            10%  { transform: translate(-50%, -50%) rotate(-100deg) scale(1.1); filter: var(--base-filter) brightness(1.2); opacity: 1; }
-            60%  { transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(45deg) scale(1.3); filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); opacity: 1; }
-            100% { transform: translate(-50%, -50%) rotate(60deg) scale(1.1); filter: var(--base-filter); opacity: 0; }
+        /* Animacion de Tajo con la misma Espada (Pivote transpolado al centro) */
+        @keyframes weaponStrike {
+            0% { 
+                transform-origin: var(--ox) var(--oy);
+                transform: translate(var(--tx), var(--ty)) rotate(-15deg) scale(1);
+                filter: var(--base-filter); 
+            }
+            30% { 
+                /* Se centra en el area visible transpolando translate y origin, se prepara a 90 deg */
+                transform-origin: 50% 50%;
+                transform: translate(-50%, -50%) rotate(-90deg) scale(1.1);
+                filter: var(--base-filter) brightness(1.2); 
+            }
+            70% { 
+                /* Slash rapido horizontal descendente */
+                transform-origin: 50% 50%;
+                transform: translate(-20%, -20%) rotate(45deg) scale(1.3);
+                filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); 
+            }
+            100% { 
+                /* Regreso liso a estado pasivo natural */
+                transform-origin: var(--ox) var(--oy);
+                transform: translate(var(--tx), var(--ty)) rotate(-15deg) scale(1);
+                filter: var(--base-filter); 
+            }
         }
         
-        .slash-sprite-overlay {
-            position: fixed;
-            transform-origin: 50% 50%;
-            pointer-events: none;
-            z-index: 9999999;
-            /* Curva bezier de tajo: Carga y desgarro violento */
-            animation: slashOverlay 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+        .cursor-striking {
+            /* Ejecutar accion y volver estricto */
+            animation: weaponStrike 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important;
         }
     `;
     document.head.appendChild(style);
@@ -66,22 +81,25 @@ function actualizarIconosTema() {
 
     giantCursor.style.position = 'fixed';
 
-    // Asignación Asimétrica de Dimensiones, Hotspots y Brillos
-    // ESTADO IDLE SE RESTAURA AL ORIGINAL: Las puntas son el clic "físico" real
+    // Asignación Asimétrica de Dimensiones y Hotspots dinámicos
     if (isDark) {
         giantCursor.style.width = '60px';
         giantCursor.style.height = '60px';
-        giantCursor.style.transformOrigin = '0% 0%';
+        giantCursor.style.setProperty('--ox', '0%');
+        giantCursor.style.setProperty('--oy', '0%');
+        giantCursor.style.transformOrigin = 'var(--ox) var(--oy)';
         giantCursor.style.setProperty('--tx', '-5px');
         giantCursor.style.setProperty('--ty', '0%');
-        giantCursor.style.setProperty('--glow-color', 'rgba(6,182,212,0.8)'); // Neon Cyan
+        giantCursor.style.setProperty('--glow-color', 'rgba(6,182,212,0.8)');
     } else {
         giantCursor.style.width = '120px';
         giantCursor.style.height = '120px';
-        giantCursor.style.transformOrigin = '20% 20%';
+        giantCursor.style.setProperty('--ox', '20%');
+        giantCursor.style.setProperty('--oy', '20%');
+        giantCursor.style.transformOrigin = 'var(--ox) var(--oy)';
         giantCursor.style.setProperty('--tx', '-20%');
         giantCursor.style.setProperty('--ty', 'calc(-20% - 8px)');
-        giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,1)'); // Naranja Ígneo Sólido
+        giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,1)');
     }
 
     // Inyectamos el contorno luminoso (Anillo) combinando multiples drop-shadow de 1px hacia todas las direcciones y un aura amplia
@@ -118,8 +136,8 @@ function actualizarIconosTema() {
             }
         });
 
-        // Efecto visual y sonoro dinámico: OVERLAY TEMPORAL CLONADO
-        window.addEventListener('mousedown', (e) => {
+        // Efecto visual y sonoro dinámico integrador: Tajo de la propia espada
+        window.addEventListener('mousedown', () => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             const isDarkModeActivo = document.documentElement.classList.contains('dark');
 
@@ -132,29 +150,10 @@ function actualizarIconosTema() {
                     katanaAudio.play().catch(er => console.log('Sin audio de katana:', er));
                 }
 
-                // Generar el Fantasma Central exacto del click 
-                const slashSprite = document.createElement('img');
-                slashSprite.src = isDarkModeActivo ? 'assets/daga.svg' : 'assets/images/reng.svg';
-                slashSprite.classList.add('slash-sprite-overlay');
-
-                // Mismos filtros y aura estática copiados del cursor verdadero
-                slashSprite.style.setProperty('--glow-color', isDarkModeActivo ? 'rgba(6,182,212,0.8)' : 'rgba(249,115,22,1)');
-                slashSprite.style.setProperty('--base-filter', cursor.style.getPropertyValue('--base-filter'));
-
-                // Agrandamos los sprites un poco más para que el barrido se sienta espectacular 
-                slashSprite.style.width = isDarkModeActivo ? '100px' : '160px';
-                slashSprite.style.height = isDarkModeActivo ? '100px' : '160px';
-
-                // Anclar estrictamente al punto del click 
-                slashSprite.style.left = e.clientX + 'px';
-                slashSprite.style.top = e.clientY + 'px';
-
-                document.body.appendChild(slashSprite);
-
-                // Destruirlo automáticamente tras terminar el keyframes CSS
-                slashSprite.addEventListener('animationend', () => {
-                    slashSprite.remove();
-                });
+                // Disparar las clases CSS de keyframes directos a la espada principal
+                cursor.classList.remove('cursor-striking');
+                void cursor.offsetWidth; // Reflow forzado
+                cursor.classList.add('cursor-striking');
             }
         });
 
