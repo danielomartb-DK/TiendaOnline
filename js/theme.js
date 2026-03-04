@@ -159,17 +159,11 @@ class AvatarParticleEngine {
                 let currentSize = p.size * p.life;
                 if (currentSize < 0) currentSize = 0;
 
-                // Efecto orgánico estirando sutilmente la geometría en el eje vertical simulando fuego
                 this.ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
 
                 let currentHue = p.hue + (1 - p.life) * 35;
-                let gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
-                // Escalas de opacidad suaves para eliminar bordes duros de la esfera
-                gradient.addColorStop(0, `hsla(${currentHue + 15}, 100%, 65%, ${p.life * 0.6})`);
-                gradient.addColorStop(0.4, `hsla(${currentHue}, 100%, 50%, ${p.life * 0.3})`);
-                gradient.addColorStop(1, `hsla(${currentHue - 10}, 100%, 30%, 0)`);
-
-                this.ctx.fillStyle = gradient;
+                // Partículas Sólidas (Aura Nítida en Alta Definición) sin desenfoque radial
+                this.ctx.fillStyle = `hsla(${currentHue}, 100%, 65%, ${p.life})`;
                 this.ctx.fill();
             }
         } else {
@@ -294,7 +288,7 @@ class ThemeParticleEngine {
                 type: 'fire',
                 x: x,
                 y: y,
-                size: inner ? Math.random() * 6 + 3 : Math.random() * 3 + 1.5, // Esferas irregulares pequeñas pero brillantes
+                size: inner ? Math.random() * 8 + 3 : Math.random() * 4 + 1, // Fuego de pista interior duplicado (8-3) a diferencia del borde (4-1)s pequeñas pero brillantes
                 speedY: speedY,
                 speedX: speedX,
                 life: 1,
@@ -355,8 +349,8 @@ class ThemeParticleEngine {
             // Noche (JinWoo Switch): Borde de Sombra tenue, Núcleo de FUEGO
             this.emitShadow(false); // Borde
 
-            // Interior relleno de Fuego denso (Pista de Jin-Woo retro-iluminada)
-            for (let i = 0; i < 15; i++) {
+            // Interior relleno de Fuego TRIPLE-denso (Pista de Jin-Woo retro-iluminada a máxima capacidad)
+            for (let i = 0; i < 35; i++) {
                 this.emitFire(true);
             }
         } else {
