@@ -37,16 +37,24 @@ function actualizarIconosTema() {
     style.innerHTML = `
         * { cursor: none !important; }
         
-        /* Separamos transform y filter. Drop-shadow anidado genera un contorno solido de color brillante. */
+        /* Animacion de Tajo Realista Centrado */
         @keyframes weaponStrike {
-            0%   { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
-            30%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-80deg) scale(1.1); filter: var(--base-filter) brightness(1.2); }
-            60%  { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(40deg) scale(1.2); filter: var(--base-filter) brightness(1.5) drop-shadow(0 0 20px var(--glow-color, rgba(6,182,212,0.8))); }
-            100% { transform: translate(var(--tx, 0%), var(--ty, 0%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
+            /* 0%   - Estado de reposo (Diagonal suave) */
+            0%   { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
+            
+            /* 20%  - Preparacion: Alzada vertical agresiva (90 grados) justo en el centro del click */
+            20%  { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-90deg) scale(1.1); filter: var(--base-filter) brightness(1.2); }
+            
+            /* 60%  - Tajo de Impacto: Arco acelerado descendente pasando la horizontal (como un corte real) con resplandor maximo */
+            60%  { transform: translate(calc(var(--tx, -50%) + 10px), calc(var(--ty, -50%) + 10px)) rotate(45deg) scale(1.2); filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); }
+            
+            /* 100% - Recuperacion curva (Ease-out lo hace el timing function) a posicion original */
+            100% { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
         }
         
         .cursor-striking {
-            animation: weaponStrike 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            /* Usamos una curva de cubic-bezier elastica para que el tajo se sienta potente al bajar y suave al retornar */
+            animation: weaponStrike 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important;
         }
     `;
     document.head.appendChild(style);
@@ -62,20 +70,20 @@ function actualizarIconosTema() {
     giantCursor.style.position = 'fixed';
 
     // Asignación Asimétrica de Dimensiones, Hotspots y Brillos
+    // NUEVA LOGICA DE PIVOTE: El centro estricto geométrico del 50% 50% es la mira del arma.
     if (isDark) {
-        giantCursor.style.width = '60px';
-        giantCursor.style.height = '60px';
-        giantCursor.style.transformOrigin = '0% 0%';
-        giantCursor.style.setProperty('--tx', '-5px'); // Compensación de 5px a la izquierda solicitada
-        giantCursor.style.setProperty('--ty', '0%');
+        giantCursor.style.width = '100px'; // Incrementado ligeramente para destacar el pivote centrado
+        giantCursor.style.height = '100px';
+        giantCursor.style.transformOrigin = '50% 50%';
+        giantCursor.style.setProperty('--tx', '-50%');
+        giantCursor.style.setProperty('--ty', '-50%');
         giantCursor.style.setProperty('--glow-color', 'rgba(6,182,212,0.8)'); // Neon Cyan
     } else {
-        giantCursor.style.width = '120px';
-        giantCursor.style.height = '120px';
-        // Equilibrio matemático: 20% es el margen real calculado entre el vacío y el centro de la hoja
-        giantCursor.style.transformOrigin = '20% 20%';
-        giantCursor.style.setProperty('--tx', '-20%');
-        giantCursor.style.setProperty('--ty', 'calc(-20% - 8px)'); // Subida adicional de 8px solicitada
+        giantCursor.style.width = '160px'; // Incrementado para compensar la visual del padding centrado
+        giantCursor.style.height = '160px';
+        giantCursor.style.transformOrigin = '50% 50%';
+        giantCursor.style.setProperty('--tx', '-50%');
+        giantCursor.style.setProperty('--ty', '-50%');
         giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,1)'); // Naranja Ígneo Sólido
     }
 
@@ -107,8 +115,9 @@ function actualizarIconosTema() {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             if (cursor) {
                 cursor.style.opacity = '1';
-                cursor.style.left = (e.clientX - 2) + 'px';
-                cursor.style.top = (e.clientY - 2) + 'px';
+                // Como ya tenemos transform translate(-50%, -50%), asignamos el top y left nativos al centro exacto del Client.
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
             }
         });
 
