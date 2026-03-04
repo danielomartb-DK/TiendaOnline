@@ -34,6 +34,52 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    // --- RASTREO GLOBAL DEL RATÓN (ESTELAS ÉPICAS) ---
+    let emitTimeout;
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        isEmitting = true; // Activa estela mientras el mouse se mueve
+
+        // Si el mouse se detiene medio segundo, deja de quemar/emitir energía estática
+        clearTimeout(emitTimeout);
+        emitTimeout = setTimeout(() => {
+            isEmitting = false;
+        }, 150);
+    });
+
+    window.addEventListener('mousedown', (e) => {
+        const isDark = document.documentElement.classList.contains('dark');
+
+        // Generador de Tajo del Arma GLOBAL (cortar la pantalla entera no solo botones)
+        slashes.push({
+            x: e.clientX,
+            y: e.clientY,
+            life: 1, // Full vida de opacidad
+            decay: 0.04, // Rapidez del tajo (25 frames dura el corte)
+            angle: (Math.random() * Math.PI) - (Math.PI / 2), // Corte diagonal/horizontal aleatorio
+            maxLength: Math.random() * 80 + 120, // Rango de longitud del haz de luz
+            thickness: isDark ? 3 : 8, // Daga letal y delgada vs Fuego Ancho de Rengoku
+            type: isDark ? 'shadow' : 'fire'
+        });
+
+        // Explosión de Partículas radial por el impacto cinético
+        for (let i = 0; i < 20; i++) {
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                size: Math.random() * 5 + 2,
+                speedX: (Math.random() - 0.5) * 10,
+                speedY: (Math.random() - 0.5) * 10,
+                life: 1,
+                decay: Math.random() * 0.03 + 0.02,
+                hue: isDark ? Math.random() * 40 + 190 : Math.random() * 25 + 5,
+                type: isDark ? 'shadow' : 'fire'
+            });
+        }
+    });
+    // --- FIN RASTREO GLOBAL ---
+
     const emitCursorParticles = () => {
         if (!isEmitting) return;
 
@@ -169,11 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('mousemove', (e) => {
             const rect = el.getBoundingClientRect();
 
-            // Alimentar Motor de Partículas Global
-            isEmitting = true;
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
             // Determinar coordenadas relativas al centro exacto del botón
             const x = e.clientX - rect.left - rect.width / 2;
             const y = e.clientY - rect.top - rect.height / 2;
@@ -195,42 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Evento Mousedown: Ejecuta el impacto del arma visualmente sobre el botón
-        el.addEventListener('mousedown', (e) => {
-            const isDark = document.documentElement.classList.contains('dark');
-
-            // Generador de Tajo del Arma
-            slashes.push({
-                x: e.clientX,
-                y: e.clientY,
-                life: 1, // Full vida de opacidad
-                decay: 0.04, // Rapidez del tajo (25 frames dura el corte)
-                angle: (Math.random() * Math.PI) - (Math.PI / 2), // Corte con dirección aleatoria mayormente diagonal u horizontal
-                maxLength: Math.random() * 80 + 120, // Quebrantador de 120 a 200px de longitud
-                thickness: isDark ? 3 : 8, // Daga letal y delgada vs Fuego Ancho
-                type: isDark ? 'shadow' : 'fire'
-            });
-
-            // Explosión de Partículas radial por el impacto cinético
-            for (let i = 0; i < 20; i++) {
-                particles.push({
-                    x: e.clientX,
-                    y: e.clientY,
-                    size: Math.random() * 5 + 2,
-                    speedX: (Math.random() - 0.5) * 10, // Ráfaga veloz radial
-                    speedY: (Math.random() - 0.5) * 10,
-                    life: 1,
-                    decay: Math.random() * 0.03 + 0.02,
-                    hue: isDark ? Math.random() * 40 + 190 : Math.random() * 25 + 5,
-                    type: isDark ? 'shadow' : 'fire'
-                });
-            }
-        });
-
         el.addEventListener('mouseleave', () => {
-            // Apaga emisor de partículas mágicas
-            isEmitting = false;
-
             // Regreso elástico a la posición original
             el.style.transform = 'translate(0px, 0px) scale(1)';
             el.style.boxShadow = ''; // Libera el glow dinámico

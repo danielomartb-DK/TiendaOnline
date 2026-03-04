@@ -24,77 +24,26 @@ function actualizarIconosTema() {
     const isDark = document.documentElement.classList.contains('dark');
     const themeIcons = document.querySelectorAll('.theme-icon-toggle');
 
-    // --- CURSOR DINÁMICO ARMAS VECTORIALES (KATANA / DAGA SVG) ---
+    // --- CURSOR DINÁMICO ARMAS NATIVAS (KATANA / DAGA PNG) ---
     // Remueve estilo previo para inyectar uno fresco y forzoso sobre el cursor global y interactivo
     let oldCursorStyle = document.getElementById('pixelwear-dynamic-cursor');
     if (oldCursorStyle) oldCursorStyle.remove();
 
-    const svgRengoku = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-        <defs>
-            <linearGradient id="flame" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="20%" stop-color="#fef08a"/>
-                <stop offset="60%" stop-color="#ef4444"/>
-                <stop offset="100%" stop-color="#7f1d1d"/>
-            </linearGradient>
-            <filter id="glowF" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="1.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-        </defs>
-        <g transform="translate(1,1)">
-            <path d="M19 19 L0 0 L2 0 L20 18 Z" fill="#111827"/>
-            <path d="M18 20 L0 2 L0 0 L19 19 Z" fill="url(#flame)" filter="url(#glowF)"/>
-            <line x1="20" x2="28" y1="20" y2="28" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
-            <line x1="20" x2="28" y1="20" y2="28" stroke="#1f2937" stroke-width="1.5" stroke-dasharray="2,2"/>
-            <path d="M17 23 L23 17" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
-            <path d="M18 22 L22 18" stroke="#fcd34d" stroke-width="1"/>
-            <polygon points="0,0 4,0 0,4" fill="#ffffff" filter="url(#glowF)"/>
-        </g>
-    </svg>`;
-
-    const svgJinwoo = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-        <defs>
-            <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="30%" stop-color="#a5f3fc"/>
-                <stop offset="70%" stop-color="#06b6d4"/>
-                <stop offset="100%" stop-color="#164e63"/>
-            </linearGradient>
-            <filter id="cyanglow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="1.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-        </defs>
-        <g transform="translate(1, 1)">
-            <path d="M14 22 Q18 18 22 14" fill="none" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
-            <path d="M18 18 L0 0 L3 2 L20 16 Z" fill="#020617"/>
-            <path d="M18 18 L0 0 L2 3 L16 20 Z" fill="#1e293b"/>
-            <path d="M17 17 L0 0 L3 1 L18 15 Z" fill="url(#neon)" filter="url(#cyanglow)"/>
-            <line x1="18" x2="26" y1="18" y2="26" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
-            <line x1="18" x2="26" y1="18" y2="26" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="2,2"/>
-            <polygon points="0,0 2,0 0,2" fill="#ffffff"/>
-        </g>
-    </svg>`;
-
-    const katanaUrl = `url('data:image/svg+xml;utf8,${encodeURIComponent(svgRengoku)}')`;
-    const dagaUrl = `url('data:image/svg+xml;utf8,${encodeURIComponent(svgJinwoo)}')`;
-
     let style = document.createElement('style');
     style.id = 'pixelwear-dynamic-cursor';
 
-    // Offset de la punta gráfica del cursor SVG (coordenada de "clic"): 1px en X, 1px en Y
+    // Offset de la punta gráfica del cursor a 0,0 para PNGs
     if (isDark) {
         // Jin-Woo (Daga Neón)
         style.innerHTML = `
-            * { cursor: ${dagaUrl} 1 1, auto !important; }
-            button, a, input, select, .cursor-pointer { cursor: ${dagaUrl} 1 1, pointer !important; }
+            * { cursor: url('assets/daga.png') 0 0, auto !important; }
+            button, a, input, select, .cursor-pointer { cursor: url('assets/daga.png') 0 0, pointer !important; }
         `;
     } else {
         // Rengoku (Katana Ígnea)
         style.innerHTML = `
-            * { cursor: ${katanaUrl} 1 1, auto !important; }
-            button, a, input, select, .cursor-pointer { cursor: ${katanaUrl} 1 1, pointer !important; }
+            * { cursor: url('assets/katana.png') 0 0, auto !important; }
+            button, a, input, select, .cursor-pointer { cursor: url('assets/katana.png') 0 0, pointer !important; }
         `;
     }
     document.head.appendChild(style);
