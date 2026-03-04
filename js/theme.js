@@ -24,6 +24,31 @@ function actualizarIconosTema() {
     const isDark = document.documentElement.classList.contains('dark');
     const themeIcons = document.querySelectorAll('.theme-icon-toggle');
 
+    // --- CURSOR DINÁMICO ARMAS (KATANA / DAGA) ---
+    // Remueve estilo previo para inyectar uno fresco y forzoso sobre el cursor global y cursores pointer interactivos
+    let oldCursorStyle = document.getElementById('pixelwear-dynamic-cursor');
+    if (oldCursorStyle) oldCursorStyle.remove();
+
+    let style = document.createElement('style');
+    style.id = 'pixelwear-dynamic-cursor';
+
+    // Offset de la punta del cursor: La Katana (diagonal up-left) apunta al 0,0 igual que el mouse estándar
+    if (isDark) {
+        // Jin-Woo (Daga Neón)
+        style.innerHTML = `
+            * { cursor: url('assets/daga.png') 0 0, auto !important; }
+            button, a, input, select, .cursor-pointer { cursor: url('assets/daga.png') 0 0, pointer !important; }
+        `;
+    } else {
+        // Rengoku (Katana Ígnea)
+        style.innerHTML = `
+            * { cursor: url('assets/katana.png') 0 0, auto !important; }
+            button, a, input, select, .cursor-pointer { cursor: url('assets/katana.png') 0 0, pointer !important; }
+        `;
+    }
+    document.head.appendChild(style);
+    // --- FIN CURSORES ---
+
     themeIcons.forEach(icon => {
         // Remover clases de material symbols si la tienen para evitar colisión de tamaño
         icon.classList.remove('material-symbols-outlined');
