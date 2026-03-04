@@ -24,30 +24,69 @@ function actualizarIconosTema() {
     const isDark = document.documentElement.classList.contains('dark');
     const themeIcons = document.querySelectorAll('.theme-icon-toggle');
 
-    // --- CURSOR DINÁMICO ARMAS NATIVAS (KATANA / DAGA PNG) ---
-    // Remueve estilo previo para inyectar uno fresco y forzoso sobre el cursor global y interactivo
-    let oldCursorStyle = document.getElementById('pixelwear-dynamic-cursor');
+    // --- CURSOR GIGANTE PERSONALIZADO (4x HD) ---
+    // Remueve estilo de cursor y el puntero DOM previo si existen
+    let oldCursorStyle = document.getElementById('pixelwear-dynamic-cursor-style');
     if (oldCursorStyle) oldCursorStyle.remove();
+    let oldCursorEl = document.getElementById('pixelwear-giant-cursor');
+    if (oldCursorEl) oldCursorEl.remove();
 
+    // 1. Forzar invisibilidad del cursor nativo de Windows para todo el sitio
     let style = document.createElement('style');
-    style.id = 'pixelwear-dynamic-cursor';
-
-    // Offset de la punta gráfica del cursor a 0,0 para PNGs
-    if (isDark) {
-        // Jin-Woo (Daga Neón)
-        style.innerHTML = `
-            * { cursor: url('assets/daga.svg') 0 0, auto !important; }
-            button, a, input, select, .cursor-pointer { cursor: url('assets/daga.svg') 0 0, pointer !important; }
-        `;
-    } else {
-        // Rengoku (Katana Ígnea)
-        style.innerHTML = `
-            * { cursor: url('assets/katana.png') 0 0, auto !important; }
-            button, a, input, select, .cursor-pointer { cursor: url('assets/katana.png') 0 0, pointer !important; }
-        `;
-    }
+    style.id = 'pixelwear-dynamic-cursor-style';
+    style.innerHTML = `* { cursor: none !important; }`;
     document.head.appendChild(style);
-    // --- FIN CURSORES ---
+
+    // 2. Crear Elemento Gráfico Flotante (Nuestra Daga/Katana 4x)
+    const giantCursor = document.createElement('img');
+    giantCursor.id = 'pixelwear-giant-cursor';
+
+    // Rutas a los assets originales inmensos que pasó el cliente:
+    // Daga es un SVG wrapper con WebP, Nueva Katana es "reng.svg"
+    giantCursor.src = isDark ? 'assets/daga.svg' : 'assets/images/reng.svg';
+
+    giantCursor.style.position = 'fixed';
+    giantCursor.style.width = '120px'; // Tamaño colosal (4 veces mayor al nativo de 32px)
+    giantCursor.style.height = '120px';
+    giantCursor.style.pointerEvents = 'none'; // Clavado: Permite hacer clics *a través* de la imagen
+    giantCursor.style.zIndex = '999999'; // Siempre encima de modales, alertas y canvas
+
+    // Rotar para enderezar el agarre de las espadas hacia el vértice superior izquierdo
+    giantCursor.style.transform = 'translate(-10%, -10%) rotate(-45deg)';
+    giantCursor.style.transition = 'transform 0.1s ease-out';
+    // Ocultar al inicio hasta mover el mouse para no estorbar en el borde (0,0)
+    giantCursor.style.opacity = '0';
+    document.body.appendChild(giantCursor);
+
+    // Inicializar Tracker de Posición Táctil Único
+    if (!window.isGiantCursorBound) {
+        window.addEventListener('mousemove', (e) => {
+            const cursor = document.getElementById('pixelwear-giant-cursor');
+            if (cursor) {
+                cursor.style.opacity = '1';
+                // Asignar offset posicional: La punta afilada arriba-izquierda
+                cursor.style.left = (e.clientX - 10) + 'px';
+                cursor.style.top = (e.clientY - 10) + 'px';
+            }
+        });
+
+        // Efecto visual dinámico: Si clíckea, el sable "estoca" hacia adelante levemente
+        window.addEventListener('mousedown', () => {
+            const cursor = document.getElementById('pixelwear-giant-cursor');
+            if (cursor) {
+                cursor.style.transform = 'translate(-30%, -30%) rotate(-45deg) scale(0.85) drop-shadow(0 0 20px rgba(6, 182, 212, 0.8))';
+            }
+        });
+        window.addEventListener('mouseup', () => {
+            const cursor = document.getElementById('pixelwear-giant-cursor');
+            if (cursor) {
+                cursor.style.transform = 'translate(-10%, -10%) rotate(-45deg) scale(1) drop-shadow(0 0 0px transparent)';
+            }
+        });
+
+        window.isGiantCursorBound = true;
+    }
+    // --- FIN CURSOR GIGANTE ---
 
     themeIcons.forEach(icon => {
         // Remover clases de material symbols si la tienen para evitar colisión de tamaño
