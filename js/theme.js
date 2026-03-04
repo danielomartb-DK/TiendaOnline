@@ -44,20 +44,20 @@ function actualizarIconosTema() {
                 transform: translate(var(--tx), var(--ty)) rotate(-15deg) scale(1);
                 filter: var(--base-filter); 
             }
-            30% { 
-                /* Se centra en el area visible transpolando translate y origin, se prepara a 90 deg */
+            25% { 
+                /* Mueve el centro de la hoja directamente a las coordenadas del mouse mientras la alza a 90°(vertical) */
                 transform-origin: 50% 50%;
-                transform: translate(-50%, -50%) rotate(-90deg) scale(1.1);
+                transform: translate(-50%, -50%) rotate(-60deg) scale(1.1);
                 filter: var(--base-filter) brightness(1.2); 
             }
             70% { 
-                /* Slash rapido horizontal descendente */
+                /* Slash rapido descendente/horizontal MANTENIENDO estrictamente el centro atado al mouse */
                 transform-origin: 50% 50%;
-                transform: translate(-20%, -20%) rotate(45deg) scale(1.3);
+                transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(75deg) scale(1.3);
                 filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); 
             }
             100% { 
-                /* Regreso liso a estado pasivo natural */
+                /* Regreso liso a estado pasivo natural en la punta de la espada */
                 transform-origin: var(--ox) var(--oy);
                 transform: translate(var(--tx), var(--ty)) rotate(-15deg) scale(1);
                 filter: var(--base-filter); 
