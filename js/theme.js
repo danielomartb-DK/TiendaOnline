@@ -47,7 +47,8 @@ function actualizarIconosTema() {
         if (avatarCanvas) {
             // Cancelar el motor de aura si ya existe uno anterior
             if (icon.avatarEngine) icon.avatarEngine.stop();
-            icon.avatarEngine = new AvatarParticleEngine(avatarCanvas, isDark ? 'shadow' : 'fire');
+            // Reducimos radicalmente la cantidad de humo (0.35) de Noche para despejar la vista del Slider
+            icon.avatarEngine = new AvatarParticleEngine(avatarCanvas, isDark ? 'shadow' : 'fire', isDark ? 0.35 : 1);
         }
     });
 }
@@ -116,11 +117,11 @@ class AvatarParticleEngine {
                 this.particles.push({
                     x: this.centerX + Math.cos(angle) * r,
                     y: this.centerY + Math.sin(angle) * r,
-                    size: Math.random() * 14 + 10, // Nubes internas normales (14-10px) restauradas
+                    size: Math.random() * 6 + 4, // Partículas de Materia Oscura muy pequeñas y sutiles
                     speedX: Math.cos(angle) * 0.5 + (Math.random() - 0.5),
                     speedY: Math.sin(angle) * 0.5 + (Math.random() - 0.5) - 0.5,
                     life: 1,
-                    decay: Math.random() * 0.015 + 0.01
+                    decay: Math.random() * 0.02 + 0.015 // Rapidez de desvanecimiento para despejar visibilidad
                 });
             }
         }
