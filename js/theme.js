@@ -37,24 +37,21 @@ function actualizarIconosTema() {
     style.innerHTML = `
         * { cursor: none !important; }
         
-        /* Animacion de Tajo Realista Centrado */
-        @keyframes weaponStrike {
-            /* 0%   - Estado de reposo (Diagonal suave) */
-            0%   { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
-            
-            /* 20%  - Preparacion: Alzada vertical agresiva (90 grados) justo en el centro del click */
-            20%  { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-90deg) scale(1.1); filter: var(--base-filter) brightness(1.2); }
-            
-            /* 60%  - Tajo de Impacto: Arco acelerado descendente pasando la horizontal (como un corte real) con resplandor maximo */
-            60%  { transform: translate(calc(var(--tx, -50%) + 10px), calc(var(--ty, -50%) + 10px)) rotate(45deg) scale(1.2); filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); }
-            
-            /* 100% - Recuperacion curva (Ease-out lo hace el timing function) a posicion original */
-            100% { transform: translate(var(--tx, -50%), var(--ty, -50%)) rotate(-15deg) scale(1); filter: var(--base-filter); }
+        /* Animacion de Tajo Realista Centrado para Overlay Temporal */
+        @keyframes slashOverlay {
+            0%   { transform: translate(-50%, -50%) rotate(-15deg) scale(1); filter: var(--base-filter); opacity: 0; }
+            10%  { transform: translate(-50%, -50%) rotate(-100deg) scale(1.1); filter: var(--base-filter) brightness(1.2); opacity: 1; }
+            60%  { transform: translate(calc(-50% + 15px), calc(-50% + 15px)) rotate(45deg) scale(1.3); filter: var(--base-filter) brightness(1.8) drop-shadow(0 0 30px var(--glow-color, rgba(6,182,212,0.8))); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(60deg) scale(1.1); filter: var(--base-filter); opacity: 0; }
         }
         
-        .cursor-striking {
-            /* Usamos una curva de cubic-bezier elastica para que el tajo se sienta potente al bajar y suave al retornar */
-            animation: weaponStrike 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important;
+        .slash-sprite-overlay {
+            position: fixed;
+            transform-origin: 50% 50%;
+            pointer-events: none;
+            z-index: 9999999;
+            /* Curva bezier de tajo: Carga y desgarro violento */
+            animation: slashOverlay 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
         }
     `;
     document.head.appendChild(style);
@@ -70,20 +67,20 @@ function actualizarIconosTema() {
     giantCursor.style.position = 'fixed';
 
     // Asignación Asimétrica de Dimensiones, Hotspots y Brillos
-    // NUEVA LOGICA DE PIVOTE: El centro estricto geométrico del 50% 50% es la mira del arma.
+    // ESTADO IDLE SE RESTAURA AL ORIGINAL: Las puntas son el clic "físico" real
     if (isDark) {
-        giantCursor.style.width = '100px'; // Incrementado ligeramente para destacar el pivote centrado
-        giantCursor.style.height = '100px';
-        giantCursor.style.transformOrigin = '50% 50%';
-        giantCursor.style.setProperty('--tx', '-50%');
-        giantCursor.style.setProperty('--ty', '-50%');
+        giantCursor.style.width = '60px';
+        giantCursor.style.height = '60px';
+        giantCursor.style.transformOrigin = '0% 0%';
+        giantCursor.style.setProperty('--tx', '-5px');
+        giantCursor.style.setProperty('--ty', '0%');
         giantCursor.style.setProperty('--glow-color', 'rgba(6,182,212,0.8)'); // Neon Cyan
     } else {
-        giantCursor.style.width = '160px'; // Incrementado para compensar la visual del padding centrado
-        giantCursor.style.height = '160px';
-        giantCursor.style.transformOrigin = '50% 50%';
-        giantCursor.style.setProperty('--tx', '-50%');
-        giantCursor.style.setProperty('--ty', '-50%');
+        giantCursor.style.width = '120px';
+        giantCursor.style.height = '120px';
+        giantCursor.style.transformOrigin = '20% 20%';
+        giantCursor.style.setProperty('--tx', '-20%');
+        giantCursor.style.setProperty('--ty', 'calc(-20% - 8px)');
         giantCursor.style.setProperty('--glow-color', 'rgba(249,115,22,1)'); // Naranja Ígneo Sólido
     }
 
@@ -115,30 +112,49 @@ function actualizarIconosTema() {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             if (cursor) {
                 cursor.style.opacity = '1';
-                // Como ya tenemos transform translate(-50%, -50%), asignamos el top y left nativos al centro exacto del Client.
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+                // Cursor regular siguiendo track al click tip offseteado a -2
+                cursor.style.left = (e.clientX - 2) + 'px';
+                cursor.style.top = (e.clientY - 2) + 'px';
             }
         });
 
-        // Efecto visual y sonoro dinámico: Animación fluida "tajo" en CSS + Audio SFX HD
-        window.addEventListener('mousedown', () => {
+        // Efecto visual y sonoro dinámico: OVERLAY TEMPORAL CLONADO
+        window.addEventListener('mousedown', (e) => {
             const cursor = document.getElementById('pixelwear-giant-cursor');
             const isDarkModeActivo = document.documentElement.classList.contains('dark');
 
             if (cursor) {
                 if (isDarkModeActivo) {
                     daggerAudio.currentTime = 0;
-                    daggerAudio.play().catch(e => console.log('Sin audio de daga:', e));
+                    daggerAudio.play().catch(er => console.log('Sin audio de daga:', er));
                 } else {
                     katanaAudio.currentTime = 0;
-                    katanaAudio.play().catch(e => console.log('Sin audio de katana:', e));
+                    katanaAudio.play().catch(er => console.log('Sin audio de katana:', er));
                 }
 
-                // Detonar Animación de Tajo Visual
-                cursor.classList.remove('cursor-striking');
-                void cursor.offsetWidth; // Disparar reflow forzado
-                cursor.classList.add('cursor-striking');
+                // Generar el Fantasma Central exacto del click 
+                const slashSprite = document.createElement('img');
+                slashSprite.src = isDarkModeActivo ? 'assets/daga.svg' : 'assets/images/reng.svg';
+                slashSprite.classList.add('slash-sprite-overlay');
+
+                // Mismos filtros y aura estática copiados del cursor verdadero
+                slashSprite.style.setProperty('--glow-color', isDarkModeActivo ? 'rgba(6,182,212,0.8)' : 'rgba(249,115,22,1)');
+                slashSprite.style.setProperty('--base-filter', cursor.style.getPropertyValue('--base-filter'));
+
+                // Agrandamos los sprites un poco más para que el barrido se sienta espectacular 
+                slashSprite.style.width = isDarkModeActivo ? '100px' : '160px';
+                slashSprite.style.height = isDarkModeActivo ? '100px' : '160px';
+
+                // Anclar estrictamente al punto del click 
+                slashSprite.style.left = e.clientX + 'px';
+                slashSprite.style.top = e.clientY + 'px';
+
+                document.body.appendChild(slashSprite);
+
+                // Destruirlo automáticamente tras terminar el keyframes CSS
+                slashSprite.addEventListener('animationend', () => {
+                    slashSprite.remove();
+                });
             }
         });
 
