@@ -38,10 +38,10 @@ function actualizarIconosTema() {
         * { cursor: none !important; }
         
         @keyframes weaponStrike {
-            0%   { transform: translate(-10%, -10%) rotate(-45deg) scale(1); }
-            30%  { transform: translate(-10%, -10%) rotate(-100deg) scale(1.1); }
-            50%  { transform: translate(-30%, -10%) rotate(45deg) scale(1.2) drop-shadow(0 0 15px rgba(6,182,212,0.8)); }
-            100% { transform: translate(-10%, -10%) rotate(-45deg) scale(1); }
+            0%   { transform: rotate(-15deg) scale(1); }
+            30%  { transform: rotate(-80deg) scale(1.1); }
+            60%  { transform: rotate(40deg) scale(1.2) drop-shadow(0 0 15px rgba(6,182,212,0.8)); }
+            100% { transform: rotate(-15deg) scale(1); }
         }
         
         .cursor-striking {
@@ -64,8 +64,9 @@ function actualizarIconosTema() {
     giantCursor.style.pointerEvents = 'none'; // Clavado: Permite hacer clics *a través* de la imagen
     giantCursor.style.zIndex = '999999'; // Siempre encima de modales, alertas y canvas
 
-    // Rotar para enderezar el agarre de las espadas hacia el vértice superior izquierdo
-    giantCursor.style.transform = 'translate(-10%, -10%) rotate(-45deg)';
+    // Enderezar y atar la base de la rotación exactamente a la punta del filo
+    giantCursor.style.transformOrigin = 'top left';
+    giantCursor.style.transform = 'rotate(-15deg)';
     giantCursor.style.transition = 'transform 0.1s ease-out';
     // Ocultar al inicio hasta mover el mouse para no estorbar en el borde (0,0)
     giantCursor.style.opacity = '0';
