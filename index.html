@@ -192,9 +192,9 @@
                 </div>
                 <div class="flex flex-col justify-center translate-y-[2px]">
                     <span class="text-lg md:text-2xl font-black tracking-widest text-white leading-none">PIXEL<span
-                            class="text-cyan-400">WEAR</span></span>
+                            class="text-orange-400 dark:text-cyan-400 transition-colors duration-500">WEAR</span></span>
                     <span
-                        class="hidden sm:inline-block text-[0.55rem] md:text-[0.65rem] font-bold tracking-[0.25em] text-cyan-500 leading-none mt-1 uppercase">Tech
+                        class="hidden sm:inline-block text-[0.55rem] md:text-[0.65rem] font-bold tracking-[0.25em] text-orange-400 dark:text-cyan-500 leading-none mt-1 uppercase transition-colors duration-500">Tech
                         & Style</span>
                 </div>
             </a>
@@ -236,7 +236,7 @@
                 <a href="carrito.html" class="relative cursor-pointer group flex items-center">
                     <span class="material-symbols-outlined text-3xl">shopping_cart</span>
                     <span id="cartCounter"
-                        class="absolute -top-1 -right-1 bg-primary text-brand-blue text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-brand-blue">0</span>
+                        class="absolute -top-1 -right-1 bg-gradient-to-r from-amber-400 to-orange-500 dark:from-cyan-400 dark:to-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-brand-blue transition-all duration-500">0</span>
                     <span class="hidden md:inline ml-1 font-bold">Carrito</span>
                 </a>
             </div>
@@ -265,13 +265,16 @@
 
                 <!-- Fondo Día (Rengoku / Demon Slayer) -->
                 <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 dark:opacity-0"
-                    style="background-image: linear-gradient(90deg, rgba(15,10,5,0.92) 0%, rgba(15,10,5,0.6) 50%, rgba(15,10,5,0.3) 100%), url('assets/images/hero_day.png');">
+                    style="background-image: linear-gradient(90deg, rgba(8,5,2,0.98) 0%, rgba(8,5,2,0.85) 30%, rgba(8,5,2,0.1) 100%), url('assets/images/hero_day.png');">
                 </div>
 
                 <!-- Fondo Noche (Jin-Woo / Solo Leveling) -->
                 <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 opacity-0 dark:opacity-100"
-                    style="background-image: linear-gradient(90deg, rgba(2,3,12,0.92) 0%, rgba(2,3,12,0.55) 50%, rgba(2,3,12,0.2) 100%), url('assets/images/hero_night.png');">
+                    style="background-image: linear-gradient(90deg, rgba(2,3,10,0.98) 0%, rgba(2,3,10,0.85) 30%, rgba(2,3,10,0.1) 100%), url('assets/images/hero_night.png');">
                 </div>
+
+                <!-- Capa de Partículas (Canvas Dinámico) -->
+                <canvas id="hero-particles" class="absolute inset-0 z-0 pointer-events-none"></canvas>
 
                 <!-- Contenido del Banner (siempre visible) -->
                 <div class="max-w-xl relative z-10">
@@ -289,16 +292,15 @@
                             Oficial</span>
                     </div>
                     <h2
-                        class="text-white text-3xl md:text-6xl font-mecha font-bold leading-tight mb-4 flex flex-col gap-1 md:gap-2 uppercase tracking-wide">
+                        class="text-white text-5xl md:text-7xl font-mecha font-black leading-tight mb-4 flex flex-col gap-1 md:gap-2 uppercase tracking-wide drop-shadow-[0_0_15px_rgba(255,153,0,0.5)] dark:drop-shadow-[0_0_15px_rgba(0,183,255,0.4)] transition-all duration-500 relative z-10">
                         <span>Pixel Wear</span> <span
-                            class="text-2xl md:text-4xl text-orange-400 dark:text-cyan-400 transition-colors duration-500">Tecnología
-                            y Estilo en
-                            un Solo Lugar</span>
+                            class="text-xl md:text-3xl font-bold text-orange-400 dark:text-cyan-400 transition-colors duration-500 tracking-normal drop-shadow-none">Donde
+                            el anime se encuentra con la tecnología</span>
                     </h2>
-                    <p class="text-slate-200 text-sm md:text-lg mb-6 md:mb-8 max-w-lg leading-relaxed">Descubre gadgets,
-                        ropa tech y accesorios únicos al
-                        mejor precio.
-                        Calidad, innovación y estilo digital para tu día a día.</p>
+                    <p
+                        class="text-slate-300 dark:text-slate-400 text-sm md:text-lg mb-6 md:mb-8 max-w-lg leading-relaxed relative z-10 font-medium">
+                        Descubre la fusión perfecta entre tus series favoritas y los mejores gadgets y accesorios tech.
+                    </p>
                     <button
                         onclick="document.getElementById('catalogo-productos').scrollIntoView({ behavior: 'smooth' })"
                         class="bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-500 dark:to-blue-600 text-white px-6 md:px-8 py-3 rounded-xl font-bold text-sm md:text-lg shadow-[0_4px_20px_rgba(255,153,0,0.4)] dark:shadow-[0_4px_20px_rgba(0,183,255,0.4)] hover:shadow-[0_6px_30px_rgba(255,153,0,0.6)] dark:hover:shadow-[0_6px_30px_rgba(0,183,255,0.6)] hover:-translate-y-0.5 transition-all flex items-center gap-2 w-max">Explorar
@@ -415,7 +417,7 @@
                     <div class="flex flex-col justify-center translate-y-[1px]">
                         <span
                             class="text-xl font-black tracking-widest text-slate-400 group-hover:text-white transition-colors leading-none">PIXEL<span
-                                class="text-slate-500 group-hover:text-cyan-400 transition-colors">WEAR</span></span>
+                                class="text-slate-500 group-hover:text-orange-400 dark:group-hover:text-cyan-400 transition-colors">WEAR</span></span>
                     </div>
                 </a>
                 <div class="flex flex-col md:flex-row items-center gap-4 text-xs text-slate-500">
@@ -452,6 +454,7 @@
     <script src="js/newsletter.js"></script>
     <script src="js/holo.js"></script>
     <script src="js/magnetic.js"></script>
+    <script src="js/particles.js"></script>
 </body>
 
 </html>
