@@ -151,7 +151,7 @@ function renderizarProductos(productos) {
             + '<div class="flex items-baseline gap-2 mb-3">'
             + '<span class="text-xl md:text-2xl font-mecha font-bold text-slate-900 dark:text-white tracking-wide">' + formattedPrice + '</span>'
             + '</div>'
-            + '<button class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 md:py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm shadow-[0_4px_15px_rgba(0,183,255,0.25)] hover:shadow-[0_6px_25px_rgba(0,183,255,0.4)] hover:-translate-y-0.5 ' + disabledClass + '" onclick="agregarAlCarrito(' + p.id_producto + ')" ' + (outOfStock ? 'disabled' : '') + '>'
+            + '<button class="w-full bg-gradient-to-r from-cyan-400 to-orange-500 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 md:py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm shadow-[0_4px_15px_rgba(255,153,0,0.25)] dark:shadow-[0_4px_15px_rgba(0,183,255,0.25)] hover:shadow-[0_6px_25px_rgba(255,153,0,0.4)] dark:hover:shadow-[0_6px_25px_rgba(0,183,255,0.4)] hover:-translate-y-0.5 ' + disabledClass + '" onclick="agregarAlCarrito(' + p.id_producto + ')" ' + (outOfStock ? 'disabled' : '') + '>'
             + '<span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>'
             + (outOfStock ? 'Agotado' : 'Agregar')
             + '</button>'
