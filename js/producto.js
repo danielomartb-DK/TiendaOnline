@@ -70,7 +70,7 @@ function renderizarDetalles(p) {
     const stockQty = Number(p.stock) || 0;
     const outOfStock = stockQty <= 0;
     const isLowStock = stockQty > 0 && stockQty <= 5;
-    let btnClass = outOfStock ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-primary hover:brightness-110 text-brand-blue';
+    let btnClass = outOfStock ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-500 dark:to-blue-600 text-white hover:brightness-110 shadow-orange-500/30 dark:shadow-cyan-500/30';
     let btnText = outOfStock ? 'No Disponible' : 'Añadir al Carrito';
 
     let stockBadge = '';

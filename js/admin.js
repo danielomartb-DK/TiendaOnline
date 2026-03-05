@@ -37,6 +37,7 @@ function initAdminPanel() {
         cargarYRenderizarVentas();
 
         // Referencias Formulario Productos
+        const form = document.getElementById('adminProductForm');
         const inputImagen = document.getElementById('prodImagen');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
         const btnSubmit = document.getElementById('btnSubmitProducto');
