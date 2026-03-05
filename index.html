@@ -136,16 +136,16 @@
                         style="font-variation-settings: 'FILL' 1;">diamond</span>
                 </div>
                 <div class="flex flex-col justify-center translate-y-[2px]">
-                    <span class="text-xl md:text-2xl font-black tracking-widest text-white leading-none">PIXEL<span
+                    <span class="text-lg md:text-2xl font-black tracking-widest text-white leading-none">PIXEL<span
                             class="text-cyan-400">WEAR</span></span>
                     <span
-                        class="text-[0.55rem] md:text-[0.65rem] font-bold tracking-[0.25em] text-cyan-500 leading-none mt-1 uppercase">Tech
+                        class="hidden sm:inline-block text-[0.55rem] md:text-[0.65rem] font-bold tracking-[0.25em] text-cyan-500 leading-none mt-1 uppercase">Tech
                         & Style</span>
                 </div>
             </a>
 
             <!-- Barra de Búsqueda -->
-            <div class="flex-1 max-w-2xl mx-4">
+            <div class="hidden lg:flex flex-1 max-w-2xl mx-4">
                 <div class="relative flex items-center w-full">
                     <input id="searchInput"
                         class="w-full h-10 px-4 pr-12 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary focus:outline-none border-none"
@@ -188,6 +188,20 @@
         </div>
     </header>
 
+    <!-- Barra de Búsqueda Móvil -->
+    <div
+        class="lg:hidden bg-[#0f1013] dark:bg-[#020305] px-4 py-3 border-b border-slate-800 shadow-sm transition-colors duration-300">
+        <div class="relative flex items-center w-full max-w-lg mx-auto">
+            <input id="searchInputMobile"
+                class="w-full h-10 px-4 pr-12 rounded-xl bg-slate-800 text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none border border-slate-700 placeholder-slate-400 transition-all font-medium text-sm"
+                placeholder="Buscar armas, armaduras y equipo..." type="text" />
+            <button
+                class="absolute right-0 bg-gradient-to-r from-cyan-500 to-blue-500 h-10 px-4 rounded-r-xl hover:brightness-110 text-white flex items-center justify-center shadow-inner">
+                <span class="material-symbols-outlined font-black text-lg">search</span>
+            </button>
+        </div>
+    </div>
+
     <main class="pt-2 pb-12 md:pt-4">
         <!-- Banner Principal -->
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 mb-8">
@@ -206,8 +220,9 @@
                         <span class="text-cyan-400 font-bold text-xs md:text-sm uppercase tracking-wider">Tienda
                             Oficial</span>
                     </div>
-                    <h2 class="text-white text-4xl md:text-6xl font-black leading-tight mb-4 flex flex-col gap-2">
-                        <span>Pixel Wear</span> <span class="text-3xl md:text-4xl text-cyan-400">Tecnología y Estilo en
+                    <h2
+                        class="text-white text-3xl md:text-6xl font-black leading-tight mb-4 flex flex-col gap-1 md:gap-2">
+                        <span>Pixel Wear</span> <span class="text-2xl md:text-4xl text-cyan-400">Tecnología y Estilo en
                             un Solo Lugar</span>
                     </h2>
                     <p class="text-slate-200 text-lg mb-8 max-w-lg">Descubre gadgets, ropa tech y accesorios únicos al

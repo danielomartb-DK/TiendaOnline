@@ -67,9 +67,9 @@ async function initApp() {
  */
 function initBuscador() {
     const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
+    const searchInputMobile = document.getElementById('searchInputMobile');
 
-    searchInput.addEventListener('input', (e) => {
+    const handleSearch = (e) => {
         // Normalizar quitando tildes y pasando a minúsculas
         const query = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
@@ -87,7 +87,10 @@ function initBuscador() {
         });
 
         renderizarProductos(productosFiltrados);
-    });
+    };
+
+    if (searchInput) searchInput.addEventListener('input', handleSearch);
+    if (searchInputMobile) searchInputMobile.addEventListener('input', handleSearch);
 }
 
 /**
