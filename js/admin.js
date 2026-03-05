@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initAdminPanel() {
     // 1. Verificar Seguridad: Esperar por maximo 1000ms a que auth.js inyecte novaAuth
     let checkInterval = setInterval(() => {
-        if (window.novaAuth !== undefined) {
+        if (window.novaAuth !== undefined && !window.novaAuth._refreshing) {
             clearInterval(checkInterval);
             if (!window.novaAuth.isAdmin()) {
                 document.body.innerHTML = `

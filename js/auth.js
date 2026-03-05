@@ -9,6 +9,10 @@ class AuthManager {
         this.supabaseKey = SUPABASE_KEY; // Viene de api.js
         this.sessionKey = 'PixelWear_session';
         this.user = this.getSession();
+        this._refreshing = false;
+
+        // Auto-refresh si el token está expirado
+        this._tryAutoRefresh();
 
         this.initUI();
     }
@@ -37,6 +41,64 @@ class AuthManager {
         localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
         this.user = sessionData;
         this.updateUI();
+    }
+
+    /**
+     * Intenta refrescar el token automáticamente si está expirado
+     */
+    async _tryAutoRefresh() {
+        if (!this.user) return;
+        // Verificar si el token JWT ha expirado
+        const session = this.user.session || this.user;
+        const accessToken = session.access_token;
+        const refreshToken = session.refresh_token;
+        if (!accessToken || !refreshToken) return;
+
+        try {
+            // Decodificar JWT para ver si expiró (payload es la 2da parte base64)
+            const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            const expiresAt = payload.exp * 1000; // a ms
+            const now = Date.now();
+            // Si expira en menos de 60 segundos, refrescar
+            if (now > expiresAt - 60000) {
+                console.log('Token expirado o por expirar, refrescando...');
+                await this.refreshSession(refreshToken);
+            }
+        } catch (e) {
+            console.warn('No se pudo verificar expiración del token:', e);
+        }
+    }
+
+    /**
+     * Refresca la sesión usando el refresh_token de Supabase
+     */
+    async refreshSession(refreshToken) {
+        if (this._refreshing) return;
+        this._refreshing = true;
+        try {
+            const response = await fetch(`${this.supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
+                method: 'POST',
+                headers: {
+                    'apikey': this.supabaseKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ refresh_token: refreshToken })
+            });
+
+            if (!response.ok) {
+                console.error('Refresh token falló, cerrando sesión');
+                this.logout();
+                return;
+            }
+
+            const data = await response.json();
+            this.setSession(data);
+            console.log('Sesión refrescada exitosamente');
+        } catch (err) {
+            console.error('Error refrescando sesión:', err);
+        } finally {
+            this._refreshing = false;
+        }
     }
 
     /**
