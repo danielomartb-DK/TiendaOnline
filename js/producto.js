@@ -152,7 +152,7 @@ function renderizarDetalles(p) {
             <!-- Info Principal (A la derecha) -->
             <div class="flex flex-col">
                 ${stockBadge}
-                <h1 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 leading-tight transition-colors duration-300">${p.nombre}</h1>
+                <h1 class="text-3xl md:text-4xl font-mecha font-bold text-slate-900 dark:text-white mb-2 leading-tight transition-colors duration-300 uppercase tracking-wide">${p.nombre}</h1>
                 
                 <div class="flex items-center gap-2 mb-6">
                     <div class="flex text-primary">
@@ -166,7 +166,7 @@ function renderizarDetalles(p) {
                 </div>
 
                 <div class="mb-8">
-                    <p class="text-4xl font-black text-slate-900 dark:text-white transition-colors duration-300">${formattedPrice}</p>
+                    <p class="text-4xl font-mecha font-bold text-slate-900 dark:text-white transition-colors duration-300 tracking-wide">${formattedPrice}</p>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 transition-colors duration-300">Garantía de Devolución de 30 Días | Pagos Seguros</p>
                 </div>
 

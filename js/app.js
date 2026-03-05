@@ -132,33 +132,38 @@ function renderizarProductos(productos) {
         const randomFallback = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
         const imagenUrl = p.imagen_url || randomFallback;
 
-        return '<div class="bg-white dark:bg-background-dark/50 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden group hover:shadow-xl transition-shadow flex flex-col">'
-            + '<a href="producto.html?id=' + p.id_producto + '" class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-900 block">'
-            + '<img alt="' + p.nombre + '" src="' + imagenUrl + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />'
+        return '<div data-holo class="holo-card relative bg-white dark:bg-[#0c1222] border border-slate-200/80 dark:border-slate-700/60 rounded-2xl overflow-hidden group flex flex-col transition-colors duration-300">'
+            + '<a href="producto.html?id=' + p.id_producto + '" class="relative aspect-square overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 block">'
+            + '<img alt="' + p.nombre + '" src="' + imagenUrl + '" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />'
             + stockBadge
             + '</a>'
-            + '<div class="p-4 flex flex-col flex-1">'
-            + '<a href="producto.html?id=' + p.id_producto + '" class="text-slate-900 dark:text-white font-medium mb-1 line-clamp-2 hover:text-primary transition-colors" title="' + p.nombre + '">' + p.nombre + '</a>'
-            + '<div class="flex items-center gap-1 mb-2">'
-            + '<span class="material-symbols-outlined text-primary text-sm fill-1">star</span>'
-            + '<span class="material-symbols-outlined text-primary text-sm fill-1">star</span>'
-            + '<span class="material-symbols-outlined text-primary text-sm fill-1">star</span>'
-            + '<span class="material-symbols-outlined text-primary text-sm fill-1">star</span>'
-            + '<span class="material-symbols-outlined text-slate-300 text-sm">star</span>'
-            + '<span class="text-xs text-slate-500 ml-1">(' + (Math.floor(Math.random() * 500) + 15) + ')</span>'
+            + '<div class="p-3 md:p-4 flex flex-col flex-1">'
+            + '<a href="producto.html?id=' + p.id_producto + '" class="text-slate-800 dark:text-slate-100 font-semibold text-xs md:text-sm mb-1 line-clamp-2 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors leading-snug" title="' + p.nombre + '">' + p.nombre + '</a>'
+            + '<div class="flex items-center gap-0.5 mb-2">'
+            + '<span class="material-symbols-outlined text-amber-400 text-xs md:text-sm" style="font-variation-settings: \'FILL\' 1;">star</span>'
+            + '<span class="material-symbols-outlined text-amber-400 text-xs md:text-sm" style="font-variation-settings: \'FILL\' 1;">star</span>'
+            + '<span class="material-symbols-outlined text-amber-400 text-xs md:text-sm" style="font-variation-settings: \'FILL\' 1;">star</span>'
+            + '<span class="material-symbols-outlined text-amber-400 text-xs md:text-sm" style="font-variation-settings: \'FILL\' 1;">star</span>'
+            + '<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-xs md:text-sm">star</span>'
+            + '<span class="text-[10px] text-slate-400 dark:text-slate-500 ml-1">(' + (Math.floor(Math.random() * 500) + 15) + ')</span>'
             + '</div>'
             + '<div class="mt-auto">'
             + '<div class="flex items-baseline gap-2 mb-3">'
-            + '<span class="text-2xl font-bold text-slate-900 dark:text-white">' + formattedPrice + '</span>'
+            + '<span class="text-xl md:text-2xl font-mecha font-bold text-slate-900 dark:text-white tracking-wide">' + formattedPrice + '</span>'
             + '</div>'
-            + '<button class="w-full bg-primary text-brand-blue font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-2 ' + disabledClass + '" onclick="agregarAlCarrito(' + p.id_producto + ')" ' + (outOfStock ? 'disabled' : '') + '>'
-            + '<span class="material-symbols-outlined text-xl">shopping_cart</span>'
-            + (outOfStock ? 'No Disponible' : 'Agregar al Carrito')
+            + '<button class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 md:py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm shadow-[0_4px_15px_rgba(0,183,255,0.25)] hover:shadow-[0_6px_25px_rgba(0,183,255,0.4)] hover:-translate-y-0.5 ' + disabledClass + '" onclick="agregarAlCarrito(' + p.id_producto + ')" ' + (outOfStock ? 'disabled' : '') + '>'
+            + '<span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>'
+            + (outOfStock ? 'Agotado' : 'Agregar')
             + '</button>'
             + '</div>'
             + '</div>'
             + '</div>';
     }).join('');
+
+    // Activar efecto holográfico en las nuevas tarjetas
+    if (typeof initHoloCards === 'function') {
+        initHoloCards();
+    }
 
     console.log('Tarjetas pintadas exitosamente.');
 }
