@@ -262,7 +262,8 @@ function initAdminPanel() {
 
         // Exponer la función globalmente para el botón in-line del HTML
         window.cambiarEstadoOrden = async (id_venta, nuevoEstado, btn) => {
-            if (!confirm('¿Marcar este pedido como Enviado/Entregado?')) return;
+            const confirmado = await pixelConfirm('¿Marcar este pedido como Enviado/Entregado?', { titulo: '📦 Enviar Pedido', btnConfirm: 'Sí, Enviar', tipo: 'info' });
+            if (!confirmado) return;
 
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<span class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></span>';
@@ -429,7 +430,8 @@ function initAdminPanel() {
         const btnTabEntregados = document.getElementById('tabEntregados');
 
         window.devolverItem = async (idVenta, idProducto, cantidad, prodName) => {
-            if (!confirm(`⚠️ ¿Estás seguro de cancelar ${cantidad} unds de '${prodName}'?\n\nEsto devolverá el stock automáticamente al inventario general.`)) return;
+            const confirmado = await pixelConfirm(`¿Estás seguro de cancelar ${cantidad} unds de '${prodName}'?\n\nEsto devolverá el stock automáticamente al inventario general.`, { titulo: '⚠️ Cancelar Producto', btnConfirm: 'Sí, Cancelar', tipo: 'danger' });
+            if (!confirmado) return;
 
             const btn = event.currentTarget;
             const card = document.getElementById(`modal-item-${idProducto}`);

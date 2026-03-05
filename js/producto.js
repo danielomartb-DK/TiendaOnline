@@ -297,7 +297,8 @@ async function guardarEdicion(id_producto) {
 async function borrarProductoActual(id_producto) {
     if (!window.novaAuth || !window.novaAuth.isAdmin()) return;
 
-    if (!confirm('🛑 ¿Estás totalmente seguro de RETIRAR este producto de PixelWear? Esta acción es instantánea y no puede deshacerse.')) return;
+    const confirmado = await pixelConfirm('¿Estás totalmente seguro de RETIRAR este producto de PixelWear? Esta acción es instantánea y no puede deshacerse.', { titulo: '🛑 Eliminar Producto', btnConfirm: 'Sí, Eliminar', tipo: 'danger' });
+    if (!confirmado) return;
 
     const btn = document.querySelector(`button[onclick="borrarProductoActual(${id_producto})"]`);
     btn.innerHTML = '<span class="material-symbols-outlined animate-spin">delete</span> Destruyendo...';

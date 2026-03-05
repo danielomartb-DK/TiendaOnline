@@ -161,6 +161,21 @@ function actualizarIconosTema() {
         });
 
         window.isGiantCursorBound = true;
+
+        // --- CURSOR EN TOP-LAYER (DIALOGS) ---
+        // Los <dialog> con showModal() entran al top-layer del navegador,
+        // que está por encima de cualquier z-index. Movemos el cursor dentro del dialog abierto.
+        const dialogObserver = new MutationObserver(() => {
+            const cursor = document.getElementById('pixelwear-giant-cursor');
+            if (!cursor) return;
+            const openDialog = document.querySelector('dialog[open]');
+            if (openDialog && cursor.parentElement !== openDialog) {
+                openDialog.appendChild(cursor);
+            } else if (!openDialog && cursor.parentElement !== document.body) {
+                document.body.appendChild(cursor);
+            }
+        });
+        dialogObserver.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
     }
     // --- FIN CURSOR GIGANTE ---
 
