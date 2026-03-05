@@ -402,7 +402,6 @@ function initAdminPanel() {
                                     <span class="material-symbols-outlined text-[14px]">cancel</span> Cancelar
                                 </button>
                                 ` : `<span class="text-red-500 font-bold text-xs">Cancelado</span>`}
-                                </button>
                             </div>
                         </div>
                     `;
