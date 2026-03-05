@@ -33,7 +33,7 @@ function initAdminPanel() {
     function bindAdminEvents() {
         // --- 1. Inicialización Estado de Pedidos ---
         let ventasGlobales = [];
-        let filtroActual = 'pendiente'; // 'pendiente' o 'entregado'
+        let filtroActual = 'pendiente'; // 'pendiente', 'entregado', o 'cancelado'
         cargarYRenderizarVentas();
 
         // Referencias Formulario Productos
@@ -136,7 +136,8 @@ function initAdminPanel() {
         }
 
         function actualizarContadorPendientes() {
-            const pendientes = ventasGlobales.filter(v => typeof v.estado === 'string' && v.estado.toLowerCase() !== 'entregado');
+            const pendientes = ventasGlobales.filter(v => typeof v.estado === 'string' && v.estado.toLowerCase() !== 'entregado' && v.estado.toLowerCase() !== 'cancelado');
+            const cancelados = ventasGlobales.filter(v => typeof v.estado === 'string' && v.estado.toLowerCase() === 'cancelado');
             const badge = document.getElementById('badgePendientes');
             if (badge) {
                 badge.textContent = pendientes.length;
@@ -146,6 +147,16 @@ function initAdminPanel() {
                 } else {
                     badge.classList.remove('bg-slate-300', 'dark:bg-slate-600');
                     badge.classList.add('bg-red-500', 'dark:bg-red-600');
+                }
+            }
+            // Actualizar badge de cancelados
+            const badgeCancelados = document.getElementById('badgeCancelados');
+            if (badgeCancelados) {
+                badgeCancelados.textContent = cancelados.length;
+                if (cancelados.length === 0) {
+                    badgeCancelados.classList.add('hidden');
+                } else {
+                    badgeCancelados.classList.remove('hidden');
                 }
             }
         }
@@ -159,7 +170,9 @@ function initAdminPanel() {
                 if (!v.estado) return false;
                 const estadoLower = v.estado.toLowerCase();
                 if (filtroActual === 'pendiente') {
-                    return estadoLower !== 'entregado';
+                    return estadoLower !== 'entregado' && estadoLower !== 'cancelado';
+                } else if (filtroActual === 'cancelado') {
+                    return estadoLower === 'cancelado';
                 } else {
                     return estadoLower === 'entregado';
                 }
@@ -222,7 +235,11 @@ function initAdminPanel() {
                             </span>
                         </td>
                         <td class="p-4 border-b border-slate-100 dark:border-slate-700/50 align-top text-center w-32" onclick="event.stopPropagation()">
-                            ${(typeof venta.estado === 'string' && venta.estado.toLowerCase() !== 'entregado') ? `
+                            ${(typeof venta.estado === 'string' && venta.estado.toLowerCase() === 'cancelado') ? `
+                                <span class="inline-flex items-center gap-1 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/40 px-3 py-1.5 rounded-lg text-sm font-bold border border-red-200 dark:border-red-800">
+                                    <span class="material-symbols-outlined text-lg">cancel</span> Cancelado
+                                </span>
+                            ` : (typeof venta.estado === 'string' && venta.estado.toLowerCase() !== 'entregado') ? `
                                 <button onclick="window.cambiarEstadoOrden(${venta.id_venta}, 'entregado', this)" class="bg-cyan-50 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 w-full hover:bg-cyan-500 hover:text-white transition-all px-3 py-2 rounded-lg font-bold text-sm shadow-sm border border-cyan-200 dark:border-cyan-800 flex items-center justify-center gap-1">
                                     <span class="material-symbols-outlined text-lg">local_shipping</span> Enviar
                                 </button>
@@ -300,8 +317,6 @@ function initAdminPanel() {
 
             modalDetalle.showModal();
 
-            modalDetalle.showModal();
-
             try {
                 // Sacar el total general de la factura del caché existente
                 const ventaMadre = ventasGlobales.find(v => v.id_venta === id_venta);
@@ -312,8 +327,50 @@ function initAdminPanel() {
                 // Solicitar detalles a DB
                 const detalles = await obtenerDetallesVenta(id_venta);
 
+                // Generar header con info del cliente
+                let headerInfo = '';
+                const ventaMadreInfo = ventasGlobales.find(v => v.id_venta === id_venta);
+                if (ventaMadreInfo && ventaMadreInfo.cliente) {
+                    const c = ventaMadreInfo.cliente;
+                    let fechaStr = 'N/A';
+                    if (ventaMadreInfo.fecha) {
+                        const d = new Date(ventaMadreInfo.fecha);
+                        if (!isNaN(d)) fechaStr = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    }
+                    headerInfo = `
+                        <div class="mb-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700/50">
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Cliente</span>
+                                    <p class="font-bold text-slate-800 dark:text-white">${c.nombres || ''} ${c.apellidos || ''}</p>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Fecha</span>
+                                    <p class="font-medium text-slate-600 dark:text-slate-300">${fechaStr}</p>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Email</span>
+                                    <p class="font-medium text-slate-600 dark:text-slate-300">${c.email || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Teléfono</span>
+                                    <p class="font-medium text-slate-600 dark:text-slate-300">${c.telefono || 'N/A'}</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Dirección</span>
+                                    <p class="font-medium text-slate-600 dark:text-slate-300">${c.direccion || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 text-xs uppercase tracking-wider">Estado</span>
+                                    <p class="font-bold ${ventaMadreInfo.estado === 'cancelado' ? 'text-red-500' : ventaMadreInfo.estado === 'entregado' ? 'text-emerald-500' : 'text-amber-500'}">${(ventaMadreInfo.estado || 'pendiente').toUpperCase()}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 if (!detalles || detalles.length === 0) {
-                    container.innerHTML = `<div class="p-8 text-center text-slate-500 italic">No se encontraron productos para esta orden.</div>`;
+                    container.innerHTML = headerInfo + `<div class="p-8 text-center text-slate-500 italic">No se encontraron productos para esta orden.</div>`;
                     return;
                 }
 
@@ -340,15 +397,18 @@ function initAdminPanel() {
                             
                             <div class="text-right flex flex-col justify-center items-end pr-2">
                                 <span class="font-black text-slate-900 dark:text-white mb-1">${subtotalDisplay}</span>
-                                <button onclick="window.devolverItem(${item.id_venta}, ${item.id_producto}, ${item.cantidad}, '${prodName}', event)" class="text-xs font-bold text-red-500 flex items-center gap-1 hover:text-red-700 transition-colors bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">
+                                ${ventaMadreInfo && ventaMadreInfo.estado !== 'cancelado' ? `
+                                <button onclick="window.devolverItem(${item.id_venta}, ${item.id_producto}, ${item.cantidad}, '${prodName.replace(/'/g, "\\'")}', event)" class="text-xs font-bold text-red-500 flex items-center gap-1 hover:text-red-700 transition-colors bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">
                                     <span class="material-symbols-outlined text-[14px]">cancel</span> Cancelar
+                                </button>
+                                ` : `<span class="text-red-500 font-bold text-xs">Cancelado</span>`}
                                 </button>
                             </div>
                         </div>
                     `;
                 });
 
-                container.innerHTML = htmlItems;
+                container.innerHTML = headerInfo + htmlItems;
 
             } catch (error) {
                 console.error("Error cargando detalles del modal:", error);
@@ -385,6 +445,23 @@ function initAdminPanel() {
                 btn.parentElement.innerHTML = '<span class="text-red-500 font-bold text-xs mt-2">Reintegrado</span>';
 
                 mostrarToast(`Stock Reintegrado Exitosamente (+${cantidad})`);
+
+                // Verificar si TODOS los ítems de este pedido han sido cancelados
+                const itemsRestantes = document.querySelectorAll(`#modalItemsContainer [id^="modal-item-"]`);
+                const todosAnulados = Array.from(itemsRestantes).every(el => el.style.opacity === '0.5');
+                if (todosAnulados) {
+                    // Marcar el pedido completo como 'cancelado'
+                    try {
+                        await actualizarEstadoVenta(idVenta, 'cancelado');
+                        const idx = ventasGlobales.findIndex(v => v.id_venta === idVenta);
+                        if (idx !== -1) ventasGlobales[idx].estado = 'cancelado';
+                        renderizarTablaPedidos();
+                        actualizarContadorPendientes();
+                        mostrarToast(`⚠️ Pedido #${idVenta} cancelado completamente. Todos los ítems fueron devueltos al stock.`);
+                    } catch (cancelErr) {
+                        console.error('Error al marcar pedido como cancelado:', cancelErr);
+                    }
+                }
             } catch (err) {
                 console.error("Fallo al devolver Item:", err);
                 alert("Ocurrió un error al contactar el Inventario: " + err.message);
@@ -410,9 +487,32 @@ function initAdminPanel() {
                 // Estilos Inactivo (Pendiente) -> Activo (Entregado)
                 btnTabPendientes.className = "px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600";
                 btnTabEntregados.className = "px-6 py-2 rounded-lg font-bold transition-all bg-emerald-500 text-white shadow-md border border-transparent";
+                if (btnTabCancelados) btnTabCancelados.className = "px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600";
 
                 renderizarTablaPedidos();
             });
+        }
+
+        // Tab Cancelados
+        const btnTabCancelados = document.getElementById('tabCancelados');
+        if (btnTabCancelados) {
+            btnTabCancelados.addEventListener('click', () => {
+                filtroActual = 'cancelado';
+
+                if (btnTabPendientes) btnTabPendientes.className = "px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600";
+                if (btnTabEntregados) btnTabEntregados.className = "px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600";
+                btnTabCancelados.className = "px-6 py-2 rounded-lg font-bold transition-all bg-red-500 text-white shadow-md border border-transparent";
+
+                renderizarTablaPedidos();
+            });
+
+            // Hacer que el tab Pendientes también resetee el tab cancelados
+            if (btnTabPendientes) {
+                const originalPendientesClick = btnTabPendientes.onclick;
+                btnTabPendientes.addEventListener('click', () => {
+                    btnTabCancelados.className = "px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600";
+                });
+            }
         }
     }
 }
