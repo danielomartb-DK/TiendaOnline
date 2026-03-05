@@ -203,7 +203,7 @@ function initAdminPanel() {
                 if (venta.fecha) {
                     const parsedDate = new Date(venta.fecha);
                     if (!isNaN(parsedDate)) {
-                        fecha = parsedDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        fecha = parsedDate.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' });
                     }
                 }
 
@@ -340,7 +340,7 @@ function initAdminPanel() {
                     let fechaStr = 'N/A';
                     if (ventaMadreInfo.fecha) {
                         const d = new Date(ventaMadreInfo.fecha);
-                        if (!isNaN(d)) fechaStr = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        if (!isNaN(d)) fechaStr = d.toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' });
                     }
                     headerInfo = `
                         <div class="mb-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700/50">
