@@ -130,7 +130,10 @@ function initAdminPanel() {
                 console.error("Error al cargar ventas en Admin:", error);
                 document.getElementById('tablaPedidosBody').innerHTML = `
                     <tr>
-                        <td colspan="5" class="p-8 text-center text-red-500 font-bold">Error cargando órdenes. Intenta recargar la página.</td>
+                        <td colspan="5" class="p-8 text-center text-red-500 font-bold">
+                            <div>Error cargando órdenes.</div>
+                            <div class="text-xs text-slate-500 mt-2 font-normal">${error.message || error}</div>
+                        </td>
                     </tr>
                 `;
             }
