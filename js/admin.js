@@ -45,7 +45,7 @@ function initAdminPanel() {
         const errorTextSpan = document.getElementById('adminErrorText');
 
         // 2. Mostrar nombre del archivo al seleccionarlo visualmente
-        inputImagen.addEventListener('change', (e) => {
+        if (inputImagen) inputImagen.addEventListener('change', (e) => {
             if (e.target.files && e.target.files.length > 0) {
                 fileNameDisplay.textContent = e.target.files[0].name;
                 fileNameDisplay.classList.add('text-primary');
@@ -55,7 +55,7 @@ function initAdminPanel() {
         });
 
         // 3. Manejar envío del formulario
-        form.addEventListener('submit', async (e) => {
+        if (form) form.addEventListener('submit', async (e) => {
             e.preventDefault();
             errorMsgDiv.classList.add('hidden');
 
