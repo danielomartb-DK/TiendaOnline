@@ -72,7 +72,7 @@ async function cargarPedidos() {
             return `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td class="p-4 border-b border-slate-100 dark:border-slate-700/50">
-                        <div class="font-bold text-slate-900 dark:text-white">#${v.id_venta}</div>
+                        <div class="text-sm font-bold text-slate-900 dark:text-white uppercase">${v.fecha ? new Date(v.fecha.includes('Z') || v.fecha.includes('+') ? v.fecha : v.fecha.replace(' ', 'T') + 'Z').toLocaleTimeString('es-CO', { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A'}</div>
                     </td>
                     <td class="p-4 border-b border-slate-100 dark:border-slate-700/50">
                         <div class="text-sm text-slate-600 dark:text-slate-300">${fecha}</div>

@@ -98,6 +98,11 @@ async function handleProfileUpdate(e) {
 
         mostrarToast("¡Perfil actualizado con éxito!");
 
+        // Actualizar el header inmediatamente si AuthManager existe
+        if (window.novaAuth) {
+            window.novaAuth.fetchProfile();
+        }
+
         const profileAvatar = document.getElementById('profileAvatar');
         if (profileAvatar && datos.nombres) {
             profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.nombres)}&background=random&size=128`;

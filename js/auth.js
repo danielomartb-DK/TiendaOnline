@@ -9,12 +9,32 @@ class AuthManager {
         this.supabaseKey = SUPABASE_KEY; // Viene de api.js
         this.sessionKey = 'PixelWear_session';
         this.user = this.getSession();
+        this.profileData = null; // Para guardar datos de la tabla 'cliente'
         this._refreshing = false;
 
         // Auto-refresh si el token está expirado
         this._tryAutoRefresh();
 
         this.initUI();
+    }
+
+    /**
+     * Busca los datos extendidos del perfil en la base de datos (tabla cliente)
+     */
+    async fetchProfile() {
+        if (!this.user || !this.user.user) return;
+        try {
+            // obtenerClientePorEmail está definido en api.js
+            if (typeof obtenerClientePorEmail === 'function') {
+                const data = await obtenerClientePorEmail(this.user.user.email);
+                if (data) {
+                    this.profileData = data;
+                    this.updateUI(); // Re-renderizar con el nombre real
+                }
+            }
+        } catch (e) {
+            console.warn("No se pudo cargar el perfil extendido:", e);
+        }
     }
 
     /**
@@ -41,6 +61,7 @@ class AuthManager {
         localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
         this.user = sessionData;
         this.updateUI();
+        this.fetchProfile(); // Traer nombre real desde la DB
     }
 
     /**
@@ -193,16 +214,39 @@ class AuthManager {
     initUI() {
         // Mejor soporte para móviles y clicks dentro de elementos
         document.addEventListener('click', (e) => {
+            // Manejar Logout
             const logoutBtn = e.target.closest('#btnLogout');
             if (logoutBtn) {
                 e.preventDefault();
                 e.stopPropagation();
                 this.logout();
+                return;
+            }
+
+            // Manejar Toggle de Mi Cuenta
+            const accountToggle = e.target.closest('#accountToggle');
+            const accountDropdown = document.getElementById('accountDropdown');
+
+            // Solo interceptar si el click es en el disparador (fuera del dropdown interno)
+            if (accountToggle && (!accountDropdown || !accountDropdown.contains(e.target))) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (accountDropdown) {
+                    accountDropdown.classList.toggle('opacity-0');
+                    accountDropdown.classList.toggle('invisible');
+                    accountDropdown.classList.toggle('pointer-events-none');
+                    accountDropdown.classList.toggle('translate-y-2'); // Efecto sutil al abrir
+                }
+            } else if (accountDropdown && !accountDropdown.contains(e.target)) {
+                // Cerrar si se hace click fuera de todo el componente
+                accountDropdown.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+                accountDropdown.classList.remove('translate-y-2');
             }
         });
 
         // Actualizar visualmente la barra al cargar
         this.updateUI();
+        this.fetchProfile(); // Intentar cargar nombre real
     }
 
     /**
@@ -216,34 +260,86 @@ class AuthManager {
                 // Usuario Logeado
                 let userName = 'Usuario';
                 let fullName = '';
-                if (this.user.user.user_metadata && this.user.user.user_metadata.name) {
-                    fullName = this.user.user.user_metadata.name;
-                } else if (this.user.user.email) {
+
+                // Prioridad 1: Datos de la tabla 'cliente' (DB)
+                if (this.profileData && this.profileData.nombres) {
+                    fullName = this.profileData.nombres;
+                    if (this.profileData.apellidos) fullName += ' ' + this.profileData.apellidos;
+                }
+                // Prioridad 2: Metadatos de Autenticación (Supabase Auth)
+                else if (this.user.user.user_metadata) {
+                    const meta = this.user.user.user_metadata;
+                    fullName = meta.name || meta.full_name || meta.display_name || '';
+                }
+
+                // Fallback: Prefijo del email
+                if (!fullName && this.user.user.email) {
                     fullName = this.user.user.email.split('@')[0];
                 }
 
                 if (fullName) {
-                    userName = fullName.trim().split(' ')[0]; // Tomar solo el primer nombre
+                    userName = fullName.trim().split(' ')[0]; // Solo primer nombre para el saludo
                 }
 
+                const displayName = fullName || this.user.user.email;
+                const shortName = userName;
+
                 container.innerHTML = `
-                    <div class="relative cursor-pointer group flex flex-col items-start leading-tight">
-                        <span class="text-xs text-slate-300">Hola, ${userName}</span>
-                        <div class="flex items-center gap-1">
+                    <div id="accountToggle" class="relative cursor-pointer flex flex-col items-start leading-tight select-none">
+                        <span class="text-xs text-slate-300 pointer-events-none">Hola, ${shortName}</span>
+                        <div class="flex items-center gap-1 pointer-events-none">
                             <span class="text-sm font-bold">Mi Cuenta</span>
                             <span class="material-symbols-outlined text-[1rem]">arrow_drop_down</span>
                         </div>
                         
-                        <!-- Dropdown menu -->
-                        <div class="absolute top-10 right-0 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden text-slate-900 dark:text-white pointer-events-none group-hover:pointer-events-auto">
-                            <div class="p-3 border-b border-slate-100 dark:border-slate-800">
-                                <p class="font-bold text-sm truncate">${this.user.user.email}</p>
+                        <!-- Dropdown menu (Controlado por JS) -->
+                        <div id="accountDropdown" class="absolute top-12 right-0 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl opacity-0 invisible pointer-events-none transition-all duration-300 z-[100] overflow-hidden text-slate-900 dark:text-white">
+                            <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-widest mb-1">Tu Cuenta</p>
+                                <p class="font-bold text-sm truncate">${displayName}</p>
+                                <p class="text-[10px] text-slate-500 truncate">${this.user.user.email}</p>
                             </div>
-                            <ul class="py-2 text-sm z-50 relative">
-                                <li><a href="perfil.html" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">account_circle</span> Mi Perfil</a></li>
-                                <li><a href="mis-pedidos.html" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">package</span> Tus Pedidos</a></li>
-                                ${this.isAdmin() ? '<li><a href="admin.html" class="block px-4 py-2 text-primary font-bold hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">admin_panel_settings</span> Panel Admin</a></li>' : ''}
-                                <li><button id="btnLogout" type="button" class="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 cursor-pointer">Cerrar Sesión</button></li>
+                            <ul class="py-2 text-sm">
+                                <li>
+                                    <a href="perfil.html" class="group flex items-center gap-3 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                        <div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-500/20 text-orange-600 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-[20px]">account_circle</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold">Mi Perfil</span>
+                                            <span class="text-[10px] text-slate-400">Edita tus datos</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mis-pedidos.html" class="group flex items-center gap-3 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                        <div class="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-[20px]">package</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold">Tus Pedidos</span>
+                                            <span class="text-[10px] text-slate-400">Ver historial</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                ${this.isAdmin() ? `
+                                <li>
+                                    <a href="admin.html" class="group flex items-center gap-3 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border-t border-slate-50 dark:border-slate-800">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold text-primary">Panel Admin</span>
+                                            <span class="text-[10px] text-slate-400">Gestión total</span>
+                                        </div>
+                                    </a>
+                                </li>` : ''}
+                                <li class="px-2 pt-2">
+                                    <button id="btnLogout" type="button" class="w-full flex items-center justify-center gap-2 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 font-bold transition-all cursor-pointer">
+                                        <span class="material-symbols-outlined text-[20px]">logout</span>
+                                        Cerrar Sesión
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </div>
