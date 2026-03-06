@@ -220,11 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const y = e.clientY - rect.top - rect.height / 2;
 
             // Factor magnético (distancia que se mueve).
-            // A 0.15 se siente suave y no entorpece el clic.
-            const moveX = x * 0.15;
-            const moveY = y * 0.15;
+            // Reducido a 0.04 para que sea casi imperceptible y facilite clics precisos.
+            const moveX = x * 0.04;
+            const moveY = y * 0.04;
 
-            el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+            el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.01)`;
 
             // Sombra neón tech/futurista dependiente del color corporativo original del botón
             if (el.classList.contains('bg-cyan-500') || el.classList.contains('text-brand-blue') || document.documentElement.classList.contains('dark')) {

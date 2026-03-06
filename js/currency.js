@@ -29,9 +29,7 @@ const CurrencyManager = {
     // Formatea el precio base de la BD a la moneda activa
     formatPrice: function (basePriceUSD) {
         const currency = this.getCurrentCurrency();
-        const rate = this.rates[currency];
-
-        const convertedPrice = basePriceUSD * rate;
+        const convertedPrice = this.fromBase(basePriceUSD);
 
         // Formato interno de JavaScript para inyectar correctamente la puntuación locale
         const formatter = new Intl.NumberFormat('es-CO', {
@@ -42,6 +40,31 @@ const CurrencyManager = {
         });
 
         return formatter.format(convertedPrice);
+    },
+
+    // Convierte precio base (USD) a precio local (ej: COP) sin formato
+    fromBase: function (basePriceUSD) {
+        const currency = this.getCurrentCurrency();
+        const rate = this.rates[currency] || 1;
+        return basePriceUSD * rate;
+    },
+
+    // Convierte precio local (ej: COP) a precio base (USD) para guardar en DB
+    toBase: function (localPrice) {
+        const currency = this.getCurrentCurrency();
+        const rate = this.rates[currency] || 1;
+        return localPrice / rate;
+    },
+
+    // Devuelve el símbolo de la moneda actual
+    getCurrencySymbol: function () {
+        const currency = this.getCurrentCurrency();
+        switch (currency) {
+            case 'COP': return '$ COP';
+            case 'EUR': return '€';
+            case 'MXN': return '$ MXN';
+            default: return '$';
+        }
     },
 
     // Inicializa el selector de moneda en el header del HTML

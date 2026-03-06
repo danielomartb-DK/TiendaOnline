@@ -26,6 +26,35 @@ function getCartKey() {
     return 'PixelWear_cart_anon';
 }
 
+function mostrarToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMessage');
+    const icon = toast ? toast.querySelector('.material-symbols-outlined') : null;
+
+    if (!toast) {
+        // Fallback simple si el toast no está en el DOM
+        console.log("Toast:", msg);
+        alert(msg);
+        return;
+    }
+
+    if (toastMsg) toastMsg.textContent = msg;
+
+    // Resetear clases
+    toast.className = 'toast show';
+    toast.classList.add(type);
+
+    if (icon) {
+        if (type === 'error') icon.textContent = 'error';
+        else if (type === 'info') icon.textContent = 'info';
+        else icon.textContent = 'check_circle';
+    }
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
+}
+
 async function initProducto() {
     // 1. Cargar carrito y actualizar contador visual
     carritoLocal = JSON.parse(localStorage.getItem(getCartKey())) || [];
@@ -93,11 +122,21 @@ function renderizarDetalles(p) {
 
     let adminPanelHtml = '';
     if (window.novaAuth && window.novaAuth.isAdmin()) {
+        const eyeIcon = p.estado ? 'visibility' : 'visibility_off';
+        const eyeColor = p.estado ? 'text-green-500' : 'text-slate-500';
+        const eyeTooltip = p.estado ? 'Visible en tienda' : 'Oculto en tienda';
+
         adminPanelHtml = `
             <div class="mt-8 p-6 bg-slate-900 border-2 border-cyan-500 rounded-xl shadow-[0_0_20px_rgba(0,183,255,0.1)] col-span-1 md:col-span-2">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2 mb-6">
-                    <span class="material-symbols-outlined text-cyan-400">admin_panel_settings</span> Editor en Vivo
-                </h3>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-cyan-400">admin_panel_settings</span> Editor en Vivo
+                    </h3>
+                    <button onclick="toggleVisibilidadProducto(${p.id_producto}, ${!p.estado})" title="${eyeTooltip}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700 ${eyeColor}">
+                        <span class="material-symbols-outlined">${eyeIcon}</span>
+                        <span class="text-xs font-bold">${p.estado ? 'Público' : 'Oculto'}</span>
+                    </button>
+                </div>
                 <div class="flex flex-col gap-4">
                     <div>
                         <label class="text-xs text-slate-400 font-bold uppercase track">Nombre del Producto</label>
@@ -109,8 +148,8 @@ function renderizarDetalles(p) {
                     </div>
                     <div class="flex gap-4">
                         <div class="flex-1">
-                            <label class="text-xs text-slate-400 font-bold uppercase track">Precio Base (USD)</label>
-                            <input type="number" id="editPrecio" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" value="${p.precio}">
+                            <label class="text-xs text-slate-400 font-bold uppercase track">Precio (${window.CurrencyManager ? window.CurrencyManager.getCurrencySymbol() : 'Base'})</label>
+                            <input type="number" id="editPrecio" class="w-full bg-slate-800 text-white rounded-lg p-3 border border-slate-700 outline-none focus:border-cyan-500 mt-1" value="${window.CurrencyManager ? window.CurrencyManager.fromBase(p.precio).toFixed(0) : p.precio}">
                         </div>
                         <div class="flex-1">
                             <label class="text-xs text-slate-400 font-bold uppercase track">Unidades Stock</label>
@@ -221,7 +260,7 @@ function agregarAlCarritoLocal(idProducto) {
         if (itemCarrito.cantidad < currentProduct.stock) {
             itemCarrito.cantidad += 1;
         } else {
-            alert('Has alcanzado el límite máximo de stock para este producto.');
+            mostrarToast('Has alcanzado el límite máximo de stock para este producto.', 'error');
             return;
         }
     } else {
@@ -246,12 +285,6 @@ function actualizarContadorCarrito() {
     productoRefs.cartCounter.textContent = totalItems > 99 ? '+99' : totalItems;
 }
 
-function mostrarToast(msg) {
-    if (!productoRefs.toast) return;
-    if (productoRefs.toastMsg && msg) productoRefs.toastMsg.textContent = msg;
-    productoRefs.toast.classList.add('show');
-    setTimeout(() => { productoRefs.toast.classList.remove('show'); }, 3000);
-}
 
 // --- CONTROLES DE ADMINISTRADOR --- //
 
@@ -270,11 +303,12 @@ async function guardarEdicion(id_producto) {
     try {
         const nombre = document.getElementById('editNombre').value;
         const descripcion = document.getElementById('editDesc').value;
-        const precio = Number(document.getElementById('editPrecio').value);
+        const rawPrecio = Number(document.getElementById('editPrecio').value);
+        const precioBase = window.CurrencyManager ? window.CurrencyManager.toBase(rawPrecio) : rawPrecio;
         const stock = Number(document.getElementById('editStock').value);
         const fileInput = document.getElementById('editImagen');
 
-        const updates = { nombre, descripcion, precio, stock };
+        const updates = { nombre, descripcion, precio: precioBase, stock };
 
         // Si se seleccionó una imagen nueva, usar el API endpoint para subir a Bucket storage
         if (fileInput.files.length > 0) {
@@ -284,10 +318,10 @@ async function guardarEdicion(id_producto) {
         }
 
         await actualizarProducto(id_producto, updates);
-
-        window.location.reload(); // Recargar para ver los cambios nativamente
+        mostrarToast('Cambios guardados con éxito.');
+        setTimeout(() => window.location.reload(), 1500);
     } catch (e) {
-        alert('Hubo un error modificando el producto: ' + e.message);
+        mostrarToast('Error al modificar producto: ' + e.message, 'error');
         btn.innerHTML = originalText;
         btn.disabled = false;
         btn.classList.remove('opacity-70', 'cursor-not-allowed');
@@ -297,20 +331,42 @@ async function guardarEdicion(id_producto) {
 async function borrarProductoActual(id_producto) {
     if (!window.novaAuth || !window.novaAuth.isAdmin()) return;
 
-    const confirmado = await pixelConfirm('¿Estás totalmente seguro de RETIRAR este producto de PixelWear? Esta acción es instantánea y no puede deshacerse.', { titulo: '🛑 Eliminar Producto', btnConfirm: 'Sí, Eliminar', tipo: 'danger' });
+    const confirmado = await window.pixelConfirm('¿Estás totalmente seguro de RETIRAR este producto de PixelWear? Esta acción es instantánea y no puede deshacerse.', {
+        titulo: '🛑 Eliminar Producto',
+        btnConfirm: 'Sí, Eliminar',
+        tipo: 'danger'
+    });
     if (!confirmado) return;
 
-    const btn = document.querySelector(`button[onclick="borrarProductoActual(${id_producto})"]`);
-    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">delete</span> Destruyendo...';
-    btn.disabled = true;
+    const btn = document.querySelector(`button[onclick^="borrarProductoActual(${id_producto})"]`);
+    if (btn) {
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Destruyendo...';
+        btn.disabled = true;
+    }
 
     try {
-        await eliminarProducto(id_producto);
-        alert('El producto ha sido eliminado de la base de datos satisfactoriamente.');
-        window.location.href = 'index.html'; // Devolver a vitrina
+        const result = await eliminarProducto(id_producto);
+        if (result === true) {
+            mostrarToast('Producto eliminado definitivamente.');
+        } else {
+            mostrarToast('Producto removido del catálogo (Oculto).', 'info');
+        }
+        setTimeout(() => window.location.href = 'index.html', 1500);
     } catch (e) {
-        alert('Error intentando purgar de DB: ' + e.message);
+        mostrarToast('Error al purgar de DB: ' + e.message, 'error');
         btn.disabled = false;
         btn.innerHTML = '<span class="material-symbols-outlined font-bold group-hover:animate-bounce">delete</span> Eliminar Ítem';
+    }
+}
+
+async function toggleVisibilidadProducto(id_producto, mostrar) {
+    if (!window.novaAuth || !window.novaAuth.isAdmin()) return;
+
+    try {
+        await actualizarProducto(id_producto, { estado: mostrar });
+        mostrarToast(mostrar ? 'Producto ahora es visible' : 'Producto ocultado de la tienda');
+        setTimeout(() => window.location.reload(), 1500);
+    } catch (e) {
+        mostrarToast('Error al cambiar visibilidad: ' + e.message, 'error');
     }
 }

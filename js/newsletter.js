@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toastElement.classList.add('show');
                 setTimeout(() => toastElement.classList.remove('show'), 4000);
             } else {
-                alert(mensaje);
+                console.log("Newsletter Toast Fallback:", mensaje);
             }
         }
     }

@@ -39,12 +39,12 @@ function handleHoloMove(e) {
     const x = (e.clientX - rect.left) / cardW - 0.5;
     const y = (e.clientY - rect.top) / cardH - 0.5;
 
-    // Inclinación máxima de ±8 grados
-    const maxTilt = 8;
+    // Inclinación máxima de ±2 grados (ultra sutil para estabilidad total)
+    const maxTilt = 2;
     const rotateY = x * maxTilt;  // Eje Y = movimiento horizontal
     const rotateX = -y * maxTilt; // Eje X = movimiento vertical (invertido)
 
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.005, 1.005, 1.005)`;
 
     // Mover el glare proporcionalmente al cursor
     const glare = card.querySelector('.holo-glare');

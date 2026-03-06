@@ -45,6 +45,43 @@
             -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
             -webkit-text-fill-color: white !important;
         }
+
+        /* Toast Premium */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #231b0f;
+            color: #ffffff;
+            padding: 16px 24px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border-left: 4px solid #ff9900;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .toast.error {
+            border-left-color: #f44336;
+        }
+
+        .toast.info {
+            border-left-color: #00bcd4;
+        }
     </style>
     <!-- Script de Persistencia de Tema Oscuro/Claro (Debe ir antes de cerrar head) -->
     <script src="js/theme.js"></script>
@@ -367,6 +404,15 @@
             </button>
         </div>
     </dialog>
+
+    </div>
+    </dialog>
+
+    <!-- Toast Component -->
+    <div id="toast" class="toast">
+        <span class="material-symbols-outlined">check_circle</span>
+        <span id="toastMessage"></span>
+    </div>
 
     <!-- Scripts -->
     <script src="js/currency.js"></script>

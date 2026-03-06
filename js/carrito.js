@@ -43,24 +43,28 @@ function initCarrito() {
     renderizarItems();
     calcularTotales();
 
-    // Autocompletar datos del cliente si está autenticado
+    // Autocompletar datos del cliente si está autenticado (desde BD)
     if (window.novaAuth && window.novaAuth.user && window.novaAuth.user.user) {
-        const currentUser = window.novaAuth.user.user;
-        const emailInput = document.querySelector('input[name="email"]');
-        if (emailInput) {
-            emailInput.value = currentUser.email;
-            emailInput.readOnly = true;
-            emailInput.classList.add('opacity-70', 'cursor-not-allowed', 'bg-slate-100');
-        }
-        if (currentUser.user_metadata && currentUser.user_metadata.name) {
-            const parts = currentUser.user_metadata.name.split(' ');
-            const nombresInput = document.querySelector('input[name="nombres"]');
-            const apellidosInput = document.querySelector('input[name="apellidos"]');
-            if (nombresInput && !nombresInput.value) nombresInput.value = parts[0];
-            if (apellidosInput && parts.length > 1 && !apellidosInput.value) {
-                apellidosInput.value = parts.slice(1).join(' ');
+        obtenerClientePorEmail(window.novaAuth.user.user.email).then(cliente => {
+            if (cliente) {
+                const form = cartRefs.form;
+                if (form) {
+                    if (form.nombres) form.nombres.value = cliente.nombres || '';
+                    if (form.apellidos) form.apellidos.value = cliente.apellidos || '';
+                    if (form.documento) form.documento.value = cliente.documento || '';
+                    if (form.email) {
+                        form.email.value = cliente.email || window.novaAuth.user.user.email;
+                        form.email.readOnly = true;
+                        form.email.classList.add('opacity-70', 'cursor-not-allowed', 'bg-slate-100');
+                    }
+                    if (form.telefono) form.telefono.value = cliente.telefono || '';
+                    if (form.direccion) form.direccion.value = cliente.direccion || '';
+                    if (form.ciudad) form.ciudad.value = cliente.ciudad || '';
+                    if (form.pais) form.pais.value = cliente.pais || '';
+                    if (form.codigo_postal) form.codigo_postal.value = cliente.codigo_postal || '';
+                }
             }
-        }
+        }).catch(err => console.warn("Error en autofill de checkout:", err));
     }
 
     // Binding del formulario
@@ -164,7 +168,7 @@ async function handleCheckoutSubmit(e) {
     e.preventDefault();
 
     if (cart.items.length === 0) {
-        alert('Tu carrito está vacío.');
+        mostrarToast('Tu carrito está vacío.', 'info');
         return;
     }
 
@@ -179,11 +183,51 @@ async function handleCheckoutSubmit(e) {
     };
 
     cartRefs.btnCheckout.disabled = true;
-    cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Procesando...';
+    cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Validando...';
 
     try {
+        // 0. Validar existencia de productos (evitar "productos fantasma" borrados)
+        const productosVigentes = await obtenerProductos();
+        const idsVigentes = productosVigentes.map(p => p.id_producto);
+        const itemsInvalidos = cart.items.filter(item => !idsVigentes.includes(item.id_producto));
+
+        if (itemsInvalidos.length > 0) {
+            const nombresInvalidos = itemsInvalidos.map(i => i.nombre).join(', ');
+            mostrarToast(`Productos no disponibles: ${nombresInvalidos}. Han sido removidos.`, 'error');
+
+            // Limpiar carrito de items inválidos
+            cart.items = cart.items.filter(item => idsVigentes.includes(item.id_producto));
+            guardarCarrito();
+            renderizarItems();
+            calcularTotales();
+
+            cartRefs.btnCheckout.disabled = false;
+            cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined">lock</span> Realizar Pedido';
+            return;
+        }
+
+        cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Procesando...';
         // 1. Registrar cliente
-        const cliente = await registrarCliente(datosCliente);
+        let cliente;
+        try {
+            cliente = await registrarCliente(datosCliente);
+        } catch (regErr) {
+            const msg = regErr.message;
+            if (msg.includes('PGRST204') || msg.includes('column')) {
+                console.warn("Faltan columnas en BD durante checkout, reintentando con básicos...");
+                const basicos = {
+                    nombres: datosCliente.nombres,
+                    apellidos: datosCliente.apellidos,
+                    email: datosCliente.email,
+                    documento: datosCliente.documento,
+                    telefono: datosCliente.telefono,
+                    direccion: datosCliente.direccion
+                };
+                cliente = await registrarCliente(basicos);
+            } else {
+                throw regErr;
+            }
+        }
         const clienteId = cliente ? cliente.id_cliente : null;
 
         // 2. Crear la venta
@@ -305,8 +349,32 @@ async function handleCheckoutSubmit(e) {
 
     } catch (error) {
         console.error('Error en checkout:', error);
-        alert('Hubo un error al procesar tu pedido:\n' + error.message);
+        mostrarToast('Error al procesar pedido: ' + error.message, 'error');
         cartRefs.btnCheckout.disabled = false;
         cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined">lock</span> Realizar Pedido';
     }
+}
+
+function mostrarToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMessage');
+    const icon = toast ? toast.querySelector('.material-symbols-outlined') : null;
+
+    if (!toast) {
+        console.log("Toast:", msg);
+        return;
+    }
+
+    if (toastMsg) toastMsg.textContent = msg;
+    toast.className = 'toast show ' + type;
+
+    if (icon) {
+        if (type === 'error') icon.textContent = 'error';
+        else if (type === 'info') icon.textContent = 'info';
+        else icon.textContent = 'check_circle';
+    }
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
 }

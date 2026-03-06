@@ -57,28 +57,41 @@
             }
         }
 
-        /* Toast */
+        /* Toast Premium */
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
             background-color: #231b0f;
             color: #ffffff;
-            padding: 15px 20px;
-            border-radius: 0.5rem;
+            padding: 16px 24px;
+            border-radius: 1rem;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            transform: translateY(100px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 1000;
+            border-left: 4px solid #ff9900;
         }
 
         .toast.show {
-            transform: translateY(0);
+            transform: translateX(0);
             opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: #4caf50;
+        }
+
+        .toast.error {
+            border-left-color: #f44336;
+        }
+
+        .toast.info {
+            border-left-color: #00bcd4;
         }
     </style>
     <!-- Script de Persistencia de Tema Oscuro/Claro (Debe ir antes de cerrar head) -->
@@ -272,11 +285,15 @@
                                     Cancelados <span id="badgeCancelados"
                                         class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
                                 </button>
+                                <button id="tabCatalogo"
+                                    class="px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[18px]">inventory</span> Catálogo
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Tabla HTML -->
-                        <div
+                        <!-- Tabla HTML Pedidos -->
+                        <div id="containerPedidos"
                             class="flex-1 overflow-y-auto overflow-x-auto p-0 max-h-[500px] border-b border-slate-100 dark:border-slate-800">
                             <table class="w-full text-left border-collapse min-w-[700px]">
                                 <thead
@@ -304,6 +321,39 @@
                                                 <span class="spinner" style="border-left-color: #06b6d4;"></span>
                                                 Cargando registro de órdenes...
                                             </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Tabla HTML Catálogo -->
+                        <div id="containerCatalogo"
+                            class="flex-1 overflow-y-auto overflow-x-auto p-0 max-h-[500px] border-b border-slate-100 dark:border-slate-800 hidden">
+                            <table class="w-full text-left border-collapse min-w-[700px]">
+                                <thead
+                                    class="sticky top-0 z-10 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm">
+                                    <tr
+                                        class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">
+                                        <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 w-20">
+                                            Img</th>
+                                        <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700">
+                                            Producto</th>
+                                        <th
+                                            class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 w-24 text-center">
+                                            Stock</th>
+                                        <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 w-32">
+                                            Precio</th>
+                                        <th
+                                            class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 w-24 text-center">
+                                            Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaCatalogoBody"
+                                    class="divide-y divide-slate-100 dark:divide-slate-700/50">
+                                    <tr>
+                                        <td colspan="5" class="p-8 text-center text-slate-500 dark:text-slate-400">
+                                            Cargando productos...
                                         </td>
                                     </tr>
                                 </tbody>
@@ -364,6 +414,7 @@
     <script src="js/api.js?v=9"></script>
     <script src="js/auth.js?v=10"></script>
     <script src="js/pixelconfirm.js?v=1"></script>
+    <script src="js/currency.js"></script>
     <script src="js/admin.js?v=11"></script>
     <script src="js/magnetic.js"></script>
 </body>

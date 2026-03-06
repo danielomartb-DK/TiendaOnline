@@ -214,11 +214,16 @@ class AuthManager {
         authContainers.forEach(container => {
             if (this.user && this.user.user) {
                 // Usuario Logeado
-                let userName = 'Account';
+                let userName = 'Usuario';
+                let fullName = '';
                 if (this.user.user.user_metadata && this.user.user.user_metadata.name) {
-                    userName = this.user.user.user_metadata.name;
+                    fullName = this.user.user.user_metadata.name;
                 } else if (this.user.user.email) {
-                    userName = this.user.user.email.split('@')[0];
+                    fullName = this.user.user.email.split('@')[0];
+                }
+
+                if (fullName) {
+                    userName = fullName.trim().split(' ')[0]; // Tomar solo el primer nombre
                 }
 
                 container.innerHTML = `
@@ -235,8 +240,9 @@ class AuthManager {
                                 <p class="font-bold text-sm truncate">${this.user.user.email}</p>
                             </div>
                             <ul class="py-2 text-sm z-50 relative">
-                                <li><a href="#" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800">Tus Pedidos</a></li>
-                                ${this.isAdmin() ? '<li><a href="admin.html" class="block px-4 py-2 text-primary font-bold hover:bg-slate-100 dark:hover:bg-slate-800">Panel Admin</a></li>' : ''}
+                                <li><a href="perfil.html" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">account_circle</span> Mi Perfil</a></li>
+                                <li><a href="mis-pedidos.html" class="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">package</span> Tus Pedidos</a></li>
+                                ${this.isAdmin() ? '<li><a href="admin.html" class="block px-4 py-2 text-primary font-bold hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">admin_panel_settings</span> Panel Admin</a></li>' : ''}
                                 <li><button id="btnLogout" type="button" class="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 cursor-pointer">Cerrar Sesión</button></li>
                             </ul>
                         </div>
