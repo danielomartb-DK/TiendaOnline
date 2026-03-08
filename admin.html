@@ -119,13 +119,20 @@
             </a>
             <!-- Controles de Usuario y Tema -->
             <div class="flex items-center gap-4 shrink-0">
-                <a href="index.html" class="text-sm font-bold hover:underline flex items-center gap-1 text-primary">
+                <!-- Botón de Menú Móvil (Hamburguesa) -->
+                <button id="mobileMenuBtn"
+                    class="lg:hidden text-white hover:text-orange-400 dark:hover:text-cyan-400 transition-colors p-1">
+                    <span class="material-symbols-outlined text-3xl">menu</span>
+                </button>
+
+                <a href="index.html"
+                    class="hidden md:flex text-sm font-bold hover:underline items-center gap-1 text-primary">
                     <span class="material-symbols-outlined">storefront</span> Volver a la Tienda
                 </a>
 
                 <!-- Theme Anime Avatar Button (Big Slider) -->
                 <button onclick="toggleTheme()"
-                    class="relative w-20 h-8 md:w-24 md:h-10 bg-gradient-to-r from-orange-400 via-red-500 to-red-600 dark:bg-none dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 flex items-center group shrink-0"
+                    class="hidden md:flex relative w-20 h-8 md:w-24 md:h-10 bg-gradient-to-r from-orange-400 via-red-500 to-red-600 dark:bg-none dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 items-center group shrink-0"
                     title="Cambiar Tema (Anime)">
 
                     <!-- Contenedor estricto para recortar partículas del fondo -->
@@ -270,23 +277,22 @@
                                 en la tienda.</p>
 
                             <!-- Pestañas de Filtrado (Tabs) -->
-                            <div class="flex gap-4 mt-6">
+                            <div class="flex gap-2 md:gap-4 mt-6 overflow-x-auto pb-2 scrollbar-none">
                                 <button id="tabPendientes"
-                                    class="px-6 py-2 rounded-lg font-bold transition-all bg-brand-blue dark:bg-primary text-white dark:text-brand-blue shadow-md border border-transparent">
+                                    class="shrink-0 px-4 md:px-6 py-2 rounded-lg font-bold transition-all bg-brand-blue dark:bg-primary text-white dark:text-brand-blue shadow-md border border-transparent text-sm md:text-base">
                                     Pendientes <span id="badgePendientes"
-                                        class="ml-2 bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
+                                        class="ml-1 md:ml-2 bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
                                 </button>
                                 <button id="tabEntregados"
-                                    class="px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600">
+                                    class="shrink-0 px-4 md:px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-sm md:text-base">
                                     Enviados
                                 </button>
                                 <button id="tabCancelados"
-                                    class="px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600">
-                                    Cancelados <span id="badgeCancelados"
-                                        class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                                    class="shrink-0 px-4 md:px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-sm md:text-base">
+                                    Cancelados
                                 </button>
                                 <button id="tabCatalogo"
-                                    class="px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 flex items-center gap-2">
+                                    class="shrink-0 px-4 md:px-6 py-2 rounded-lg font-bold transition-all bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 flex items-center gap-2 text-sm md:text-base">
                                     <span class="material-symbols-outlined text-[18px]">inventory</span> Catálogo
                                 </button>
                             </div>
@@ -404,11 +410,116 @@
         </div>
     </dialog>
 
-    <!-- Notificación Toast -->
-    <div id="toast" class="toast">
-        <span class="material-symbols-outlined" style="color: #4caf50;">check_circle</span>
-        <span id="toastMessage">¡Producto creado con éxito!</span>
+    <!-- Mobile Drawer Overlay -->
+    <div id="mobileDrawerOverlay"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
     </div>
+
+    <!-- Mobile Drawer Menu -->
+    <aside id="mobileDrawer"
+        class="fixed top-0 left-0 bottom-0 w-[300px] bg-white dark:bg-[#0f1013] z-[101] -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-6 bg-[#0f1013] text-white flex items-center justify-between border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-600 dark:from-cyan-400 dark:to-blue-600 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white">admin_panel_settings</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-slate-400">Admin</span>
+                    <span class="font-bold" id="mobileUserName">---</span>
+                </div>
+            </div>
+            <button id="closeDrawerBtn"
+                class="text-white hover:text-orange-400 dark:hover:text-cyan-400 transition-colors">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-6">
+            <!-- Navigation -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Panel Administrativo
+                </h4>
+                <div class="space-y-1">
+                    <a href="index.html"
+                        class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colors font-medium text-slate-700 dark:text-slate-200">
+                        <span class="material-symbols-outlined text-orange-500 dark:text-cyan-500">storefront</span>
+                        Volver a la Tienda
+                    </a>
+                    <a href="admin.html"
+                        class="flex items-center gap-3 p-3 rounded-xl bg-orange-100/50 dark:bg-cyan-900/20 text-orange-600 dark:text-cyan-400 font-bold transition-colors">
+                        <span class="material-symbols-outlined">dashboard</span> Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Previsiones -->
+            <div class="pt-6 border-t border-slate-100 dark:border-white/5">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Preferencias</h4>
+                <div class="space-y-4 px-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-slate-400">dark_mode</span>
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">Tema Oscuro</span>
+                        </div>
+                        <button onclick="toggleTheme()"
+                            class="relative w-12 h-6 bg-slate-200 dark:bg-cyan-600 rounded-full transition-colors flex items-center px-1">
+                            <div
+                                class="w-4 h-4 bg-white rounded-full shadow-sm transform dark:translate-x-6 transition-transform">
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div class="p-4 border-t border-slate-100 dark:border-white/5" id="drawerAuthFooter">
+            <!-- Logout Button -->
+        </div>
+    </aside>
+
+    <script>
+        // Lógica del Drawer Móvil
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+        const mobileUserName = document.getElementById('mobileUserName');
+        const drawerAuthFooter = document.getElementById('drawerAuthFooter');
+
+        function toggleDrawer(open) {
+            if (open) {
+                mobileDrawer.classList.remove('-translate-x-full');
+                mobileDrawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileDrawer.classList.add('-translate-x-full');
+                mobileDrawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }
+        }
+
+        mobileMenuBtn?.addEventListener('click', () => toggleDrawer(true));
+        closeDrawerBtn?.addEventListener('click', () => toggleDrawer(false));
+        mobileDrawerOverlay?.addEventListener('click', () => toggleDrawer(false));
+
+        // Sync auth state
+        document.addEventListener('authReady', (e) => {
+            const user = e.detail?.user;
+            if (user) {
+                const name = user.user_metadata?.full_name || user.email;
+                mobileUserName.textContent = name.split(' ')[0];
+                drawerAuthFooter.innerHTML = `
+                    <button onclick="window.novaAuth.logout().then(() => window.location.href='login.html')" class="w-full flex items-center justify-center gap-2 p-3 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors">
+                        <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+                    </button>
+                `;
+            }
+        });
+    </script>
 
     <!-- Scripts -->
     <script src="js/api.js?v=9"></script>
