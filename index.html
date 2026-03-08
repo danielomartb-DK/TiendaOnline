@@ -371,16 +371,19 @@
         <!-- Banner Principal (Hero Temático Dual) -->
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 mb-8">
             <div
-                class="relative rounded-2xl overflow-hidden min-h-[280px] md:min-h-[420px] flex items-center px-6 md:px-16">
+                class="relative rounded-3xl overflow-hidden min-h-[500px] md:min-h-[420px] flex flex-col md:flex-row items-center bg-black">
 
-                <!-- Fondo Día (Rengoku / Demon Slayer) -->
-                <div class="absolute inset-0 bg-contain bg-right bg-no-repeat bg-black transition-opacity duration-700 dark:opacity-0"
-                    style="background-image: url('assets/images/hero_day.png');">
-                </div>
+                <!-- Contenedor de Imágenes (Abajo en móvil, Fondo en desktop) -->
+                <div class="absolute inset-0 md:block z-0 pointer-events-none">
+                    <!-- Fondo Día (Rengoku / Demon Slayer) -->
+                    <div class="absolute inset-0 bg-contain bg-bottom md:bg-right bg-no-repeat transition-opacity duration-700 dark:opacity-0"
+                        style="background-image: url('assets/images/hero_day.png');">
+                    </div>
 
-                <!-- Fondo Noche (Jin-Woo / Solo Leveling) -->
-                <div class="absolute inset-0 bg-contain bg-right bg-no-repeat bg-black transition-opacity duration-700 opacity-0 dark:opacity-100"
-                    style="background-image: url('assets/images/hero_night.png');">
+                    <!-- Fondo Noche (Jin-Woo / Solo Leveling) -->
+                    <div class="absolute inset-0 bg-contain bg-bottom md:bg-right bg-no-repeat transition-opacity duration-700 opacity-0 dark:opacity-100"
+                        style="background-image: url('assets/images/hero_night.png');">
+                    </div>
                 </div>
 
                 <!-- Capa de Partículas (Canvas Dinámico) -->
@@ -389,8 +392,9 @@
                 <!-- Efecto Scanline Cinematic -->
                 <div class="scanline-overlay"></div>
 
-                <!-- Contenido del Banner (siempre visible) -->
-                <div class="w-full md:max-w-xl relative z-10 text-center md:text-left pt-12 md:pt-0">
+                <!-- Contenido del Banner -->
+                <div
+                    class="w-full md:max-w-xl relative z-10 text-center md:text-left px-6 py-12 md:px-16 md:py-0 self-start md:self-center bg-gradient-to-b from-black/80 via-black/40 to-transparent md:bg-none">
                     <div class="reveal-item inline-flex items-center mb-6 md:mb-4 bg-black/40 border border-orange-500/40 dark:border-cyan-500/40 px-5 md:px-4 py-2 md:py-1.5 rounded-full backdrop-blur-md shadow-[0_4px_15px_rgba(255,153,0,0.15)] dark:shadow-[0_4px_15px_rgba(0,200,255,0.2)]"
                         style="animation-delay: 0.3s;">
                         <span
@@ -404,7 +408,7 @@
                             class="text-lg sm:text-xl md:text-3xl font-bold text-orange-400 dark:text-cyan-400 transition-colors duration-500 tracking-normal drop-shadow-none">Viste
                             tu anime favorito</span>
                     </h2>
-                    <p class="reveal-item text-slate-300 dark:text-slate-400 text-sm sm:text-base md:text-lg mb-8 md:mb-8 mx-auto md:mx-0 max-w-lg leading-relaxed font-medium"
+                    <p class="reveal-item text-slate-200 dark:text-slate-300 text-sm sm:text-base md:text-lg mb-8 md:mb-8 mx-auto md:mx-0 max-w-lg leading-relaxed font-medium"
                         style="animation-delay: 0.7s;">
                         Camisetas inspiradas en mundos como Solo Leveling, Attack on Titan y más. Diseños pensados para
                         verdaderos fans del anime.
