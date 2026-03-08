@@ -102,13 +102,16 @@ function renderizarProductos(productos) {
 
     const isAdmin = window.novaAuth && window.novaAuth.isAdmin && window.novaAuth.isAdmin();
 
-    refs.grid.innerHTML = productos.map(p => {
+    refs.grid.innerHTML = productos.map((p, index) => {
         const price = Number(p.precio) || 0;
         const formattedPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(price) : '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
         const stockQty = Number(p.stock) || 0;
         const isLowStock = stockQty > 0 && stockQty <= 5;
         const outOfStock = stockQty <= 0;
         const disabledClass = outOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110';
+
+        // Delay dinámico para efecto de cascada (stagger)
+        const delay = (index * 0.05).toFixed(2);
 
         let stockBadge = '';
         if (outOfStock) {
@@ -126,13 +129,13 @@ function renderizarProductos(productos) {
         if (isAdmin) {
             adminToggle = `
                 <button onclick="toggleVisibilidadDesdeIndex(${p.id_producto}, ${p.estado}, event)" 
-                        class="absolute top-3 right-3 z-10 bg-white/90 dark:bg-slate-800/90 p-2 rounded-full shadow-lg text-slate-700 dark:text-slate-200 hover:scale-110 transition-transform">
+                        class="absolute top-3 right-3 z-20 bg-white/90 dark:bg-slate-800/90 p-2 rounded-full shadow-lg text-slate-700 dark:text-slate-200 hover:scale-110 transition-transform">
                     <span class="material-symbols-outlined text-[20px]">${p.estado ? 'visibility' : 'visibility_off'}</span>
                 </button>
             `;
         }
 
-        return `<div data-holo class="holo-card relative ${!p.estado ? 'grayscale opacity-60' : ''} bg-white dark:bg-[#0c1222] border border-slate-200/80 dark:border-slate-700/60 rounded-2xl overflow-hidden group flex flex-col transition-all duration-300">
+        return `<div data-holo class="holo-card reveal-item relative ${!p.estado ? 'grayscale opacity-60' : ''} bg-white dark:bg-[#0c1222] border border-slate-200/80 dark:border-slate-700/60 rounded-2xl overflow-hidden group flex flex-col transition-all duration-300" style="animation-delay: ${delay}s;">
             ${adminToggle}
             <a href="producto.html?id=${p.id_producto}" class="relative aspect-square overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 block">
                 <img alt="${p.nombre}" src="${imagenUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
