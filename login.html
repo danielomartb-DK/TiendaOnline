@@ -68,34 +68,42 @@
 
     <!-- Header Minimal -->
     <header class="w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- Espacio vacío para flex-between simétrico -->
-            <div class="w-10"></div>
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Espacio vacío oculto en móvil -->
+            <div class="hidden md:block w-24"></div>
 
-            <!-- Identidad de Marca CSS (Logo) -->
+            <!-- Identidad de Marca CSS (Logo) - Centrado en móvil y desktop -->
             <a href="index.html" class="flex flex-col items-center justify-center gap-1 group">
                 <div
-                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-amber-600 dark:from-cyan-400 dark:to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(255,153,0,0.4)] dark:shadow-[0_0_15px_rgba(0,183,255,0.4)] transition-transform duration-300 group-hover:scale-110">
-                    <span class="material-symbols-outlined text-white text-3xl"
+                    class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-orange-400 to-amber-600 dark:from-cyan-400 dark:to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(255,153,0,0.4)] dark:shadow-[0_0_15px_rgba(0,183,255,0.4)] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <span class="material-symbols-outlined text-white text-2xl md:text-3xl"
                         style="font-variation-settings: 'FILL' 1;">diamond</span>
                 </div>
                 <span
-                    class="text-xl font-black tracking-widest text-slate-800 dark:text-white leading-none mt-2">PIXEL<span
+                    class="text-lg md:text-xl font-black tracking-widest text-slate-800 dark:text-white leading-none mt-2">PIXEL<span
                         class="text-orange-400 dark:text-cyan-400 transition-colors duration-500">WEAR</span></span>
             </a>
 
-            <!-- Conmutador de tema (Big Slider) -->
-            <button onclick="toggleTheme()"
-                class="relative w-20 h-8 md:w-24 md:h-10 bg-gradient-to-r from-orange-400 via-red-500 to-red-600 dark:bg-none dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 flex items-center group shrink-0 z-10"
-                title="Cambiar Tema (Anime)">
+            <!-- Conmutador de tema -->
+            <div class="flex items-center md:w-24 justify-end">
+                <button onclick="toggleTheme()"
+                    class="relative w-12 h-6 md:w-24 md:h-10 bg-slate-200 dark:bg-slate-800 rounded-full md:bg-gradient-to-r md:from-orange-400 md:via-red-500 md:to-red-600 md:dark:bg-none md:dark:bg-slate-800 border md:border-slate-400 dark:border-slate-700 transition-all duration-300 flex items-center group shrink-0"
+                    title="Cambiar Tema">
 
-                <!-- Contenedor estricto para recortar partículas del fondo -->
-                <div class="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-0">
-                    <canvas class="themeAnimeCanvas absolute inset-0 w-full h-full"></canvas>
-                </div>
-                <span
-                    class="theme-icon-toggle absolute -left-2 top-1/2 -translate-y-1/2 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform dark:translate-x-10 md:dark:translate-x-12 z-10 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center"></span>
-            </button>
+                    <!-- Canvas solo en desktop -->
+                    <div class="hidden md:block absolute inset-0 rounded-full overflow-hidden pointer-events-none z-0">
+                        <canvas class="themeAnimeCanvas absolute inset-0 w-full h-full"></canvas>
+                    </div>
+
+                    <!-- Slider móvil vs desktop -->
+                    <div
+                        class="md:hidden w-4 h-4 bg-white rounded-full shadow-sm transform dark:translate-x-6 transition-transform mx-1">
+                    </div>
+                    <span
+                        class="hidden md:flex theme-icon-toggle absolute -left-2 top-1/2 -translate-y-1/2 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform dark:translate-x-12 z-10 w-16 h-16 items-center justify-center"></span>
+                </button>
+            </div>
         </div>
     </header>
 
