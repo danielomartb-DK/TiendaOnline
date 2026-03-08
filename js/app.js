@@ -110,8 +110,8 @@ function renderizarProductos(productos) {
         const outOfStock = stockQty <= 0;
         const disabledClass = outOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110';
 
-        // Delay dinámico para efecto de cascada (stagger)
-        const delay = (index * 0.05).toFixed(2);
+        // Delay dinámico para efecto de cascada (stagger) - Un poco más lento para que se note
+        const delay = ((index % 4) * 0.12).toFixed(2);
 
         let stockBadge = '';
         if (outOfStock) {
@@ -164,6 +164,30 @@ function renderizarProductos(productos) {
     }).join('');
 
     if (typeof initHoloCards === 'function') initHoloCards();
+    initScrollReveal();
+}
+
+/**
+ * Revela elementos con animación cuando entran en el viewport (Intersection Observer)
+ */
+function initScrollReveal() {
+    const items = document.querySelectorAll('.reveal-item:not(.revealed)');
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                // Una vez revelado, dejamos de observarlo para ahorrar recursos
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    items.forEach(item => observer.observe(item));
 }
 
 /**

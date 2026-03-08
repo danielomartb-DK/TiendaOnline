@@ -208,20 +208,24 @@
         @keyframes reveal-slide-up {
             from {
                 opacity: 0;
-                transform: translateY(30px) skewY(2deg);
-                filter: blur(10px);
+                transform: translateY(40px) scale(0.95);
+                filter: blur(12px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0) skewY(0deg);
+                transform: translateY(0) scale(1);
                 filter: blur(0);
             }
         }
 
         .reveal-item {
             opacity: 0;
-            animation: reveal-slide-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            will-change: transform, opacity;
+        }
+
+        .reveal-item.revealed {
+            animation: reveal-slide-up 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .hero-title-glitch {
@@ -698,6 +702,11 @@
         mobileMenuBtn?.addEventListener('click', () => toggleDrawer(true));
         closeDrawerBtn?.addEventListener('click', () => toggleDrawer(false));
         mobileDrawerOverlay?.addEventListener('click', () => toggleDrawer(false));
+
+        // Inicializar Scroll Reveal para elementos estáticos (como el Hero)
+        if (typeof initScrollReveal === 'function') {
+            initScrollReveal();
+        }
 
         // Actualizar UI del Drawer según Auth
         document.addEventListener('authReady', (e) => {
