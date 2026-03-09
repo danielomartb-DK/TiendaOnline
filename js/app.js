@@ -157,13 +157,19 @@ function renderizarProductos(productos) {
                     <span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-xs md:text-sm">star</span>
                 </div>
                 <div class="mt-auto">
-                    <div class="flex items-baseline gap-2 mb-3">
+                    <div class="flex flex-col md:flex-row gap-2 mb-3">
                         <span class="text-xl md:text-2xl font-mecha font-bold text-slate-900 dark:text-white">${formattedPrice}</span>
                     </div>
-                    <button class="w-full bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm ${disabledClass}" onclick="agregarAlCarrito(${p.id_producto})" ${outOfStock ? 'disabled' : ''}>
-                        <span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>
-                        ${outOfStock ? 'Agregar' : 'Agregar'}
-                    </button>
+                    <div class="flex flex-col gap-2">
+                        <a href="producto.html?id=${p.id_producto}" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600">
+                            <span class="material-symbols-outlined text-base md:text-xl">visibility</span>
+                            Ver
+                        </a>
+                        <button class="flex-1 bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm ${disabledClass}" onclick="agregarAlCarrito(${p.id_producto})" ${outOfStock ? 'disabled' : ''}>
+                            <span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>
+                            ${outOfStock ? 'Agregar' : 'Agregar'}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>`;

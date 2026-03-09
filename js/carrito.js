@@ -95,16 +95,17 @@ function renderizarItems() {
 
         const tallasDisponibles = ['S', 'M', 'L', 'XL', 'XXL'];
         const selectorTallasHtml = `
-            <div class="flex flex-wrap gap-1.5 mt-2">
+            <div class="flex flex-wrap gap-1 mt-2">
                 ${tallasDisponibles.map(t => {
             const isActive = t === tallaActual;
             const activeClass = isActive
-                ? 'bg-primary/20 border-primary text-primary dark:bg-cyan-500/20 dark:border-cyan-500 dark:text-cyan-400'
-                : 'bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-primary dark:hover:border-cyan-500';
+                ? 'bg-primary/20 border-primary text-primary dark:bg-cyan-500/20 dark:border-cyan-500 dark:text-cyan-400 ring-2 ring-primary/20'
+                : 'bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-primary dark:hover:border-cyan-500 hover:text-primary dark:hover:text-cyan-400 cursor-pointer';
             return `
                         <button 
                             onclick="cambiarTallaCarrito('${item.id_producto}', '${tallaActual}', '${t}')" 
-                            class="text-[10px] font-bold px-2 py-1 rounded-md border transition-all ${activeClass}"
+                            class="text-[10px] font-black px-2.5 py-1 rounded-md border transition-all duration-200 ${activeClass}"
+                            title="Cambiar a talla ${t}"
                         >${t}</button>
                     `;
         }).join('')}
