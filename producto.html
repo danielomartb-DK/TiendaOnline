@@ -151,16 +151,16 @@
                     <input id="searchInput"
                         class="w-full h-10 px-4 pr-12 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary focus:outline-none border-none"
                         placeholder="Busca productos, marcas y más..." type="text" />
-                    <button
+                    <button aria-label="Buscar productos"
                         class="absolute right-0 bg-primary h-10 px-4 rounded-r-lg hover:bg-orange-500 text-brand-blue flex items-center justify-center">
-                        <span class="material-symbols-outlined">search</span>
+                        <span class="material-symbols-outlined" aria-hidden="true">search</span>
                     </button>
                 </div>
             </div>
 
             <div class="flex items-center gap-4 shrink-0">
                 <!-- Theme Anime Avatar Button (Big Slider) -->
-                <button onclick="toggleTheme()"
+                <button onclick="toggleTheme()" aria-label="Cambiar tema de la página"
                     class="relative w-20 h-8 md:w-24 md:h-10 bg-gradient-to-r from-orange-400 via-red-500 to-red-600 dark:bg-none dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 flex items-center group shrink-0 order-2 md:order-none"
                     title="Cambiar Tema (Anime)">
 
@@ -360,7 +360,7 @@
                     <form id="newsletterForm" class="flex max-w-md" onsubmit="return false;">
                         <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico..." required
                             class="flex-1 bg-brand-blue border border-slate-700 rounded-l-lg px-4 py-2 text-sm focus:outline-none focus:border-cyan-500 text-white placeholder-slate-500">
-                        <button type="submit" id="newsletterBtn"
+                        <button type="submit" id="newsletterBtn" aria-label="Unirme al boletín"
                             class="bg-cyan-500 text-black px-6 py-2 rounded-r-lg font-bold hover:bg-cyan-400 transition-colors flex items-center justify-center min-w-[100px]">
                             <span>Unirme</span>
                         </button>
@@ -369,15 +369,15 @@
                 <div class="md:text-right flex flex-col md:items-end justify-center">
                     <h4 class="text-white font-bold mb-4">Conéctate al Circuito</h4>
                     <div class="flex items-center gap-4">
-                        <a href="#"
+                        <a href="#" aria-label="Seguir en X (Twitter)"
                             class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
                             <span class="font-bold text-lg group-hover:scale-110 transition-transform">X</span>
                         </a>
-                        <a href="#"
+                        <a href="#" aria-label="Seguir en Instagram"
                             class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
                             <span class="font-bold text-lg group-hover:scale-110 transition-transform">IG</span>
                         </a>
-                        <a href="#"
+                        <a href="#" aria-label="Seguir en Facebook"
                             class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-cyan-500 hover:text-black transition-all group">
                             <span class="font-bold text-lg group-hover:scale-110 transition-transform">FB</span>
                         </a>

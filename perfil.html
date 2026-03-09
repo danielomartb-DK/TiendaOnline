@@ -85,13 +85,13 @@
             </a>
             <div class="flex items-center gap-4">
                 <!-- Botón de Menú Móvil (Hamburguesa) -->
-                <button id="mobileMenuBtn"
+                <button id="mobileMenuBtn" aria-label="Abrir menú de navegación"
                     class="lg:hidden text-white hover:text-orange-400 dark:hover:text-cyan-400 transition-colors p-1">
-                    <span class="material-symbols-outlined text-3xl">menu</span>
+                    <span class="material-symbols-outlined text-3xl" aria-hidden="true">menu</span>
                 </button>
 
                 <!-- Theme Anime Avatar Button (Big Slider) -->
-                <button onclick="toggleTheme()"
+                <button onclick="toggleTheme()" aria-label="Cambiar tema de la página"
                     class="hidden lg:flex relative w-20 h-8 md:w-24 md:h-10 bg-gradient-to-r from-orange-400 via-red-500 to-red-600 dark:bg-none dark:bg-slate-800 rounded-full shadow-inner border border-slate-400 dark:border-slate-600 transition-colors duration-300 mx-2 items-center group shrink-0"
                     title="Cambiar Tema (Anime)">
                     <div class="absolute inset-0 rounded-full overflow-hidden pointer-events-none z-0">

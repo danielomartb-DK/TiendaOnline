@@ -135,8 +135,9 @@ function renderizarProductos(productos) {
         if (isAdmin) {
             adminToggle = `
                 <button onclick="toggleVisibilidadDesdeIndex(${p.id_producto}, ${p.estado}, event)" 
+                        aria-label="${p.estado ? 'Ocultar producto de la tienda' : 'Mostrar producto en la tienda'}"
                         class="absolute top-3 right-3 z-20 bg-white/90 dark:bg-slate-800/90 p-2 rounded-full shadow-lg text-slate-700 dark:text-slate-200 hover:scale-110 transition-transform">
-                    <span class="material-symbols-outlined text-[20px]">${p.estado ? 'visibility' : 'visibility_off'}</span>
+                    <span class="material-symbols-outlined text-[20px]" aria-hidden="true">${p.estado ? 'visibility' : 'visibility_off'}</span>
                 </button>
             `;
         }
@@ -161,12 +162,16 @@ function renderizarProductos(productos) {
                         <span class="text-xl md:text-2xl font-mecha font-bold text-slate-900 dark:text-white">${formattedPrice}</span>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <a href="producto.html?id=${p.id_producto}" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600">
-                            <span class="material-symbols-outlined text-base md:text-xl">visibility</span>
+                        <a href="producto.html?id=${p.id_producto}" 
+                           aria-label="Ver detalles de ${p.nombre}"
+                           class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600">
+                            <span class="material-symbols-outlined text-base md:text-xl" aria-hidden="true">visibility</span>
                             Ver
                         </a>
-                        <button class="flex-1 bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm ${disabledClass}" onclick="agregarAlCarrito(${p.id_producto})" ${outOfStock ? 'disabled' : ''}>
-                            <span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>
+                        <button class="flex-1 bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm ${disabledClass}" 
+                                aria-label="Agregar ${p.nombre} al carrito"
+                                onclick="agregarAlCarrito(${p.id_producto})" ${outOfStock ? 'disabled' : ''}>
+                            <span class="material-symbols-outlined text-base md:text-xl" aria-hidden="true">shopping_cart</span>
                             ${outOfStock ? 'Agregar' : 'Agregar'}
                         </button>
                     </div>

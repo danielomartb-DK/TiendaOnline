@@ -106,6 +106,8 @@ function renderizarItems() {
                             onclick="cambiarTallaCarrito('${item.id_producto}', '${tallaActual}', '${t}')" 
                             class="text-[10px] font-black px-2.5 py-1 rounded-md border transition-all duration-200 ${activeClass}"
                             title="Cambiar a talla ${t}"
+                            aria-label="Cambiar a talla ${t}"
+                            ${isActive ? 'aria-pressed="true"' : 'aria-pressed="false"'}
                         >${t}</button>
                     `;
         }).join('')}
@@ -123,8 +125,11 @@ function renderizarItems() {
                 <div class="flex-1 min-w-0 w-full">
                     <div class="flex justify-between items-start gap-3">
                         <h4 class="font-black text-sm md:text-base text-slate-900 dark:text-white truncate transition-colors duration-300 uppercase tracking-tight">${item.nombre}</h4>
-                        <button onclick="eliminarItem(${item.id_producto}, '${tallaActual}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-transform active:scale-90" title="Eliminar del carrito">
-                            <span class="material-symbols-outlined text-xl md:text-2xl">delete_forever</span>
+                        <button onclick="eliminarItem(${item.id_producto}, '${tallaActual}')" 
+                                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-transform active:scale-90" 
+                                title="Eliminar del carrito"
+                                aria-label="Eliminar ${item.nombre} talla ${tallaActual} del carrito">
+                            <span class="material-symbols-outlined text-xl md:text-2xl" aria-hidden="true">delete_forever</span>
                         </button>
                     </div>
                     
@@ -137,9 +142,13 @@ function renderizarItems() {
 
                     <div class="flex flex-wrap items-center justify-between gap-4 mt-5">
                         <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl p-1.5 border border-slate-100 dark:border-slate-700/50 shadow-inner">
-                            <button onclick="cambiarCantidad(${item.id_producto}, -1, '${tallaActual}')" class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">−</button>
-                            <span class="text-sm font-black w-6 text-center text-slate-900 dark:text-white">${item.cantidad}</span>
-                            <button onclick="cambiarCantidad(${item.id_producto}, 1, '${tallaActual}')" class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">+</button>
+                            <button onclick="cambiarCantidad(${item.id_producto}, -1, '${tallaActual}')" 
+                                    aria-label="Disminuir cantidad de ${item.nombre}"
+                                    class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">−</button>
+                            <span class="text-sm font-black w-6 text-center text-slate-900 dark:text-white" aria-live="polite">${item.cantidad}</span>
+                            <button onclick="cambiarCantidad(${item.id_producto}, 1, '${tallaActual}')" 
+                                    aria-label="Aumentar cantidad de ${item.nombre}"
+                                    class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">+</button>
                         </div>
                         
                         <div class="text-right hidden sm:block">
