@@ -250,3 +250,73 @@ async function obtenerDetallesVenta(id) {
     });
     return await res.json();
 }
+
+/**
+ * Obtiene las reseñas de un producto específico
+ */
+async function obtenerResenasPorProducto(idProducto) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/resena?id_producto=eq.${idProducto}&select=*,cliente(nombres,apellidos)&order=fecha.desc`, {
+            method: 'GET',
+            headers: headers
+        });
+        if (!response.ok) throw new Error('Error al obtener reseñas');
+        return await response.json();
+    } catch (error) {
+        console.error('API Error (obtenerResenas):', error);
+        return [];
+    }
+}
+
+/**
+ * Crea una nueva reseña
+ */
+async function crearResena(resena) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/resena`, {
+            method: 'POST',
+            headers: { ...getDynamicHeaders(), 'Prefer': 'return=representation' },
+            body: JSON.stringify(resena)
+        });
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.message || 'Error al guardar reseña');
+        }
+        const data = await response.json();
+        return data[0];
+    } catch (error) {
+        console.error('API Error (crearResena):', error);
+        throw error;
+    }
+}
+
+/**
+ * Sube una foto de reseña al bucket 'resenas' de Supabase
+ */
+async function subirFotoResena(file) {
+    try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `public/${fileName}`;
+
+        const response = await fetch(`${SUPABASE_URL}/storage/v1/object/resenas/${filePath}`, {
+            method: 'POST',
+            headers: {
+                ...getDynamicHeaders(),
+                'Content-Type': file.type
+            },
+            body: file
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.message || 'Error al subir imagen');
+        }
+
+        // Obtener URL Pública
+        return `${SUPABASE_URL}/storage/v1/object/public/resenas/${filePath}`;
+    } catch (error) {
+        console.error('API Error (subirFotoResena):', error);
+        throw error;
+    }
+}

@@ -18,7 +18,8 @@ function getCartKey() {
 // Estado local de la aplicaciÃ³n
 const state = {
     productos: [],
-    carrito: []
+    carrito: [],
+    productosAMostrar: 8 // Cantidad inicial de productos
 };
 
 // Referencias del DOM
@@ -97,12 +98,17 @@ function initBuscador() {
 function renderizarProductos(productos) {
     if (!productos || productos.length === 0) {
         refs.grid.innerHTML = '<p class="text-center text-slate-500 py-10" style="grid-column: 1/-1;">No se encontraron productos.</p>';
+        if (document.getElementById('verMasContainer')) document.getElementById('verMasContainer').classList.add('hidden');
         return;
     }
 
     const isAdmin = window.novaAuth && window.novaAuth.isAdmin && window.novaAuth.isAdmin();
 
-    refs.grid.innerHTML = productos.map((p, index) => {
+    // Lógica de Paginación: Solo mostrar una parte
+    const paginados = productos.slice(0, state.productosAMostrar);
+    const hayMas = productos.length > state.productosAMostrar;
+
+    refs.grid.innerHTML = paginados.map((p, index) => {
         const price = Number(p.precio) || 0;
         const formattedPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(price) : '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
         const stockQty = Number(p.stock) || 0;
@@ -110,7 +116,7 @@ function renderizarProductos(productos) {
         const outOfStock = stockQty <= 0;
         const disabledClass = outOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110';
 
-        // Delay dinámico para efecto de cascada (stagger) - Un poco más lento para que se note
+        // Delay dinámico para efecto de cascada (stagger)
         const delay = ((index % 4) * 0.12).toFixed(2);
 
         let stockBadge = '';
@@ -156,15 +162,44 @@ function renderizarProductos(productos) {
                     </div>
                     <button class="w-full bg-gradient-to-r from-amber-400 to-orange-600 dark:from-cyan-600 dark:to-blue-700 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-xs md:text-sm ${disabledClass}" onclick="agregarAlCarrito(${p.id_producto})" ${outOfStock ? 'disabled' : ''}>
                         <span class="material-symbols-outlined text-base md:text-xl">shopping_cart</span>
-                        ${outOfStock ? 'Agotado' : 'Agregar'}
+                        ${outOfStock ? 'Agregar' : 'Agregar'}
                     </button>
                 </div>
             </div>
         </div>`;
     }).join('');
 
+    // Manejar visibilidad del botón "Ver Más"
+    const verMasContainer = document.getElementById('verMasContainer');
+    if (verMasContainer) {
+        if (hayMas) {
+            verMasContainer.classList.remove('hidden');
+        } else {
+            verMasContainer.classList.add('hidden');
+        }
+    }
+
     if (typeof initHoloCards === 'function') initHoloCards();
     initScrollReveal();
+}
+
+/**
+ * Carga más productos incrementando el límite visual
+ */
+function cargarMasProductos() {
+    state.productosAMostrar += 8;
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+    if (query) {
+        const filtrados = state.productos.filter(p =>
+            (p.nombre && p.nombre.toLowerCase().includes(query)) ||
+            (p.descripcion && p.descripcion.toLowerCase().includes(query))
+        );
+        renderizarProductos(filtrados);
+    } else {
+        renderizarProductos(state.productos);
+    }
 }
 
 /**

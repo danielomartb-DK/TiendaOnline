@@ -487,6 +487,103 @@
         <div id="productGrid"
             class="holo-grid max-w-[1440px] mx-auto px-4 md:px-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         </div>
+
+        <!-- Botón Ver Más -->
+        <div id="verMasContainer" class="flex justify-center mt-12 mb-8 hidden">
+            <button id="btnVerMas" onclick="cargarMasProductos()"
+                class="group relative px-8 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-700 dark:text-white hover:border-primary dark:hover:border-cyan-500 transition-all duration-300 shadow-lg hover:shadow-primary/20 flex items-center gap-2">
+                <span
+                    class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">expand_more</span>
+                Ver más Tesoros
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                </span>
+            </button>
+        </div>
+        <!-- SECCIÓN: PROTOCOLO DE VENTAJAS PIXELWEAR -->
+        <section class="py-20 relative overflow-hidden">
+            <!-- Decoración de fondo -->
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 dark:opacity-10">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]"></div>
+            </div>
+
+            <div class="max-w-[1200px] mx-auto px-4 relative z-10">
+                <div class="text-center mb-16">
+                    <h2
+                        class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-4">
+                        ¿POR QUÉ ELEGIR EL <span class="text-primary">EQUIPO PIXELWEAR</span>?
+                    </h2>
+                    <div class="h-1.5 w-24 bg-primary mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+                        No solo vendemos ropa, forjamos equipo de alto rendimiento para los cazadores de tendencias más
+                        exigentes.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Ventaja 1 -->
+                    <div
+                        class="group bg-white dark:bg-slate-800/40 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-cyan-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                        <div
+                            class="w-16 h-16 bg-orange-100 dark:bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-3xl text-primary">verified</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-tight">
+                            Calidad Grado S</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Tejidos seleccionados para resistir cualquier mazmorra urbana. Durabilidad máxima
+                            garantizada.
+                        </p>
+                    </div>
+
+                    <!-- Ventaja 2 -->
+                    <div
+                        class="group bg-white dark:bg-slate-800/40 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-cyan-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                        <div
+                            class="w-16 h-16 bg-cyan-100 dark:bg-cyan-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-3xl text-cyan-500">bolt</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-tight">Envío
+                            Shadow Step</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Logística de respuesta rápida. Tu pedido llegará antes de que termine el episodio actual.
+                        </p>
+                    </div>
+
+                    <!-- Ventaja 3 -->
+                    <div
+                        class="group bg-white dark:bg-slate-800/40 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-cyan-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                        <div
+                            class="w-16 h-16 bg-purple-100 dark:bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-3xl text-purple-500">diversity_3</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-tight">
+                            Soporte Gremio</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Cazadores atendiendo a cazadores. Resolución inmediata de dudas 24/7 en nuestro canal.
+                        </p>
+                    </div>
+
+                    <!-- Ventaja 4 -->
+                    <div
+                        class="group bg-white dark:bg-slate-800/40 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-cyan-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                        <div
+                            class="w-16 h-16 bg-emerald-100 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-3xl text-emerald-500">palette</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-tight">Arte
+                            Viral</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Diseños exclusivos que no verás en el mundo real. Arte creado por fans para fans.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Pie de Página Enriquecido (Megamenu) -->

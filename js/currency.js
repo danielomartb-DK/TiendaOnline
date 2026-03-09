@@ -13,7 +13,7 @@ const CurrencyManager = {
 
     // Obtiene la moneda actual del localStorage o por defecto USD
     getCurrentCurrency: function () {
-        return localStorage.getItem('pixelwear_currency') || 'USD';
+        return localStorage.getItem('pixelwear_currency') || 'COP';
     },
 
     // Establece la moneda actual (guardando en local storage) y recarga

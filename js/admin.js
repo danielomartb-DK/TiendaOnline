@@ -391,7 +391,10 @@ async function initAdminPanel() {
                             <img src="${imgUrl}" class="w-16 h-16 object-cover rounded-lg shadow-sm" onerror="this.src='https://placehold.co/100x100?text=No+Img'">
                             <div class="flex-1">
                                 <h4 class="font-bold text-slate-800 dark:text-white text-sm">${d.producto ? d.producto.nombre : 'Producto Eliminado'}</h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Cantidad: <span class="font-black text-primary">${d.cantidad}</span> x ${window.CurrencyManager ? window.CurrencyManager.formatPrice(d.precio_unitario) : '$' + d.precio_unitario}</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">TALLA: ${d.talla || 'N/A'}</span>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Cant: <span class="font-black">${d.cantidad}</span> x ${window.CurrencyManager ? window.CurrencyManager.formatPrice(d.precio_unitario) : '$' + d.precio_unitario}</p>
+                                </div>
                             </div>
                             <div class="text-right">
                                 <p class="text-sm font-black text-slate-900 dark:text-white">${formattedSubtotal}</p>

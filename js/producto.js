@@ -77,8 +77,11 @@ async function initProducto() {
             return;
         }
 
-        // 4. Renderizar la UI si todo estÃ¡ bien
+        // 4. Renderizar la UI si todo está bien
         renderizarDetalles(currentProduct);
+
+        // 5. Cargar Reseñas
+        initResenas(idProducto);
 
     } catch (error) {
         console.error("Error al cargar producto:", error);
@@ -194,14 +197,15 @@ function renderizarDetalles(p) {
                 <h1 class="text-3xl md:text-4xl font-mecha font-bold text-slate-900 dark:text-white mb-2 leading-tight transition-colors duration-300 uppercase tracking-wide">${p.nombre}</h1>
                 
                 <div class="flex items-center gap-2 mb-6">
-                    <div class="flex text-primary">
-                        <span class="material-symbols-outlined text-lg fill-1">star</span>
-                        <span class="material-symbols-outlined text-lg fill-1">star</span>
-                        <span class="material-symbols-outlined text-lg fill-1">star</span>
-                        <span class="material-symbols-outlined text-lg fill-1">star</span>
-                        <span class="material-symbols-outlined text-lg fill-1">star_half</span>
+                    <div class="flex text-primary" id="avgStarsContainer">
+                        <!-- Estrellas dinámicas -->
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        <span class="material-symbols-outlined text-lg">star</span>
+                        <span class="material-symbols-outlined text-lg">star</span>
                     </div>
-                    <span class="text-sm text-slate-500 font-medium line-underline hover:underline cursor-pointer">Ver 120 reseñas</span>
+                    <span id="avgReviewsText" class="text-sm text-slate-500 font-medium line-underline hover:underline cursor-pointer">Cargando reseñas...</span>
                 </div>
 
                 <div class="mb-8">
@@ -212,6 +216,24 @@ function renderizarDetalles(p) {
                 <div class="mb-8 border-t border-b border-slate-100 dark:border-slate-800 py-6 transition-colors duration-300">
                     <h3 class="font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">Acerca de este artículo</h3>
                     <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm transition-colors duration-300">${description}</p>
+                </div>
+
+                <!-- Selector de Tallas -->
+                <div class="mb-8 border-t border-slate-100 dark:border-slate-800 pt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-900 dark:text-white uppercase tracking-widest text-xs transition-colors duration-300">Seleccionar Talla (Nivel de Armadura)</h3>
+                        <a href="#" class="text-[10px] text-cyan-500 font-bold hover:underline uppercase tracking-tighter">Guía de Tallas</a>
+                    </div>
+                    <div class="flex flex-wrap gap-3" id="tallaSelector">
+                        ${['S', 'M', 'L', 'XL', 'XXL'].map(t => `
+                            <button 
+                                onclick="seleccionarTalla('${t}')"
+                                class="talla-btn w-12 h-12 rounded-xl border-2 border-slate-200 dark:border-slate-700 font-bold text-sm flex items-center justify-center transition-all hover:border-primary dark:hover:border-cyan-500 text-slate-600 dark:text-slate-400"
+                                data-talla="${t}"
+                            >${t}</button>
+                        `).join('')}
+                    </div>
+                    <p id="tallaError" class="text-[10px] text-red-500 font-bold mt-2 hidden uppercase tracking-widest animate-pulse">¡ERROR! Selecciona tu talla para sincronizar el equipo.</p>
                 </div>
 
                 <!-- Botón de Compra -->
@@ -248,13 +270,48 @@ function mostrarError(mensajeDebug = "El producto que buscas no existe o ha sido
     if (textError) textError.textContent = mensajeDebug;
 }
 
+let tallaSeleccionada = null;
+
+function seleccionarTalla(talla) {
+    tallaSeleccionada = talla;
+
+    // UI Update
+    document.querySelectorAll('.talla-btn').forEach(btn => {
+        btn.classList.remove('border-primary', 'dark:border-cyan-500', 'bg-primary/10', 'dark:bg-cyan-500/10', 'text-primary', 'dark:text-cyan-400');
+        btn.classList.add('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
+    });
+
+    const selectedBtn = document.querySelector(`.talla-btn[data-talla="${talla}"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-400');
+        selectedBtn.classList.add('border-primary', 'dark:border-cyan-500', 'bg-primary/10', 'dark:bg-cyan-500/10', 'text-primary', 'dark:text-cyan-400');
+    }
+
+    // Ocultar error si existía
+    const errorMsg = document.getElementById('tallaError');
+    if (errorMsg) errorMsg.classList.add('hidden');
+}
+
 /**
  * Agrega el producto al carrito de compras desde esta vista.
  */
 function agregarAlCarritoLocal(idProducto) {
     if (!currentProduct || currentProduct.stock <= 0) return;
 
-    const itemCarrito = carritoLocal.find(item => item.id_producto === idProducto);
+    // Validación de Talla
+    if (!tallaSeleccionada) {
+        const errorMsg = document.getElementById('tallaError');
+        if (errorMsg) {
+            errorMsg.classList.remove('hidden');
+            // Scroll suave al error
+            errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        mostrarToast('¡ERROR DE SINCRONIZACIÓN! Selecciona tu talla.', 'error');
+        return;
+    }
+
+    // Buscamos si ya existe el mismo producto CON LA MISMA TALLA
+    const itemCarrito = carritoLocal.find(item => item.id_producto === idProducto && item.talla === tallaSeleccionada);
 
     if (itemCarrito) {
         if (itemCarrito.cantidad < currentProduct.stock) {
@@ -270,13 +327,14 @@ function agregarAlCarritoLocal(idProducto) {
             precio: Number(currentProduct.precio),
             imagen_url: currentProduct.imagen_url,
             cantidad: 1,
-            stock: currentProduct.stock
+            stock: currentProduct.stock,
+            talla: tallaSeleccionada
         });
     }
 
     localStorage.setItem(getCartKey(), JSON.stringify(carritoLocal));
     actualizarContadorCarrito();
-    mostrarToast('¡Listo! Agregado a tu carrito.');
+    mostrarToast('¡Listo! Equipo sincronizado talla ' + tallaSeleccionada);
 }
 
 function actualizarContadorCarrito() {
@@ -368,5 +426,241 @@ async function toggleVisibilidadProducto(id_producto, mostrar) {
         setTimeout(() => window.location.reload(), 1500);
     } catch (e) {
         mostrarToast('Error al cambiar visibilidad: ' + e.message, 'error');
+    }
+}
+
+// --- SISTEMA DE RESEÑAS --- //
+
+let selectedRating = 0;
+let listaResenasLocal = [];
+let resenasVisibles = 4;
+const resenasPorCarga = 4;
+
+async function initResenas(idProducto) {
+    try {
+        resenasVisibles = resenasPorCarga;
+        listaResenasLocal = await obtenerResenasPorProducto(idProducto);
+        renderizarResenas();
+        actualizarPromedioEstrellas();
+    } catch (e) {
+        console.error("Error al cargar reseñas:", e);
+    }
+}
+
+function renderizarResenas() {
+    const container = document.getElementById('reviewsList');
+    const loadMoreContainer = document.getElementById('loadMoreResenasContainer');
+    if (!container) return;
+
+    if (listaResenasLocal.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full py-10 text-center border border-slate-100 dark:border-slate-800 rounded-2xl bg-white/50 dark:bg-slate-800/30">
+                <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-2">auto_stories</span>
+                <p class="text-slate-500 italic text-sm">Aún no hay registros de batalla para este ítem. ¡Sé el primero!</p>
+            </div>
+        `;
+        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+        return;
+    }
+
+    // Paginación visual (Slice)
+    const parcial = listaResenasLocal.slice(0, resenasVisibles);
+
+    container.innerHTML = parcial.map(r => {
+        const estrellas = Array(5).fill(0).map((_, i) => {
+            const icon = i < r.calificacion ? 'star' : 'star_border';
+            const fillClass = i < r.calificacion ? 'fill-1' : '';
+            return `<span class="material-symbols-outlined text-sm ${fillClass}">${icon}</span>`;
+        }).join('');
+
+        const autor = r.cliente ? `${r.cliente.nombres} ${r.cliente.apellidos}` : (r.nombres_anonimo || 'Cazador Anónimo');
+        const fecha = new Date(r.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        // Foto de la reseña
+        const fotoHtml = r.foto_url ? `
+            <div class="mt-4 mb-2 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+                <img src="${r.foto_url}" alt="Evidencia de caza" class="w-full h-auto max-h-64 object-cover hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="window.open('${r.foto_url}', '_blank')">
+            </div>
+        ` : '';
+
+        return `
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-800 dark:text-white text-sm">${autor}</span>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-tighter">${fecha}</span>
+                    </div>
+                    <div class="flex text-primary">
+                        ${estrellas}
+                    </div>
+                </div>
+                ${fotoHtml}
+                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">"${r.comentario}"</p>
+            </div>
+        `;
+    }).join('');
+
+    // Mostrar/Ocultar botón de ver más
+    if (loadMoreContainer) {
+        if (listaResenasLocal.length > resenasVisibles) {
+            loadMoreContainer.classList.remove('hidden');
+        } else {
+            loadMoreContainer.classList.add('hidden');
+        }
+    }
+}
+
+/**
+ * Carga el siguiente bloque de reseñas
+ */
+function cargarMasResenas() {
+    resenasVisibles += resenasPorCarga;
+    renderizarResenas();
+}
+
+function actualizarPromedioEstrellas() {
+    const container = document.getElementById('avgStarsContainer');
+    const text = document.getElementById('avgReviewsText');
+    if (!container || !text) return;
+
+    if (listaResenasLocal.length === 0) {
+        text.textContent = "Sin reseñas aún";
+        return;
+    }
+
+    const suma = listaResenasLocal.reduce((acc, r) => acc + r.calificacion, 0);
+    const promedio = (suma / listaResenasLocal.length).toFixed(1);
+
+    let estrellasHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= Math.floor(promedio)) {
+            estrellasHtml += '<span class="material-symbols-outlined text-lg fill-1">star</span>';
+        } else if (i === Math.ceil(promedio) && promedio % 1 !== 0) {
+            estrellasHtml += '<span class="material-symbols-outlined text-lg fill-1">star_half</span>';
+        } else {
+            estrellasHtml += '<span class="material-symbols-outlined text-lg">star</span>';
+        }
+    }
+
+    container.innerHTML = estrellasHtml;
+    text.textContent = `Basado en ${listaResenasLocal.length} informe(s)`;
+}
+
+function toggleFomularioResena() {
+    const form = document.getElementById('reviewFormContainer');
+    if (form) {
+        form.classList.toggle('hidden');
+        if (!form.classList.contains('hidden')) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+}
+
+function setRating(n) {
+    selectedRating = n;
+    const starBtns = document.querySelectorAll('.star-btn span');
+    starBtns.forEach((span, i) => {
+        if (i < n) {
+            span.textContent = 'star';
+            span.classList.add('fill-1', 'text-primary');
+            span.classList.remove('text-slate-300');
+        } else {
+            span.textContent = 'star';
+            span.classList.remove('fill-1', 'text-primary');
+            span.classList.add('text-slate-300');
+        }
+    });
+}
+
+function removeReviewPhoto() {
+    const input = document.getElementById('reviewPhoto');
+    const preview = document.getElementById('photoPreviewContainer');
+    const label = document.getElementById('photoLabel');
+    if (input) input.value = '';
+    if (preview) preview.classList.add('hidden');
+    if (label) label.textContent = 'Subir evidencia';
+}
+
+function previewReviewPhoto(event) {
+    const file = event.target.files[0];
+    const previewContainer = document.getElementById('photoPreviewContainer');
+    const previewImg = document.getElementById('photoPreview');
+    const label = document.getElementById('photoLabel');
+
+    if (file) {
+        if (file.size > 2 * 1024 * 1024) { // 2MB limit
+            mostrarToast('La imagen es muy pesada. Máximo 2MB.', 'error');
+            removeReviewPhoto();
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            previewContainer.classList.remove('hidden');
+            label.textContent = 'Imagen lista';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+async function enviarResena() {
+    const nombre = document.getElementById('reviewName').value.trim();
+    const comentario = document.getElementById('reviewComment').value.trim();
+    const photoInput = document.getElementById('reviewPhoto');
+    const btn = document.getElementById('btnSubmitReview');
+
+    if (selectedRating === 0) {
+        mostrarToast('Por favor selecciona un nivel de estrellas', 'error');
+        return;
+    }
+    if (!comentario) {
+        mostrarToast('El informe está vacío. Cuéntanos qué tal el equipo.', 'error');
+        return;
+    }
+
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Enviando...';
+    btn.disabled = true;
+
+    try {
+        let fotoUrl = null;
+        if (photoInput.files && photoInput.files[0]) {
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Subiendo evidencia...';
+            fotoUrl = await subirFotoResena(photoInput.files[0]);
+        }
+
+        const id_producto = new URLSearchParams(window.location.search).get('id');
+        const resena = {
+            id_producto: parseInt(id_producto),
+            calificacion: selectedRating,
+            comentario: comentario,
+            nombres_anonimo: nombre || 'Cazador Anónimo',
+            foto_url: fotoUrl
+        };
+
+        // Si hay una sesión activa, asociar el id_cliente
+        if (window.novaAuth && window.novaAuth.user && window.novaAuth.user.perfil) {
+            resena.id_cliente = window.novaAuth.user.perfil.id_cliente;
+        }
+
+        await crearResena(resena);
+        mostrarToast('¡Tu informe ha sido publicado con éxito!');
+
+        // Resetear y cerrar
+        document.getElementById('reviewName').value = '';
+        document.getElementById('reviewComment').value = '';
+        removeReviewPhoto();
+        setRating(0);
+        toggleFomularioResena();
+
+        // Recargar lista
+        initResenas(id_producto);
+
+    } catch (e) {
+        mostrarToast('Error al publicar: ' + e.message, 'error');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
     }
 }

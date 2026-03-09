@@ -91,38 +91,90 @@ function renderizarItems() {
         const itemTotal = window.CurrencyManager ? window.CurrencyManager.formatPrice(item.precio * item.cantidad) : '$' + (item.precio * item.cantidad).toLocaleString('en-US', { minimumFractionDigits: 2 });
         const unitPrice = window.CurrencyManager ? window.CurrencyManager.formatPrice(item.precio) : '$' + item.precio.toLocaleString('en-US', { minimumFractionDigits: 2 });
         const imgUrl = item.imagen_url || 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=200';
+        const tallaActual = item.talla || 'N/A';
 
-        return '<div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex gap-4 items-center shadow-sm dark:shadow-[0_0_15px_rgba(0,183,255,0.03)] transition-colors duration-300">'
-            + '<img src="' + imgUrl + '" alt="' + item.nombre + '" class="w-20 h-20 object-cover rounded-lg flex-shrink-0" />'
-            + '<div class="flex-1 min-w-0">'
-            + '<h4 class="font-medium text-sm text-slate-900 dark:text-white truncate transition-colors duration-300">' + item.nombre + '</h4>'
-            + '<p class="text-xs text-slate-500 mt-1">Precio unit.: ' + unitPrice + '</p>'
-            + '<div class="flex items-center gap-2 mt-2">'
-            + '<button onclick="cambiarCantidad(' + item.id_producto + ', -1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">−</button>'
-            + '<span class="text-sm font-bold w-6 text-center dark:text-white transition-colors duration-300">' + item.cantidad + '</span>'
-            + '<button onclick="cambiarCantidad(' + item.id_producto + ', 1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">+</button>'
-            + '</div>'
-            + '</div>'
-            + '<div class="text-right flex-shrink-0">'
-            + '<p class="font-bold text-lg text-slate-900 dark:text-white drop-shadow-sm transition-colors duration-300">' + itemTotal + '</p>'
-            + '<button onclick="eliminarItem(' + item.id_producto + ')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-xs mt-2 flex items-center gap-1 ml-auto transition-colors duration-300">'
-            + '<span class="material-symbols-outlined text-sm">delete</span> Quitar'
-            + '</button>'
-            + '</div>'
-            + '</div>';
+        const tallasDisponibles = ['S', 'M', 'L', 'XL', 'XXL'];
+        const selectorTallasHtml = `
+            <div class="flex flex-wrap gap-1.5 mt-2">
+                ${tallasDisponibles.map(t => {
+            const isActive = t === tallaActual;
+            const activeClass = isActive
+                ? 'bg-primary/20 border-primary text-primary dark:bg-cyan-500/20 dark:border-cyan-500 dark:text-cyan-400'
+                : 'bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-primary dark:hover:border-cyan-500';
+            return `
+                        <button 
+                            onclick="cambiarTallaCarrito('${item.id_producto}', '${tallaActual}', '${t}')" 
+                            class="text-[10px] font-bold px-2 py-1 rounded-md border transition-all ${activeClass}"
+                        >${t}</button>
+                    `;
+        }).join('')}
+            </div>
+        `;
+
+        return `
+            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex gap-4 items-center shadow-sm dark:shadow-[0_0_15px_rgba(0,183,255,0.03)] transition-colors duration-300">
+                <img src="${imgUrl}" alt="${item.nombre}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0" />
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-medium text-sm text-slate-900 dark:text-white truncate transition-colors duration-300">${item.nombre}</h4>
+                    <p class="text-xs text-slate-500 mt-1">Precio unit.: ${unitPrice}</p>
+                    
+                    <div class="mt-2">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Talla:</span>
+                        ${selectorTallasHtml}
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-3">
+                        <button onclick="cambiarCantidad(${item.id_producto}, -1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">−</button>
+                        <span class="text-sm font-bold w-6 text-center dark:text-white transition-colors duration-300">${item.cantidad}</span>
+                        <button onclick="cambiarCantidad(${item.id_producto}, 1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">+</button>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <p class="font-bold text-lg text-slate-900 dark:text-white drop-shadow-sm transition-colors duration-300">${itemTotal}</p>
+                    <button onclick="eliminarItem(${item.id_producto}, '${tallaActual}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-xs mt-2 flex items-center gap-1 ml-auto transition-colors duration-300">
+                        <span class="material-symbols-outlined text-sm">delete</span> Quitar
+                    </button>
+                </div>
+            </div>
+        `;
     }).join('');
+}
+
+/**
+ * Cambia la talla de un item en el carrito
+ */
+function cambiarTallaCarrito(idProducto, tallaVieja, tallaNueva) {
+    if (tallaVieja === tallaNueva) return;
+
+    const idx = cart.items.findIndex(i => i.id_producto == idProducto && i.talla == tallaVieja);
+    if (idx === -1) return;
+
+    // Verificamos si ya existe el mismo producto con la talla nueva para fusionarlos
+    const itemExistente = cart.items.find(i => i.id_producto == idProducto && i.talla == tallaNueva);
+
+    if (itemExistente) {
+        itemExistente.cantidad += cart.items[idx].cantidad;
+        cart.items.splice(idx, 1);
+    } else {
+        cart.items[idx].talla = tallaNueva;
+    }
+
+    guardarCarrito();
+    renderizarItems();
 }
 
 /**
  * Cambia la cantidad de un item
  */
-function cambiarCantidad(idProducto, delta) {
-    const item = cart.items.find(i => i.id_producto === idProducto);
+function cambiarCantidad(idProducto, delta, talla = null) {
+    // Si no se pasa talla (compatibilidad backward), intentamos buscar el primero
+    // Pero idealmente siempre pasaremos talla de los botones del renderizado
+    const item = cart.items.find(i => i.id_producto == idProducto && (!talla || i.talla == talla));
     if (!item) return;
 
     item.cantidad += delta;
     if (item.cantidad <= 0) {
-        cart.items = cart.items.filter(i => i.id_producto !== idProducto);
+        cart.items = cart.items.filter(i => !(i.id_producto == idProducto && i.talla == item.talla));
     } else if (item.cantidad > item.stock) {
         item.cantidad = item.stock;
     }
@@ -135,8 +187,8 @@ function cambiarCantidad(idProducto, delta) {
 /**
  * Elimina un item del carrito
  */
-function eliminarItem(idProducto) {
-    cart.items = cart.items.filter(i => i.id_producto !== idProducto);
+function eliminarItem(idProducto, talla = null) {
+    cart.items = cart.items.filter(i => !(i.id_producto == idProducto && (!talla || i.talla == talla)));
     guardarCarrito();
     renderizarItems();
     calcularTotales();
@@ -206,6 +258,15 @@ async function handleCheckoutSubmit(e) {
             return;
         }
 
+        // 0.1 Validar que todos los items tengan talla (Seguridad extra)
+        const sinTalla = cart.items.filter(item => !item.talla);
+        if (sinTalla.length > 0) {
+            mostrarToast('¡ERROR DE SINCRONIZACIÓN! Algunos artículos no tienen talla seleccionada.', 'error');
+            cartRefs.btnCheckout.disabled = false;
+            cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined">lock</span> Realizar Pedido';
+            return;
+        }
+
         cartRefs.btnCheckout.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Procesando...';
         // 1. Registrar cliente
         let cliente;
@@ -245,9 +306,33 @@ async function handleCheckoutSubmit(e) {
                 id_producto: item.id_producto,
                 cantidad: item.cantidad,
                 precio_unitario: item.precio,
-                subtotal: item.precio * item.cantidad
+                subtotal: item.precio * item.cantidad,
+                talla: item.talla // NUEVO CAMPO
             }));
             await registrarDetallesVenta(detalles);
+
+            // 3.5 ENVIAR CORREO DE CONFIRMACIÓN (PixelWear API)
+            try {
+                fetch('/api/confirmar-compra', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: datosCliente.email,
+                        nombres: datosCliente.nombres,
+                        total: subtotal,
+                        productos: cart.items.map(i => ({
+                            nombre: i.nombre,
+                            cantidad: i.cantidad,
+                            precio: i.precio,
+                            imagen_url: i.imagen_url,
+                            talla: i.talla // NUEVO CAMPO PARA EL CORREO
+                        })),
+                        id_pedido: venta.id_venta
+                    })
+                }); // No bloqueamos el flujo principal si el correo falla o tarda
+            } catch (mailErr) {
+                console.warn("Fallo el envío de correo:", mailErr);
+            }
 
             // Deducción transaccional de bodega (stock negativo = resta)
             for (const item of cart.items) {

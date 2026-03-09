@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PixelWear | Rastreo de Misión</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Rajdhani:wght@600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#00b7ff", "anime-blue": "#4f46e5", "anime-red": "#ef4444" },
+                    fontFamily: { "display": ["Inter", "sans-serif"], "mecha": ["Rajdhani", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(0, 183, 255, 0.3);
+        }
+
+        .bg-grid {
+            background-image: radial-gradient(rgba(0, 183, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-white font-display min-h-screen bg-grid">
+
+    <div class="max-w-2xl mx-auto px-6 py-12">
+        <!-- Logo -->
+        <div class="flex flex-col items-center mb-12">
+            <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,183,255,0.5)] mb-4">
+                <span class="material-symbols-outlined text-white text-4xl"
+                    style="font-variation-settings: 'FILL' 1;">diamond</span>
+            </div>
+            <h1 class="text-4xl font-black tracking-widest text-white leading-none">PIXEL<span
+                    class="text-primary">WEAR</span></h1>
+            <p class="text-xs font-bold tracking-[0.3em] text-slate-500 mt-2 uppercase">Centro de Rastreo Táctico</p>
+        </div>
+
+        <!-- Card de Rastreo -->
+        <div id="trackingCard"
+            class="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 glow-blue relative overflow-hidden hidden">
+            <!-- Header Misión -->
+            <div class="flex justify-between items-start mb-8 border-b border-slate-800 pb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-white flex items-center gap-2">
+                        ID DE MISIÓN: #<span id="orderIdText">--</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1" id="orderDate">-- de --</p>
+                </div>
+                <div id="statusBadge"
+                    class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                    Sincronizando...
+                </div>
+            </div>
+
+            <!-- Lista de Artículos -->
+            <div id="itemsList" class="space-y-4 mb-8">
+                <!-- Por JS -->
+            </div>
+
+            <!-- Total -->
+            <div class="flex justify-between items-center bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50">
+                <span class="text-slate-400 font-bold uppercase text-xs tracking-widest">Total de la Transacción</span>
+                <span id="totalText" class="text-3xl font-black text-primary">$0.00</span>
+            </div>
+
+            <a href="index.html"
+                class="mt-10 w-full py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 group">
+                <span
+                    class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                Volver a la Base
+            </a>
+        </div>
+
+        <!-- Loader -->
+        <div id="trackingLoader" class="flex flex-col items-center justify-center py-20">
+            <span class="material-symbols-outlined text-6xl text-primary animate-spin mb-4">sync</span>
+            <p class="text-slate-400 font-bold tracking-widest animate-pulse uppercase text-xs">Escaneando Circuito...
+            </p>
+        </div>
+
+        <!-- Error -->
+        <div id="trackingError" class="hidden bg-red-950/30 border border-red-900/50 p-8 rounded-3xl text-center">
+            <span class="material-symbols-outlined text-6xl text-red-500 mb-4">error</span>
+            <h3 class="text-xl font-bold text-white mb-2">ORDEN NO ENCONTRADA</h3>
+            <p class="text-slate-400 text-sm mb-6">El código de misión no parece ser válido o ha expirado en el sistema.
+            </p>
+            <a href="index.html"
+                class="inline-block px-8 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition-colors">Volver
+                a Inicio</a>
+        </div>
+    </div>
+
+    <script src="js/currency.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/rastreo.js"></script>
+</body>
+
+</html>
