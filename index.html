@@ -303,7 +303,7 @@
         <div class="flex items-center self-center gap-6">
             <a href="#" class="hover:text-cyan-400 transition-colors">Soporte Tecnológico</a>
             <span class="border-l border-white/20 pl-4 h-full flex items-center pr-2">
-                <select
+                <select aria-label="Seleccionar moneda tributaria"
                     class="currency-selector bg-[#0f1013] text-slate-300 border-none outline-none cursor-pointer hover:text-cyan-400 transition-colors text-xs font-bold font-['Inter'] rounded-md px-2 py-1">
                     <option value="USD">USD ($)</option>
                     <option value="COP">COP ($)</option>
@@ -377,8 +377,9 @@
                     </a>
                 </div>
 
-                <a href="carrito.html" class="relative cursor-pointer group flex items-center">
-                    <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+                <a href="carrito.html" class="relative cursor-pointer group flex items-center"
+                    aria-label="Ir al carrito de compras, tienes 0 artículos">
+                    <span class="material-symbols-outlined text-3xl" aria-hidden="true">shopping_cart</span>
                     <span id="cartCounter"
                         class="absolute -top-1 -right-1 bg-gradient-to-r from-amber-400 to-orange-500 dark:from-cyan-400 dark:to-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-brand-blue transition-all duration-500">0</span>
                     <span class="hidden md:inline ml-1 font-bold">Carrito</span>
@@ -762,7 +763,7 @@
                             <span class="material-symbols-outlined text-slate-400">payments</span>
                             <span class="text-sm font-medium text-slate-700 dark:text-slate-200">Moneda</span>
                         </div>
-                        <select
+                        <select aria-label="Seleccionar moneda móvil"
                             class="currency-selector bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-none outline-none text-xs font-bold rounded-lg px-2 py-1">
                             <option value="USD">USD</option>
                             <option value="COP">COP</option>

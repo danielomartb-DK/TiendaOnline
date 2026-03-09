@@ -145,7 +145,7 @@ function renderizarProductos(productos) {
         return `<div data-holo class="holo-card reveal-item relative ${!p.estado ? 'grayscale opacity-60' : ''} bg-white dark:bg-[#0c1222] border border-slate-200/80 dark:border-slate-700/60 rounded-2xl overflow-hidden group flex flex-col transition-all duration-300" style="animation-delay: ${delay}s;">
             ${adminToggle}
             <a href="producto.html?id=${p.id_producto}" class="relative aspect-square overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 block">
-                <img alt="${p.nombre}" src="${imagenUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                <img alt="${p.nombre}" src="${imagenUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" ${index < 4 ? 'fetchpriority="high"' : 'loading="lazy"'} />
                 ${stockBadge}
             </a>
             <div class="p-3 md:p-4 flex flex-col flex-1">
