@@ -271,7 +271,8 @@ function agregarAlCarrito(idProducto) {
             precio: Number(producto.precio),
             imagen_url: producto.imagen_url,
             cantidad: 1,
-            stock: producto.stock
+            stock: producto.stock,
+            talla: 'M' // Talla inicial por defecto para items de la Home
         });
     }
 

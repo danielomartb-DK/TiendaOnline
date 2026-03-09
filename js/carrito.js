@@ -113,28 +113,46 @@ function renderizarItems() {
         `;
 
         return `
-            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex gap-4 items-center shadow-sm dark:shadow-[0_0_15px_rgba(0,183,255,0.03)] transition-colors duration-300">
-                <img src="${imgUrl}" alt="${item.nombre}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0" />
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-medium text-sm text-slate-900 dark:text-white truncate transition-colors duration-300">${item.nombre}</h4>
-                    <p class="text-xs text-slate-500 mt-1">Precio unit.: ${unitPrice}</p>
+            <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm dark:shadow-[0_0_20px_rgba(0,183,255,0.03)] transition-all duration-300 group">
+                <!-- Imagen -->
+                <div class="w-full sm:w-24 h-24 sm:h-24 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
+                    <img src="${imgUrl}" alt="${item.nombre}" class="w-full h-full object-cover rounded-xl shadow-md border border-slate-100 dark:border-slate-600" />
+                </div>
+
+                <!-- Detalles e Interactividad -->
+                <div class="flex-1 min-w-0 w-full">
+                    <div class="flex justify-between items-start gap-3">
+                        <h4 class="font-black text-sm md:text-base text-slate-900 dark:text-white truncate transition-colors duration-300 uppercase tracking-tight">${item.nombre}</h4>
+                        <button onclick="eliminarItem(${item.id_producto}, '${tallaActual}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-transform active:scale-90" title="Eliminar del carrito">
+                            <span class="material-symbols-outlined text-xl md:text-2xl">delete_forever</span>
+                        </button>
+                    </div>
                     
-                    <div class="mt-2">
-                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Talla:</span>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-bold">PRECIO UNIT: <span class="text-primary dark:text-cyan-400">${unitPrice}</span></p>
+                    
+                    <div class="mt-3">
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1.5 opacity-60">Escala de Armadura (Talla)</p>
                         ${selectorTallasHtml}
                     </div>
 
-                    <div class="flex items-center gap-2 mt-3">
-                        <button onclick="cambiarCantidad(${item.id_producto}, -1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">−</button>
-                        <span class="text-sm font-bold w-6 text-center dark:text-white transition-colors duration-300">${item.cantidad}</span>
-                        <button onclick="cambiarCantidad(${item.id_producto}, 1)" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-bold text-slate-600 dark:text-slate-300 transition-colors duration-300">+</button>
+                    <div class="flex flex-wrap items-center justify-between gap-4 mt-5">
+                        <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl p-1.5 border border-slate-100 dark:border-slate-700/50 shadow-inner">
+                            <button onclick="cambiarCantidad(${item.id_producto}, -1, '${tallaActual}')" class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">−</button>
+                            <span class="text-sm font-black w-6 text-center text-slate-900 dark:text-white">${item.cantidad}</span>
+                            <button onclick="cambiarCantidad(${item.id_producto}, 1, '${tallaActual}')" class="w-8 h-8 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-lg font-black text-slate-700 dark:text-white transition-all shadow-sm active:scale-95">+</button>
+                        </div>
+                        
+                        <div class="text-right hidden sm:block">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5 opacity-50">Subtotal Item</p>
+                            <p class="font-black text-xl text-slate-900 dark:text-white drop-shadow-sm transition-colors duration-300">${itemTotal}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-right flex-shrink-0">
-                    <p class="font-bold text-lg text-slate-900 dark:text-white drop-shadow-sm transition-colors duration-300">${itemTotal}</p>
-                    <button onclick="eliminarItem(${item.id_producto}, '${tallaActual}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-xs mt-2 flex items-center gap-1 ml-auto transition-colors duration-300">
-                        <span class="material-symbols-outlined text-sm">delete</span> Quitar
-                    </button>
+                
+                <!-- Subtotal solo visible en movil al final -->
+                <div class="w-full flex justify-between items-center sm:hidden pt-3 border-t border-slate-100 dark:border-slate-700/30 mt-1">
+                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60">Subtotal Item</p>
+                     <p class="font-black text-xl text-slate-900 dark:text-white">${itemTotal}</p>
                 </div>
             </div>
         `;
@@ -147,17 +165,26 @@ function renderizarItems() {
 function cambiarTallaCarrito(idProducto, tallaVieja, tallaNueva) {
     if (tallaVieja === tallaNueva) return;
 
-    const idx = cart.items.findIndex(i => i.id_producto == idProducto && i.talla == tallaVieja);
-    if (idx === -1) return;
-
-    // Verificamos si ya existe el mismo producto con la talla nueva para fusionarlos
-    const itemExistente = cart.items.find(i => i.id_producto == idProducto && i.talla == tallaNueva);
-
-    if (itemExistente) {
-        itemExistente.cantidad += cart.items[idx].cantidad;
-        cart.items.splice(idx, 1);
+    const idx = cart.items.findIndex(i => i.id_producto == idProducto && (i.talla == tallaVieja || (!i.talla && tallaVieja === 'N/A')));
+    if (idx === -1) {
+        // Fallback: buscar solo por ID si es el único item para rescatar el estado
+        const count = cart.items.filter(i => i.id_producto == idProducto).length;
+        if (count === 1) {
+            const onlyIdx = cart.items.findIndex(i => i.id_producto == idProducto);
+            cart.items[onlyIdx].talla = tallaNueva;
+        } else {
+            return;
+        }
     } else {
-        cart.items[idx].talla = tallaNueva;
+        // Verificamos si ya existe el mismo producto con la talla nueva para fusionarlos
+        const itemExistente = cart.items.find(i => i.id_producto == idProducto && i.talla == tallaNueva);
+
+        if (itemExistente) {
+            itemExistente.cantidad += cart.items[idx].cantidad;
+            cart.items.splice(idx, 1);
+        } else {
+            cart.items[idx].talla = tallaNueva;
+        }
     }
 
     guardarCarrito();
