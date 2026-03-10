@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 // Configuración de Middlewares
 app.use(cors());
@@ -128,7 +129,7 @@ app.post('/api/confirmar-compra', async (req, res) => {
                                             <!-- Button -->
                                             <tr>
                                                 <td align="center" style="padding-top: 45px;">
-                                                    <a href="http://localhost:8080/rastreo.html?id=${id_pedido}" style="background: linear-gradient(90deg, #00b7ff, #4f46e5); color: #ffffff; padding: 20px 40px; border-radius: 16px; text-decoration: none; font-weight: 900; font-size: 14px; letter-spacing: 2px; display: inline-block; text-transform: uppercase; box-shadow: 0 10px 20px rgba(0, 183, 255, 0.3);">Seguimiento de Misión</a>
+                                                    <a href="${BASE_URL}/rastreo.html?id=${id_pedido}" style="background: linear-gradient(90deg, #00b7ff, #4f46e5); color: #ffffff; padding: 20px 40px; border-radius: 16px; text-decoration: none; font-weight: 900; font-size: 14px; letter-spacing: 2px; display: inline-block; text-transform: uppercase; box-shadow: 0 10px 20px rgba(0, 183, 255, 0.3);">Seguimiento de Misión</a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -169,7 +170,7 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`
     ---------------------------------------------------
-    🚀 PixelWear Server rodando en: http://localhost:${PORT}
+    🚀 PixelWear Server rodando en: ${BASE_URL}
     📧 Servicio de Correo: pixelwear632@gmail.com
     ---------------------------------------------------
     `);
